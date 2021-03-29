@@ -3,8 +3,9 @@ const db = require('../config/database')
 
 const User = db.define('User', {
     id: {
-        type: DataTypes.STRING,
-        primaryKey: true
+        type: DataTypes.UUIDV4,
+        primaryKey: true,
+        defaultValue: DataTypes.UUIDV4
     },
     name: {
         type: DataTypes.STRING

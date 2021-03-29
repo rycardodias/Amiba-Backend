@@ -1,7 +1,6 @@
 const express = require('express')
 const router = express.Router()
 const db = require('../config/database')
-const { v4: uuidv4 } = require("uuid")
 
 const User = require('../models/User')
 
@@ -13,23 +12,47 @@ router.get('/', (req, res) => {
         .catch(err => console.log(err))
 })
 
+//getById
 router.get('/id', (req, res) => {
     User.findByPk(req.headers.id)
         .then(status => res.send(status))
         .catch(err => console.log(err))
 })
 
-//create user
+//create
 router.post('/create', (req, res) => {
     const { name, surname, password, active } = req.body
 
     User.create({
-        id: uuidv4(),
         name: name,
         surname: surname,
         password: password,
         active: active,
     })
+        .then(status => res.send(status))
+        .catch(err => console.log(err))
+})
+
+router.post('/update', (req, res) => {
+    const { id, name, surname, password, active } = req.body
+
+    if (id == undefined || id == "") {
+        res.send("Error! An id must be provided!")
+    }
+
+    const data = {
+        name: name,
+        surname: surname,
+        password: password,
+        active: active,
+    }
+
+    User.update(data,
+        {
+            where: {
+                id: id
+            },
+        })
         .then(status => res.send(status))
         .catch(err => console.log(err))
 })
@@ -40,12 +63,11 @@ router.delete('/delete', (req, res) => {
 
     User.destroy({
         where: {
-            id: 1
+            id: id
         },
         force: true
     })
-        .then(status => res.send(status))
-        .catch(err => console.log(err))
+        .then(status => res.json(status))
 })
 
 module.exports = router
