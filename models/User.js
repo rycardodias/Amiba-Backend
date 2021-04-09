@@ -1,5 +1,6 @@
 const { DataTypes, Sequelize } = require('sequelize');
-const db = require('../config/database')
+const db = require('../config/database');
+const Organization = require('./Organization');
 
 const User = db.define('User', {
     id: {
@@ -39,7 +40,10 @@ const User = db.define('User', {
     organization: {
         type:DataTypes.UUID,
         allowNull: true,
-        defaultValue: null
+        references: {
+            model: Organization,
+            key: 'id',
+        }
     },
     adress: {
         type: DataTypes.STRING,

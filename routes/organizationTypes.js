@@ -2,16 +2,16 @@ const express = require('express')
 const router = express.Router()
 const db = require('../config/database')
 
-const OrganizationType = require('../models/OrganizationType')
+const Model = require('../models/OrganizationType')
 
 router.get('/', (req, res) => {
-    OrganizationType.findAll()
+    Model.findAll()
         .then(status => res.send(status))
         .catch(err => console.log(err))
 })
 
 router.get('/id', (req, res) => {
-    OrganizationType.findByPk(req.headers.id)
+    Model.findByPk(req.headers.id)
         .then(status => res.send(status))
         .catch(err => console.log(err))
 })
@@ -19,7 +19,7 @@ router.get('/id', (req, res) => {
 router.post('/create', (req, res) => {
     const { name, description } = req.body
 
-    OrganizationType.create({
+    Model.create({
         name: name,
         description: description,
     })
@@ -27,7 +27,7 @@ router.post('/create', (req, res) => {
         .catch(err => res.send(err))
 })
 
-router.post('/update', (req, res) => {
+router.put('/update', (req, res) => {
     const { id, name, description } = req.body
 
     if (id == undefined || id == "") {
@@ -39,7 +39,7 @@ router.post('/update', (req, res) => {
         description: description,
     }
 
-    OrganizationType.update(data,
+    Model.update(data,
         {
             where: {
                 id: id
@@ -52,7 +52,7 @@ router.post('/update', (req, res) => {
 router.delete('/delete', (req, res) => {
     const { id } = req.body
 
-    OrganizationType.destroy({
+    Model.destroy({
         where: {
             id: id
         },

@@ -2,7 +2,7 @@ const express = require('express')
 const router = express.Router()
 const db = require('../config/database')
 
-const Model = require('../models/User')
+const Model = require('../models/Restaurant')
 
 router.get('/', (req, res) => {
     Model.findAll()
@@ -17,14 +17,11 @@ router.get('/id', (req, res) => {
 })
 
 router.post('/create', (req, res) => {
-    const { name, surname, email, password, organization, adress, locale, zipcode, fiscalNumber } = req.body
+    const { name, description, adress, locale, zipcode, fiscalNumber } = req.body
 
     Model.create({
         name: name,
-        surname: surname,
-        email: email,
-        password: password,
-        organization: organization,
+        description: description,
         adress: adress,
         locale: locale,
         zipcode: zipcode,
@@ -36,7 +33,7 @@ router.post('/create', (req, res) => {
 })
 
 router.put('/update', (req, res) => {
-    const { id, name, surname, email, password, active, organization, adress, locale, zipcode, fiscalNumber } = req.body
+    const { id, name, description, adress, locale, zipcode, fiscalNumber } = req.body
 
     if (id == undefined || id == "") {
         res.send("Error! An id must be provided!")

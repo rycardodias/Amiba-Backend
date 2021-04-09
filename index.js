@@ -17,8 +17,16 @@ app.use(express.json());
 
 app.get('/', (req, res) => res.send('INDEX'));
 
-//users routes
+//routes
 app.use('/users', require('./routes/users'))
+app.use('/organizationTypes', require('./routes/organizationTypes'))
+app.use('/organizations', require('./routes/organizations'))
+app.use('/restaurants', require('./routes/restaurants'))
+app.use('/recipes', require('./routes/recipes'))
+app.use('/menuItems', require('./routes/menuItems'))
+app.use('/photos', require('./routes/photos'))
+app.use('/orders', require('./routes/orders'))
+app.use('/explorationTypes', require('./routes/explorationTypes'))
 
 
 const PORT = process.env.PORT || 5000;
