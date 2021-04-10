@@ -27,6 +27,10 @@ app.use('/menuItems', require('./routes/menuItems'))
 app.use('/photos', require('./routes/photos'))
 app.use('/orders', require('./routes/orders'))
 app.use('/explorationTypes', require('./routes/explorationTypes'))
+app.use('/explorations', require('./routes/explorations'))
+app.use('/certifications', require('./routes/certifications'))
+app.use('/taxes', require('./routes/taxes'))
+app.use('/productTypes', require('./routes/productTypes'))
 
 
 const PORT = process.env.PORT || 5000;
