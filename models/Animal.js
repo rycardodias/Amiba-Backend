@@ -44,20 +44,17 @@ const Animal = db.define('Animal', {
     slaughterDate: {
         type: DataTypes.DATE,
         allowNull: true,
-        defaultValue: null
     },
     slaughterWeight: {
         type: DataTypes.INTEGER,
-        allowNull: true,
-        defaultValue: null
+        allowNull: true
     },
     slaughterLocal: {
         type: DataTypes.STRING,
         allowNull: true,
-        defaultValue: null
     }
 },
    )
-//    Animal.sync({force: true})
+// Animal.sync({force: true})
    
 module.exports = Animal

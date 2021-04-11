@@ -1,6 +1,7 @@
 const { DataTypes, Sequelize } = require('sequelize');
 const db = require('../config/database');
 const Organization = require('./Organization');
+const Restaurant = require('./Restaurant');
 
 const User = db.define('User', {
     id: {
@@ -42,6 +43,14 @@ const User = db.define('User', {
         allowNull: true,
         references: {
             model: Organization,
+            key: 'id',
+        }
+    },
+    restaurant: {
+        type:DataTypes.UUID,
+        allowNull: true,
+        references: {
+            model: Restaurant,
             key: 'id',
         }
     },
