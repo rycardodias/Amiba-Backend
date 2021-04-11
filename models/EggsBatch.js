@@ -1,15 +1,15 @@
 const { DataTypes, Sequelize } = require('sequelize');
 const db = require('../config/database');
-const ExplorationType = require('./ExplorationType');
+const Race = require('./Race');
 const Organization = require('./Organization');
 
-const Exploration = db.define('Exploration', {
+const EggsBatch = db.define('EggsBatch', {
     id: {
         type: DataTypes.UUID,
         primaryKey: true,
         defaultValue: DataTypes.UUIDV4
     },
-    organization: {
+    calibrator: {
         type: DataTypes.UUID,
         allowNull: false,
         references: {
@@ -17,51 +17,32 @@ const Exploration = db.define('Exploration', {
             key: 'id'
         }
     },
-    type: {
+    race: {
         type: DataTypes.UUID,
         allowNull: false,
         references: {
-            model: ExplorationType,
+            model: Race,
             key: 'id'
         }
+    },
+    caliber: {
+        type: DataTypes.STRING,
+        allowNull: false,
+    },
+    batchNumber: {
+        type: DataTypes.STRING,
+        allowNull: false,
     },
     name: {
         type: DataTypes.STRING,
         allowNull: false,
     },
-    adress: {
-        type: DataTypes.STRING,
-        allowNull: false,
-    },
-    locale: {
-        type: DataTypes.STRING,
-        allowNull: false,
-    },
-    zipcode: {
-        type: DataTypes.STRING,
-        allowNull: false,
-    },
-    telephone: {
-        type: DataTypes.STRING,
-        allowNull: true,
-        unique: true
-    },
-    mobilePhone: {
-        type: DataTypes.STRING,
-        allowNull: true,
-        unique: true
-    },
-    fiscalNumber: {
+    quantity: {
         type: DataTypes.INTEGER,
-        allowNull: true,
-        unique: true
-    },
-    gpsLocalization: {
-        type: DataTypes.STRING,
-        allowNull: true
+        allowNull: false,
     }
 },
    )
-//    Exploration.sync({force: true})
+//    EggsBatch.sync({force: true})
    
-module.exports = Exploration
+module.exports = EggsBatch

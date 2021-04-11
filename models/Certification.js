@@ -34,6 +34,6 @@ const Certification = db.define('Certification', {
     }
 },
    )
-   Certification.sync({force: true})
+//    Certification.sync({force: true})
    
 module.exports = Certification

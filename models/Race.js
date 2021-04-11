@@ -1,11 +1,20 @@
 const { DataTypes, Sequelize } = require('sequelize');
 const db = require('../config/database')
+const Specie = require('./Specie')
 
-const OrganizationType = db.define('OrganizationType', {
+const Race = db.define('Race', {
     id: {
         type: DataTypes.UUID,
         primaryKey: true,
         defaultValue: DataTypes.UUIDV4
+    },
+    specie: {
+        type: DataTypes.UUID,
+        allowNull: false,
+        references: {
+            model: Specie,
+            key: 'id'
+        }
     },
     name: {
         type: DataTypes.STRING,
@@ -14,11 +23,10 @@ const OrganizationType = db.define('OrganizationType', {
     },
     description: {
         type: DataTypes.STRING,
-        allowNull: true,
+        allowNull: true
     },
-},
-   )
+})
 
-//   OrganizationType.sync({force: true})
-   
-module.exports = OrganizationType
+// Race.sync({ alter: true })
+
+module.exports = Race

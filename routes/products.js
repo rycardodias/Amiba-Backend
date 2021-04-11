@@ -2,7 +2,7 @@ const express = require('express')
 const router = express.Router()
 const db = require('../config/database')
 
-const Model = require('../models/Order')
+const Model = require('../models/Product')
 
 router.get('/', (req, res) => {
     Model.findAll()
@@ -17,17 +17,16 @@ router.get('/id', (req, res) => {
 })
 
 router.post('/create', (req, res) => {
-    const { user, total, totalVAT, adress, locale, zipcode, observation, fiscalNumber } = req.body
+    const { type, taxCode, name, description, price, animal, eggsBatch } = req.body
 
     Model.create({
-        user: user,
-        total: total,
-        totalVAT: totalVAT,
-        adress: adress,
-        locale: locale,
-        zipcode: zipcode,
-        observation: observation,
-        fiscalNumber: fiscalNumber
+        type: type,
+        taxCode: taxCode,
+        name: name,
+        description: description,
+        price: price,
+        animal: animal,
+        eggsBatch: eggsBatch
 
     })
         .then(status => res.send(status))
@@ -36,21 +35,20 @@ router.post('/create', (req, res) => {
 
 
 router.put('/update', (req, res) => {
-    const { id, user, total, totalVAT, adress, locale, zipcode, observation, fiscalNumber } = req.body
+    const { id, type, taxCode, name, description, price, animal, eggsBatch } = req.body
 
     if (id == undefined || id == "") {
         res.send("Error! An id must be provided!")
     }
 
     const data = {
-        user: user,
-        total: total,
-        totalVAT: totalVAT,
-        adress: adress,
-        locale: locale,
-        zipcode: zipcode,
-        observation: observation,
-        fiscalNumber: fiscalNumber
+        type: type,
+        taxCode: taxCode,
+        name: name,
+        description: description,
+        price: price,
+        animal: animal,
+        eggsBatch: eggsBatch
     }
 
     Model.update(data,

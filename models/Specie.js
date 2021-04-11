@@ -1,7 +1,7 @@
 const { DataTypes, Sequelize } = require('sequelize');
 const db = require('../config/database')
 
-const OrganizationType = db.define('OrganizationType', {
+const Specie = db.define('Specie', {
     id: {
         type: DataTypes.UUID,
         primaryKey: true,
@@ -14,11 +14,10 @@ const OrganizationType = db.define('OrganizationType', {
     },
     description: {
         type: DataTypes.STRING,
-        allowNull: true,
+        allowNull: true
     },
-},
-   )
+})
 
-//   OrganizationType.sync({force: true})
-   
-module.exports = OrganizationType
+// Specie.sync({ force: true })
+
+module.exports = Specie

@@ -47,6 +47,6 @@ const Order = db.define('Order', {
 },
    )
 
-   Order.sync({alter: true})
+//    Order.sync({force: true})
    
 module.exports = Order

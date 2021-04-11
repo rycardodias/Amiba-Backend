@@ -27,6 +27,6 @@ const Recipe = db.define('Recipe', {
 },
    )
 
-   Recipe.sync({alter: true})
+//   Recipe.sync({alter: true})
    
 module.exports = Recipe

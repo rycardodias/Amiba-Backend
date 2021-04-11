@@ -2,7 +2,7 @@ const express = require('express')
 const router = express.Router()
 const db = require('../config/database')
 
-const Model = require('../models/Order')
+const Model = require('../models/Animal')
 
 router.get('/', (req, res) => {
     Model.findAll()
@@ -17,18 +17,18 @@ router.get('/id', (req, res) => {
 })
 
 router.post('/create', (req, res) => {
-    const { user, total, totalVAT, adress, locale, zipcode, observation, fiscalNumber } = req.body
+    const { animalCode, exploration, race, gender, birthDate, weight, slaughterDate, slaughterWeight, slaughterLocal } = req.body
 
     Model.create({
-        user: user,
-        total: total,
-        totalVAT: totalVAT,
-        adress: adress,
-        locale: locale,
-        zipcode: zipcode,
-        observation: observation,
-        fiscalNumber: fiscalNumber
-
+        animalCode: animalCode,
+        exploration: exploration,
+        race: race,
+        gender: gender,
+        birthDate: birthDate,
+        weight: weight,
+        slaughterDate: slaughterDate,
+        slaughterWeight: slaughterWeight,
+        slaughterLocal: slaughterLocal
     })
         .then(status => res.send(status))
         .catch(err => res.send(err))
@@ -36,21 +36,22 @@ router.post('/create', (req, res) => {
 
 
 router.put('/update', (req, res) => {
-    const { id, user, total, totalVAT, adress, locale, zipcode, observation, fiscalNumber } = req.body
+    const { id, animalCode, exploration, race, gender, birthDate, weight, slaughterDate, slaughterWeight, slaughterLocal } = req.body
 
     if (id == undefined || id == "") {
         res.send("Error! An id must be provided!")
     }
 
     const data = {
-        user: user,
-        total: total,
-        totalVAT: totalVAT,
-        adress: adress,
-        locale: locale,
-        zipcode: zipcode,
-        observation: observation,
-        fiscalNumber: fiscalNumber
+        animalCode: animalCode,
+        exploration: exploration,
+        race: race,
+        gender: gender,
+        birthDate: birthDate,
+        weight: weight,
+        slaughterDate: slaughterDate,
+        slaughterWeight: slaughterWeight,
+        slaughterLocal: slaughterLocal
     }
 
     Model.update(data,

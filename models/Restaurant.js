@@ -34,6 +34,6 @@ const Restaurant = db.define('Restaurant', {
     },
 },
    )
-   Restaurant.sync({alter: true})
+//    Restaurant.sync({force: true})
    
 module.exports = Restaurant

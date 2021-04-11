@@ -19,6 +19,6 @@ const ExplorationType = db.define('ExplorationType', {
 },
    )
 
-   ExplorationType.sync({alter: true})
+//    ExplorationType.sync({force: true})
    
 module.exports = ExplorationType

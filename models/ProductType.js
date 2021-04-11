@@ -19,6 +19,6 @@ const ProductType = db.define('ProductType', {
 },
    )
 
-   ProductType.sync({alter: true})
+//   ProductType.sync({force: true})
    
 module.exports = ProductType

@@ -41,6 +41,6 @@ const Photo = db.define('Photo', {
 },
    )
 
-   Photo.sync({alter: true})
+  //Photo.sync({alter: true})
    
 module.exports = Photo

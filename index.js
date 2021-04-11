@@ -31,6 +31,14 @@ app.use('/explorations', require('./routes/explorations'))
 app.use('/certifications', require('./routes/certifications'))
 app.use('/taxes', require('./routes/taxes'))
 app.use('/productTypes', require('./routes/productTypes'))
+app.use('/products', require('./routes/products'))
+app.use('/orderLines', require('./routes/orderLines'))
+app.use('/species', require('./routes/species'))
+app.use('/races', require('./routes/races'))
+app.use('/eggsBatchs', require('./routes/eggsBatchs'))
+app.use('/explorationEggs', require('./routes/explorationEggs'))
+app.use('/animals', require('./routes/animals'))
+app.use('/animalProducts', require('./routes/animalProducts'))
 
 
 const PORT = process.env.PORT || 5000;

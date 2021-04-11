@@ -27,6 +27,6 @@ const MenuItem = db.define('MenuItem', {
 },
    )
 
-   MenuItem.sync({alter: true})
+//    MenuItem.sync({alter: true})
    
 module.exports = MenuItem

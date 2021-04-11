@@ -2,6 +2,8 @@ const { DataTypes, Sequelize } = require('sequelize');
 const db = require('../config/database');
 const ProductType = require('./ProductType');
 const Taxes = require('./Taxes');
+const Animal = require('./Animal');
+const EggsBatch = require('./EggsBatch');
 
 const Product = db.define('Product', {
     id: {
@@ -40,15 +42,23 @@ const Product = db.define('Product', {
     animal: {
         type: DataTypes.UUID,
         allowNull: true,
+        references: {
+            model: Animal,
+            key: 'id'
+        }
     },
     eggsBatch: {
         type: DataTypes.UUID,
         allowNull: true,
+        references: {
+            model: EggsBatch,
+            key: 'id'
+        }
     },
 
 },
    )
 
-   Product.sync({alter: true})
+//   Product.sync({alter: true})
    
 module.exports = Product

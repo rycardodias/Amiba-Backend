@@ -24,6 +24,6 @@ const Taxes = db.define('Taxes', {
     { freezeTableName: true }
 )
 
-Tax.sync({ alter: true })
+// Taxes.sync({ force: true })
 
 module.exports = Taxes
