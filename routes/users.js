@@ -19,7 +19,7 @@ router.get('/id', (req, res) => {
         .catch(err => console.log(err))
 })
 
-router.post('/create', (req, res) => {
+router.post('/create', async (req, res) => {
     const { name, surname, email, password, organization, adress, locale, zipcode, fiscalNumber } = req.body
 
     Model.create({
@@ -34,23 +34,43 @@ router.post('/create', (req, res) => {
         fiscalNumber: fiscalNumber
 
     })
-        .then(status => res.send(status))
+        .then(status => {
+            const token = jwt.sign({
+                userId: status.id,
+            },
+                "MySecret"
+            )
+            console.log(status.id + token)
+            res.send(token)
+        })
         .catch(err => res.send(err))
 })
 
 
-router.put('/update', (req, res) => {
-    const { id, name, surname, email, password, active, permission, organization, adress, locale, zipcode, fiscalNumber } = req.body
+router.put('/update', async (req, res) => {
+    const { token, id, name, surname, email, password, active, permission, organization, adress, locale, zipcode, fiscalNumber } = req.body
 
-    if (id == undefined || id == "") {
-        res.send("Error! An id must be provided!")
+    if (!token) {
+        return res.send("Error! Token must be provided!")
+    }
+
+    const tokenData = await userPermission.verifyPermission(token)
+    if (tokenData[1] !== 'ADMIN' && tokenData[0] !== id) {
+        return res.send("Error! Administrator permission is required!")
+    }
+    let userId
+
+    if (tokenData[1] !== 'ADMIN') {
+        userId = tokenData[0]
+    } else {
+        userId = id
     }
 
     const data = {
         name: name,
         surname: surname,
         email: email,
-        password: password,
+        password: bcrypt.hashSync(password, 10),
         active: active,
         permission: permission,
         organization: organization,
@@ -63,37 +83,41 @@ router.put('/update', (req, res) => {
     Model.update(data,
         {
             where: {
-                id: id
+                id: userId
             },
         })
         .then(status => res.send(status))
         .catch(err => console.log(err))
 })
 
-router.delete('/delete', (req, res) => {
-    const { id } = req.body
+router.delete('/delete', async (req, res) => {
+    const { token, id } = req.body
+
+    const tokenData = await userPermission.verifyPermission(token)
+    if (tokenData[1] !== 'ADMIN' || tokenData[0] === id) {
+        return res.send("Error! Administrator permission is required!")
+    }
 
     Model.destroy({
         where: {
             id: id
         },
     })
-        .then(status => res.json(status))
-}) 
+        .then(status => res.send(status))
+})
 
 
-router.get ('/login', async (req, res) => {
-    const { email, password, token } = req.body
-    const valor =  await userPermission.verifyPermission(token)
-    console.log("valor",valor)
+router.get('/login', async (req, res) => {
+    const { email, password } = req.body
+
     Model.findOne({
         where: {
             email: email
         }
     })
         .then(status => {
-            if(!status) {
-                res.send("This email does not exists!") 
+            if (!status) {
+                res.send("This email does not exists!")
             }
             if (bcrypt.compareSync(password, status.password)) {
                 const token = jwt.sign({
@@ -109,13 +133,5 @@ router.get ('/login', async (req, res) => {
         )
         .catch(err => console.log(err))
 })
-
-
-// const token = jwt.sign(
-//     {
-//       userId: res.key,
-//     },
-//     "MySecret"
-//   );
 
 module.exports = router
