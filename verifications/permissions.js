@@ -1,0 +1,3 @@
+exports.permissions = ['ADMIN', 'USER']
+
+

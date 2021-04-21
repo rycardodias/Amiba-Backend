@@ -30,6 +30,6 @@ const AnimalProduct = db.define('AnimalProduct', {
     }
 },
    )
-   AnimalProduct.sync({alter: true})
+//    AnimalProduct.sync({alter: true})
    
 module.exports = AnimalProduct

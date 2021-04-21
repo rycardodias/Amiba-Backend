@@ -37,7 +37,11 @@ const User = db.define('User', {
         defaultValue: 1,
         allowNull: false,
     },
-
+    permission: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        defaultValue: 'USER',
+    },
     organization: {
         type:DataTypes.UUID,
         allowNull: true,
