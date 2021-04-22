@@ -9,14 +9,14 @@ const Model = require('../models/User')
 
 router.get('/', (req, res) => {
     Model.findAll()
-        .then(status => res.send(status))
-        .catch(err => console.log(err))
+        .then(status => res.json(status))
+        .catch(err => res.json(err))
 })
 
 router.get('/id', (req, res) => {
     Model.findByPk(req.headers.id)
-        .then(status => res.send(status))
-        .catch(err => console.log(err))
+        .then(status => res.json(status))
+        .catch(err => res.json(err))
 })
 
 router.post('/create', async (req, res) => {
@@ -35,15 +35,10 @@ router.post('/create', async (req, res) => {
 
     })
         .then(status => {
-            const token = jwt.sign({
-                userId: status.id,
-            },
-                "MySecret"
-            )
-            console.log(status.id + token)
-            res.send(token)
+            const token = jwt.sign({ id: status.id, }, "MySecret")
+            res.json(token)
         })
-        .catch(err => res.send(err))
+        .catch(err => res.json(err))
 })
 
 
@@ -51,29 +46,24 @@ router.put('/update', async (req, res) => {
     const { token, id, name, surname, email, password, active, permission, organization, adress, locale, zipcode, fiscalNumber } = req.body
 
     if (!token) {
-        return res.send("Error! Token must be provided!")
+        return res.json({ error: "Token must be provided!" })
     }
 
     const tokenData = await userPermission.verifyPermission(token)
     if (tokenData[1] !== 'ADMIN' && tokenData[0] !== id) {
-        return res.send("Error! Administrator permission is required!")
+        return res.json({ error: "Administrator permission is required!" })
     }
-    let userId
 
-    if (tokenData[1] !== 'ADMIN') {
-        userId = tokenData[0]
-    } else {
-        userId = id
-    }
+    tokenData[1] === 'ADMIN' ? userId = id : userId = tokenData[0]
 
     const data = {
         name: name,
         surname: surname,
         email: email,
-        password: bcrypt.hashSync(password, 10),
-        active: active,
-        permission: permission,
-        organization: organization,
+        password: password ? bcrypt.hashSync(password, 10) : undefined,
+        active: tokenData[1] === 'ADMIN' ? active : undefined,
+        permission: tokenData[1] === 'ADMIN' ? permission : undefined,
+        organization: tokenData[1] === 'ADMIN' ? organization : undefined,
         adress: adress,
         locale: locale,
         zipcode: zipcode,
@@ -86,24 +76,32 @@ router.put('/update', async (req, res) => {
                 id: userId
             },
         })
-        .then(status => res.send(status))
-        .catch(err => console.log(err))
+        .then(status => {
+            status == 1
+                ? res.json({ sucess: "User updated sucessfuly" })
+                : res.json({ error: "The user can not be updated!" })
+        })
+        .catch(err => res.json(err))
 })
 
 router.delete('/delete', async (req, res) => {
     const { token, id } = req.body
 
     const tokenData = await userPermission.verifyPermission(token)
-    if (tokenData[1] !== 'ADMIN' || tokenData[0] === id) {
-        return res.send("Error! Administrator permission is required!")
+    if (tokenData[1] !== 'ADMIN') {
+        return res.json({ error: "Administrator permission is required!" })
     }
-
     Model.destroy({
         where: {
             id: id
         },
     })
-        .then(status => res.send(status))
+        .then(status => {
+            status == 1
+                ? res.json({ sucess: "User deleted sucessfuly" })
+                : res.json({ error: "The user does not exists!" })
+        })
+        .catch(err => res.json(err))
 })
 
 
@@ -117,21 +115,18 @@ router.get('/login', async (req, res) => {
     })
         .then(status => {
             if (!status) {
-                res.send("This email does not exists!")
+                 return res.json({ error: "Invalid email or password!" })
             }
+        
             if (bcrypt.compareSync(password, status.password)) {
-                const token = jwt.sign({
-                    userId: status.id,
-                },
-                    "MySecret"
-                );
-                res.send(token)
+                const token = jwt.sign({ id: status.id, }, "MySecret");
+                return res.json(token)
             } else {
-                res.send("Invalid email or password!")
+                return res.json({ error: "Invalid email or password!" })
             }
         }
         )
-        .catch(err => console.log(err))
+        .catch(err => res.json(err))
 })
 
 module.exports = router

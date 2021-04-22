@@ -5,19 +5,15 @@ const { permissions } = require('./permissions')
 // exports.convertToId = async function (token) {
 //     let idToken = ''
 //     try {
-//         idToken = jwt.verify(token, "MySecret").userId
+//         idToken = jwt.verify(token, "MySecret").id
 //     } catch {
 //         return ('The token is invalid!')
 //     }
 //     return idToken
 // }
- 
+
 exports.convertToToken = async function (id) {
-    const token = jwt.sign({
-        userId: id,
-    },
-        "MySecret"
-    )
+    const token = jwt.sign({ id: id }, "MySecret")
     return token
 }
 
@@ -25,7 +21,7 @@ exports.convertToToken = async function (id) {
 exports.verifyPermission = async function (token) {
     let idToken = ''
     try {
-        idToken = jwt.verify(token, "MySecret").userId
+        idToken = jwt.verify(token, "MySecret").id
     } catch {
         return ('The token is invalid!')
     }
@@ -42,6 +38,6 @@ exports.verifyPermission = async function (token) {
 
     }
     ).catch(err => { return err })
-    
+
     return result
 }
