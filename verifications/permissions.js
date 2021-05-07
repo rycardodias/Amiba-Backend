@@ -1,3 +1,3 @@
-exports.permissions = ['ADMIN', 'USER']
+exports.permissions = ['ADMIN', 'AMIBA', 'VET', 'CALIBRATOR', 'PRODUCTOR', 'RETAILER', 'RESTAURANT', 'CLIENT']
 
 
