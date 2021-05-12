@@ -9,14 +9,14 @@ const Model = require('../models/User')
 
 router.get('/', (req, res) => {
     Model.findAll()
-        .then(status => res.json(status))
-        .catch(err => res.json(err))
+        .then(status => res.json({data: status}))
+        .catch(err => res.json({error: err}))
 })
 
 router.get('/id', (req, res) => {
     Model.findByPk(req.headers.id)
-        .then(status => res.json(status))
-        .catch(err => res.json(err))
+        .then(status => res.json({data: status}))
+        .catch(err => res.json({error: err}))
 })
 
 router.post('/create', async (req, res) => {
@@ -36,9 +36,9 @@ router.post('/create', async (req, res) => {
     })
         .then(status => {
             const token = jwt.sign({ id: status.id, }, "MySecret")
-            res.json(token)
+            res.json({data: token})
         })
-        .catch(err => res.json(err))
+        .catch(err => res.json({error: err}))
 })
 
 
@@ -78,10 +78,10 @@ router.put('/update', async (req, res) => {
         })
         .then(status => {
             status == 1
-                ? res.json({ sucess: "User updated sucessfuly" })
+                ? res.json({ data: "User updated sucessfuly" })
                 : res.json({ error: "The user can not be updated!" })
         })
-        .catch(err => res.json(err))
+        .catch(err => res.json({error: err}))
 })
 
 router.delete('/delete', async (req, res) => {
@@ -98,14 +98,14 @@ router.delete('/delete', async (req, res) => {
     })
         .then(status => {
             status == 1
-                ? res.json({ sucess: "User deleted sucessfuly" })
+                ? res.json({ data: "User deleted sucessfuly" })
                 : res.json({ error: "The user does not exists!" })
         })
-        .catch(err => res.json(err))
+        .catch(err => res.json({error: err}))
 })
 
 
-router.get('/login', async (req, res) => {
+router.post('/login', async (req, res) => {
     const { email, password } = req.body
 
     Model.findOne({
@@ -120,13 +120,21 @@ router.get('/login', async (req, res) => {
         
             if (bcrypt.compareSync(password, status.password)) {
                 const token = jwt.sign({ id: status.id, }, "MySecret");
-                return res.json(token)
+                return res.json({data: token})
             } else {
                 return res.json({ error: "Invalid email or password!" })
             }
         }
         )
-        .catch(err => res.json(err))
+        .catch(err => res.json({error: err}))
+})
+
+router.post('/me', async (req, res) => {
+    const userID = jwt.verify(req.body.token, "MySecret");
+    console.log(userID)
+    Model.findByPk(userID.id)
+        .then(status => res.json({data: status}))
+        .catch(err => res.json({error: err}))
 })
 
 module.exports = router

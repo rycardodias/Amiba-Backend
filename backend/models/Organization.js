@@ -50,5 +50,5 @@ const Organization = db.define('Organization', {
 },
    )
 //    Organization.sync({force: true})
-   
+
 module.exports = Organization

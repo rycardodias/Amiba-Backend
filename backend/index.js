@@ -2,7 +2,7 @@ const express = require('express')
 const exphbs = require('express-handlebars')
 const bodyParser = require('body-parser')
 const path = require('path')
-
+const cors = require("cors");
 //Database
 const db = require('./config/database')
 
@@ -14,6 +14,12 @@ const db = require('./config/database')
 const app = express();
 
 app.use(express.json());
+app.use(
+    cors({
+      origin: "http://localhost:3000",
+      optionsSuccessStatus: 200,
+    })
+  );
 
 app.get('/', (req, res) => res.send('INDEX'));
 
