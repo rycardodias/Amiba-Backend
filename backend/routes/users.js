@@ -13,8 +13,8 @@ router.get('/', (req, res) => {
         .catch(err => res.json({error: err}))
 })
 
-router.get('/id', (req, res) => {
-    Model.findByPk(req.headers.id)
+router.get('/id/:id', (req, res) => {
+    Model.findByPk(req.params.id)
         .then(status => res.json({data: status}))
         .catch(err => res.json({error: err}))
 })
@@ -130,8 +130,17 @@ router.post('/login', async (req, res) => {
 })
 
 router.post('/me', async (req, res) => {
-    const userID = jwt.verify(req.body.token, "MySecret");
-    console.log(userID)
+if(!req.body.token){
+    return res.json({ error: "No Token" })
+}
+let userID;
+try {
+     userID = jwt.verify(req.body.token, "MySecret");
+  
+} catch (error) {
+    return res.json({ error: error })
+}
+
     Model.findByPk(userID.id)
         .then(status => res.json({data: status}))
         .catch(err => res.json({error: err}))

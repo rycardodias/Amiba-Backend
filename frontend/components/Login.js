@@ -4,7 +4,6 @@ import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
 import Nav from 'react-bootstrap/Nav'
 import { login } from './lib/requests'
-import Cookies from 'js-cookie';
 
 export default class Login extends Component {
     constructor(props) {
@@ -17,8 +16,10 @@ export default class Login extends Component {
             email: ""
         };
     }
+    
     changeShow = () => {
         this.setState({ ...this.state, show: !this.state.show })
+        this.setState({ showWrongData: false })
     }
     saveToState = (e) => {
         this.setState({ [e.target.name]: e.target.value });
@@ -26,20 +27,14 @@ export default class Login extends Component {
 
     getData = async () => {
         const user = await login(this.state.email, this.state.password);
-        // console.log(this.state, user)
-
+        
         if (user.data.data) {
-            Cookies.set('token', user.data.data, {
-                path: '',
-                expires: 1000 * 60 * 60 * 24 * 365, // 1 year cookie
-            })
             this.changeShow()
-            this.props.handleLogin()
+            // this.props.handleLogin()
+            this.props.refetch();
         } else {
             this.setState({ showWrongData: true })
         }
-
-
     };
 
     render() {
