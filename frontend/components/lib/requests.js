@@ -35,9 +35,16 @@ const login = async (email, password) => {
   return response;
 };
 
+
 const logout = () => {
   Cookies.set('token', '');
 };
+
+const getCoockies = () => {
+  const token= Cookies.get('token')
+  console.log(token)
+  return token
+}
 
 const getUserByToken = async () => {
   const token = Cookies.get('token');
@@ -58,4 +65,4 @@ const getUserByToken = async () => {
   return res;
 };
 
-export { sendRequest, login, logout, getUserByToken }
+export { sendRequest, login, logout, getUserByToken, getCoockies}

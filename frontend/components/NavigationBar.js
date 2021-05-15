@@ -8,19 +8,6 @@ import { logout } from './lib/requests'
 import Signout from './Signout'
 
 export default class NavigationBar extends Component {
-    // constructor(props) {
-    //     super(props)
-
-    //     this.state = {
-    //         isLoggedIn: false
-    //     }
-    // }
-
-    // handleLogin = () => {
-    //     this.setState({ isLoggedIn: !this.state.isLoggedIn })
-    //     this.props.handleLogin()
-    // }
-
     render() {
         return (
             <>
@@ -37,26 +24,25 @@ export default class NavigationBar extends Component {
                             <Me>
                                 {(items, isLoaded, fetch) => {
                                     if (!isLoaded) {
-                                        return <p>Loading...</p>
+                                        return <p></p>
                                     }
                                     if (items.error) {
-                                        return <Login /*handleLogin={this.handleLogin}*/ refetch={fetch} />
+                                        return <Login refetch={fetch} />
                                     }
 
 
-                                    if ( items.data.id) {
+                                    if (items.data.id) {
                                         return (<>
                                             {/* <Signout refetch={fetch} /> */}
                                             <Nav.Link href="/perfil" passHref>Perfil</Nav.Link>
                                             <Nav.Link href="/backoffice" passHref>Backoffice</Nav.Link>
                                             <Nav.Link onClick={() => {
-                                                // this.props.handleLogout()
                                                 logout()
                                                 fetch()
                                             }}>Sair</Nav.Link>
                                         </>)
                                     }
-                                    return <p></p>
+                                    return <></>
 
                                 } }
                             </Me>

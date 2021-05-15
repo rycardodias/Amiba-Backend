@@ -30,7 +30,6 @@ export default class Login extends Component {
         
         if (user.data.data) {
             this.changeShow()
-            // this.props.handleLogin()
             this.props.refetch();
         } else {
             this.setState({ showWrongData: true })

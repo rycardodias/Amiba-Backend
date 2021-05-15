@@ -31,9 +31,9 @@ router.post('/create', (req, res) => {
 
 router.put('/update', (req, res) => {
     const { id, VATcode, percentage, description } = req.body
-
+    
     if (id == undefined || id == "") {
-        res.send("Error! An id must be provided!")
+        res.json({error: "Error! An id must be provided!"})
     }
 
     const data = {
@@ -48,7 +48,11 @@ router.put('/update', (req, res) => {
                 id: id
             },
         })
-        .then(status => res.send(status))
+        .then(status => {
+            status == 1
+                ? res.json({ data: "Tax updated sucessfuly" })
+                : res.json({ error: "The taxes can not be updated!" })
+        })
         .catch(err => console.log(err))
 })
 

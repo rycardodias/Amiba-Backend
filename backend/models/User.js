@@ -58,7 +58,7 @@ const User = db.define('User', {
             key: 'id',
         }
     },
-    adress: {
+    address: {
         type: DataTypes.STRING,
         allowNull: true,
     },
@@ -78,6 +78,6 @@ const User = db.define('User', {
 },
    // { freezeTableName: true }
    )
-//    User.sync({force: true})
+//    User.sync({alter: true})
    
 module.exports = User
