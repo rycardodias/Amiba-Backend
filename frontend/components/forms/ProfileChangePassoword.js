@@ -58,10 +58,12 @@ export default class ProfileChangePassoword extends React.Component {
                                 <InputGroup.Text id="oldPassword" style={{ width: '14rem' }}>Palavra-passe Antiga</InputGroup.Text>
                                 <Form.Control name="oldPassword" onChange={this.saveToState} />
                             </InputGroup>
+
                             <InputGroup className="mb-3">
                                 <InputGroup.Text id="newPassword" style={{ width: '14rem' }}>Nova Palavra-passe</InputGroup.Text>
                                 <Form.Control name="newPassword" onChange={this.saveToState} />
                             </InputGroup>
+
                             <InputGroup className="mb-3">
                                 <InputGroup.Text id="newPassword2" style={{ width: '14rem' }}>Repetir Nova Palavra-passe</InputGroup.Text>
                                 <Form.Control name="newPassword2" onChange={this.saveToState} />
@@ -70,8 +72,10 @@ export default class ProfileChangePassoword extends React.Component {
                         </Col>
                         <Col>
 
-
                         </Col>
+
+
+
                     </Row>
 
                 </Container>

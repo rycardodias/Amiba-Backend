@@ -32,21 +32,17 @@ export default class ProfileAddress extends React.Component {
 
 
     updateUser = async () => {
-        if (this.state.address != "" && this.state.locale != "" && this.state.zipcode != "") {
+        if (this.state.address !== "" && this.state.locale !== "" && this.state.zipcode !== "") {
             return await updateAddress(this.state.id, Cookies.get('token'),
                 this.state.address, this.state.locale, this.state.zipcode)
         }
+
     };
 
     saveToState = (e) => {
         this.setState({ [e.target.name]: e.target.value });
-        // if ((this.state.address != "" || this.state.address == undefined) && this.state.locale != "" && this.state.zipcode != "") {
-        //     this.setState({ isButtonDisabled: false }) //mostra o botao
-        // } else {
-        //     this.setState({ isButtonDisabled: true })
-        // }
+        
     };
-
 
 
     render() {
@@ -56,6 +52,7 @@ export default class ProfileAddress extends React.Component {
                 <Container>
                     <Row>
                         <Col>
+                        {this.state.address===undefined ? 'undf' :this.state.address}
                             <InputGroup className="mb-3">
                                 <InputGroup.Text id="name" style={{ width: '8rem' }}>Nome</InputGroup.Text>
                                 <Form.Control name="name" disabled={true} defaultValue={name + ' ' + surname} />
