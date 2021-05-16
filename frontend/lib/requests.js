@@ -23,29 +23,6 @@ const sendRequest = async (metodh, url, params) => {
   return response;
 };
 
-const login = async (email, password) => {
-  const response = await sendRequest('POST', 'users/login', { email, password });
-  if (response.data.data) {
-    Cookies.set('token', response.data.data, {
-      path: '',
-      expires: 1000 * 24 * 365 * 60 * 60, // 1 year cookie
-    });
-  }
-  //
-  return response;
-};
-
-
-const logout = () => {
-  Cookies.set('token', '');
-};
-
-const getCoockies = () => {
-  const token= Cookies.get('token')
-  console.log(token)
-  return token
-}
-
 const getUserByToken = async () => {
   const token = Cookies.get('token');
   const id = { token };
@@ -65,4 +42,4 @@ const getUserByToken = async () => {
   return res;
 };
 
-export { sendRequest, login, logout, getUserByToken, getCoockies}
+export { sendRequest, getUserByToken}

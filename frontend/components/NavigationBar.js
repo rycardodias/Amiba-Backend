@@ -4,8 +4,7 @@ import Nav from 'react-bootstrap/Nav'
 import Link from 'next/link'
 import Login from './Login'
 import Me from './Me';
-import { logout } from './lib/requests'
-import Signout from './Signout'
+import { logout } from '../lib/users/userRequests'
 
 export default class NavigationBar extends Component {
     render() {
@@ -17,10 +16,9 @@ export default class NavigationBar extends Component {
                     <Navbar.Toggle aria-controls="responsive-navbar-nav" />
                     <Navbar.Collapse id="responsive-navbar-nav">
                         <Nav className="mr-auto">
-                            <Link href="/associacao" passHref><Nav.Link>A Associação</Nav.Link></Link>
-                            <Link href="/eventos" passHref><Nav.Link >Eventos/Noticias</Nav.Link></Link>
-                            <Link href="/contactos" passHref><Nav.Link >Contactos</Nav.Link></Link>
-
+                            <Link href="/association" passHref><Nav.Link>A Associação</Nav.Link></Link>
+                            <Link href="/events" passHref><Nav.Link >Eventos/Noticias</Nav.Link></Link>
+                            <Link href="/contacts" passHref><Nav.Link >Contactos</Nav.Link></Link>
                             <Me>
                                 {(items, isLoaded, fetch) => {
                                     if (!isLoaded) {
@@ -29,29 +27,21 @@ export default class NavigationBar extends Component {
                                     if (items.error) {
                                         return <Login refetch={fetch} />
                                     }
-
-
                                     if (items.data.id) {
-                                        return (<>
-                                            {/* <Signout refetch={fetch} /> */}
-                                            <Nav.Link href="/perfil" passHref>Perfil</Nav.Link>
-                                            <Nav.Link href="/backoffice" passHref>Backoffice</Nav.Link>
+                                        return (
+                                            <>
+                                            <Link href="/profile" passHref><Nav.Link>Perfil</Nav.Link></Link>
+                                            <Link href="/backoffice" passHref><Nav.Link>Backoffice</Nav.Link></Link>
                                             <Nav.Link onClick={() => {
                                                 logout()
                                                 fetch()
-                                            }}>Sair</Nav.Link>
+                                            }}>Sair</Nav.Link> 
                                         </>)
                                     }
-                                    return <></>
+                                    // return <></>
 
                                 } }
                             </Me>
-
-                            {/* {this.props.isLoggedIn
-                                ? <Nav.Link onClick={() => {this.props.handleLogout() 
-                                    logout()}}>Sair</Nav.Link>
-                                : <Login handleLogin={this.handleLogin} />
-                            } */}
                         </Nav>
                     </Navbar.Collapse>
                 </Navbar>

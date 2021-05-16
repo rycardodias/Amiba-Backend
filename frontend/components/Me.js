@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { getUserByToken } from './lib/requests';
+import { getUserByToken } from '../lib/requests';
 
 class Me extends React.Component {
   constructor(props) {
