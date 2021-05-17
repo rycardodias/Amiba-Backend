@@ -6,31 +6,46 @@ import Col from 'react-bootstrap/Col'
 import InputGroup from 'react-bootstrap/InputGroup'
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
-import { updatePassword } from '../../lib/users/userRequests'
-import Cookies from 'js-cookie'
+import { getOrganizationTypes, createOrganization } from '../../lib/organizations/organizationsRequests'
 
 export default class OrganizationsCreateForm extends React.Component {
     constructor(props) {
         super(props)
 
         this.state = {
-            isButtonDisabled: false
+            type: undefined,
+            name: undefined,
+            adress: undefined,
+            locale: undefined,
+            zipcode: undefined,
+            telephone: undefined,
+            mobilePhone: undefined,
+            fiscalNumber: undefined,
+            isButtonDisabled: false,
+            types: []
         }
+
     }
 
     componentDidMount() {
-        // const actualPassword = await getPassword()
-        this.setState({
-            id: this.props.id,
-            // actualPassword: actualPassword
-        })
-
+        this.getTypes()
     }
 
-    changePassword = async () => {
-        if (this.state.newPassword == this.state.newPassword2) {
-            return await updatePassword(this.state.id, Cookies.get('token'), this.state.newPassword)
-        }
+    getTypes = async () => {
+        const organizationTypes = await getOrganizationTypes()
+        this.setState({
+            types: organizationTypes.data,
+            type: organizationTypes.data[0].id ? organizationTypes.data[0].id : undefined,
+        })
+    }
+
+    createOrganization = async () => {
+        const { type, name, adress, locale, zipcode, telephone, mobilePhone, fiscalNumber } = this.state
+        const res = await createOrganization(type, name, adress, locale, zipcode, telephone, mobilePhone, fiscalNumber)
+        // if(res.data.error) {
+        //     alert(res.data.error)
+        // }
+        console.log(res.data)
     };
 
     saveToState = (e) => {
@@ -45,53 +60,86 @@ export default class OrganizationsCreateForm extends React.Component {
                     <Row>
                         <Col>
                             <InputGroup className="mb-3">
-                                <InputGroup.Text id="type" style={{ width: '14rem' }}>Tipo</InputGroup.Text>
-                                <Form.Control name="type" onChange={this.saveToState} />
-                            </InputGroup>
-
-                            <InputGroup className="mb-3">
-                                <InputGroup.Text id="name" style={{ width: '14rem' }}>Nome</InputGroup.Text>
+                                <InputGroup.Text id="name" >Nome</InputGroup.Text>
                                 <Form.Control name="name" onChange={this.saveToState} />
                             </InputGroup>
-
-                            <InputGroup className="mb-3">
-                                <InputGroup.Text id="adress" style={{ width: '14rem' }}>Morada</InputGroup.Text>
-                                <Form.Control name="adress" onChange={this.saveToState} />
-                            </InputGroup>
-
-                            <InputGroup className="mb-3">
-                                <InputGroup.Text id="locale" style={{ width: '14rem' }}>Localidade</InputGroup.Text>
-                                <Form.Control name="locale" onChange={this.saveToState} />
-                            </InputGroup>
-                            <InputGroup className="mb-3">
-                                <InputGroup.Text id="zipcode" style={{ width: '14rem' }}>Código-Postal</InputGroup.Text>
-                                <Form.Control name="zipcode" onChange={this.saveToState} />
-                            </InputGroup>
-                            <InputGroup className="mb-3">
-                                <InputGroup.Text id="telephone" style={{ width: '14rem' }}>Telefone</InputGroup.Text>
-                                <Form.Control name="telephone" onChange={this.saveToState} />
-                            </InputGroup>
-                            <InputGroup className="mb-3">
-                                <InputGroup.Text id="mobilePhone" style={{ width: '14rem' }}>Telemóvel</InputGroup.Text>
-                                <Form.Control name="mobilePhone" onChange={this.saveToState} />
-                            </InputGroup>
-                            <InputGroup className="mb-3">
-                                <InputGroup.Text id="fiscalNumber" style={{ width: '14rem' }}>NIF</InputGroup.Text>
-                                <Form.Control name="fiscalNumber" onChange={this.saveToState} />
-                            </InputGroup>
-                            <Button variant="outline-success" onClick={this.changePassword} disabled={this.state.isButtonDisabled}>Alterar Palavra-Passe</Button>
                         </Col>
                         <Col>
-
+                            <InputGroup className="mb-3">
+                                <InputGroup.Text id="adress" >Morada</InputGroup.Text>
+                                <Form.Control name="adress" onChange={this.saveToState} />
+                            </InputGroup>
                         </Col>
-
-
-
                     </Row>
 
-                </Container>
+                    <Row>
+                        <Col>
+                            <Row>
+                                <Col>
+                                    <InputGroup className="mb-3">
+                                        <InputGroup.Text id="type" >Tipo</InputGroup.Text>
+                                        <Form.Control as="select" name="type" onChange={this.saveToState} >
+                                            {
+                                                
+                                                this.state.types.map((type) => {
+                                                    return (<option key={type.id} value={type.id}>{type.name}</option>)
+                                                })
+                                            }
+                                        </Form.Control>
+                                    </InputGroup>
+                                </Col>
+                                <Col>
 
-            </Card.Body>
+                                    <InputGroup className="mb-3">
+                                        <InputGroup.Text id="fiscalNumber" >NIF</InputGroup.Text>
+                                        <Form.Control name="fiscalNumber" onChange={this.saveToState} />
+                                    </InputGroup>
+                                </Col>
+                            </Row>
+                        </Col>
+
+                        <Col>
+                            <Row>
+                                <Col>
+                                    <InputGroup className="mb-3">
+                                        <InputGroup.Text id="locale" >Localidade</InputGroup.Text>
+                                        <Form.Control name="locale" onChange={this.saveToState} />
+                                    </InputGroup>
+                                </Col>
+                                <Col>
+                                    <InputGroup className="mb-3">
+                                        <InputGroup.Text id="zipcode">Código-Postal</InputGroup.Text>
+                                        <Form.Control name="zipcode" onChange={this.saveToState} />
+                                    </InputGroup>
+                                </Col>
+                            </Row>
+                        </Col>
+                    </Row>
+
+                    <Row>
+                        <Col>
+                            <Row>
+                                <Col>
+                                    <InputGroup className="mb-3">
+                                        <InputGroup.Text id="telephone" >Telefone</InputGroup.Text>
+                                        <Form.Control name="telephone" onChange={this.saveToState} />
+                                    </InputGroup>
+                                </Col>
+                                <Col>
+                                    <InputGroup className="mb-3">
+                                        <InputGroup.Text id="mobilePhone" >Telemóvel</InputGroup.Text>
+                                        <Form.Control name="mobilePhone" onChange={this.saveToState} />
+                                    </InputGroup>
+                                </Col>
+                            </Row>
+                        </Col>
+
+                        <Col>
+                            <Button variant="outline-success" onClick={this.createOrganization} disabled={this.state.isButtonDisabled}>Adicionar Organização</Button>
+                        </Col>
+                    </Row>
+                </Container >
+            </Card.Body >
         )
     }
 }

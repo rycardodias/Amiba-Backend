@@ -16,6 +16,10 @@ const Organization = db.define('Organization', {
             key: 'id'
         }
     },
+    typeDescription: {
+        type: DataTypes.STRING,
+        allowNull: false,
+    },
     name: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -48,7 +52,7 @@ const Organization = db.define('Organization', {
         unique: true
     },
 },
-   )
-//    Organization.sync({force: true})
+)
+//    Organization.sync({alter: true})
 
 module.exports = Organization

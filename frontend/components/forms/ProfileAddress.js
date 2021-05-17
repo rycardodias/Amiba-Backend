@@ -52,7 +52,6 @@ export default class ProfileAddress extends React.Component {
                 <Container>
                     <Row>
                         <Col>
-                        {this.state.address===undefined ? 'undf' :this.state.address}
                             <InputGroup className="mb-3">
                                 <InputGroup.Text id="name" style={{ width: '8rem' }}>Nome</InputGroup.Text>
                                 <Form.Control name="name" disabled={true} defaultValue={name + ' ' + surname} />

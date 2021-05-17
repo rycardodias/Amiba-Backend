@@ -10,8 +10,8 @@ router.get('/', (req, res) => {
         .catch(err => console.log(err))
 })
 
-router.get('/id', (req, res) => {
-    Model.findByPk(req.headers.id)
+router.get('/id/:id', (req, res) => {
+    Model.findByPk(req.params.id)
         .then(status => res.send(status))
         .catch(err => console.log(err))
 })

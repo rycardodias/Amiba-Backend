@@ -2,7 +2,6 @@ import React from 'react'
 import Accordion from 'react-bootstrap/Accordion'
 import Card from 'react-bootstrap/Card'
 import Me from '../components/Me'
-
 import ProfileAddress from '../components/forms/ProfileAddress'
 import ProfileChangePassoword from '../components/forms/ProfileChangePassoword'
 
