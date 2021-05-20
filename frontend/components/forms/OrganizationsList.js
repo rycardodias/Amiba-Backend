@@ -10,10 +10,6 @@ export default class OrganizationsList extends React.Component {
         }
     }
 
-    // componentDidMount() {
-    //     this.setState({ organizations: this.props.data })
-    // }
-
     render() {
         return (
             <Table responsive>

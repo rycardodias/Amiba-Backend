@@ -1,5 +1,6 @@
 import { sendRequest } from '../requests'
 import Cookies from 'js-cookie';
+import Router from 'react'
 
 const login = async (email, password) => {
     const response = await sendRequest('POST', 'users/login', { email, password });
@@ -21,7 +22,7 @@ const updateAddress = async (id, token, address, locale, zipcode) => {
 };
 
 const updatePassword = async (id, token, password) => {
-    return await sendRequest('PUT', 'users/update', { id, token, password});
+    return await sendRequest('PUT', 'users/update', { id, token, password });
 };
 
 export { login, logout, updateAddress, updatePassword }

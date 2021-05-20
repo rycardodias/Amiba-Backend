@@ -6,13 +6,13 @@ const Model = require('../models/Photo')
 
 router.get('/', (req, res) => {
     Model.findAll()
-        .then(status => res.send(status))
+        .then(status => res.json({ data: status }))
         .catch(err => console.log(err))
 })
 
-router.get('/id', (req, res) => {
-    Model.findByPk(req.headers.id)
-        .then(status => res.send(status))
+router.get('/id/:id', (req, res) => {
+    Model.findByPk(req.params.id)
+        .then(status => res.json({ data: status }))
         .catch(err => console.log(err))
 })
 
@@ -25,7 +25,7 @@ router.post('/create', (req, res) => {
         menuItem: menuItem,
         recipe: recipe
     })
-        .then(status => res.send(status))
+        .then(status => res.json({ data: status }))
         .catch(err => res.send(err))
 })
 
@@ -50,7 +50,7 @@ router.put('/update', (req, res) => {
                 id: id
             },
         })
-        .then(status => res.send(status))
+        .then(status => res.json({ data: status }))
         .catch(err => console.log(err))
 })
 
@@ -63,6 +63,7 @@ router.delete('/delete', (req, res) => {
         },
     })
         .then(status => res.json(status))
+        .catch(err => res.json({error: "Erro! Não foi possivel eliminar o registo!", err: err}))
 })
 
 module.exports = router

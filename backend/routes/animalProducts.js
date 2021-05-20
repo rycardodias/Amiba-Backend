@@ -6,13 +6,13 @@ const Model = require('../models/AnimalProduct')
 
 router.get('/', (req, res) => {
     Model.findAll()
-        .then(status => res.send(status))
+        .then(status => res.json({ data: status }))
         .catch(err => console.log(err))
 })
 
-router.get('/id', (req, res) => {
-    Model.findByPk(req.headers.id)
-        .then(status => res.send(status))
+router.get('/id/:id', (req, res) => {
+    Model.findByPk(req.params.id)
+        .then(status => res.json({ data: status }))
         .catch(err => console.log(err))
 })
 
@@ -25,7 +25,7 @@ router.post('/create', (req, res) => {
         weight: weight,
         description: description
     })
-        .then(status => res.send(status))
+        .then(status => res.json({ data: status }))
         .catch(err => res.send(err))
 })
 
@@ -34,7 +34,7 @@ router.put('/update', (req, res) => {
     const { product, animal, weight, description } = req.body
 
     if (id == undefined || id == "") {
-        res.send("Error! An id must be provided!")
+        res.send("Erro! Deve ser indicado um id!")
     }
 
     const data = {
@@ -50,7 +50,7 @@ router.put('/update', (req, res) => {
                 id: id
             },
         })
-        .then(status => res.send(status))
+        .then(status => res.json({ data: status }))
         .catch(err => console.log(err))
 })
 
@@ -62,7 +62,8 @@ router.delete('/delete', (req, res) => {
             id: id
         },
     })
-        .then(status => res.json(status))
+        .then(status => res.json({ data: status }))
+        .catch(err => res.json({error: "Erro! Não foi possivel eliminar o registo!", err: err}))
 })
 
 module.exports = router

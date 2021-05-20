@@ -40,7 +40,7 @@ router.post('/create', async (req, res) => {
         fiscalNumber: fiscalNumber
 
     })
-        .then(status => res.send(status))
+        .then(status => res.json({ data: status }))
         .catch(err => res.json({ error: "Erro! Não foi possivel criar a Organização!", err: err }))
 })
 
@@ -92,7 +92,7 @@ router.delete('/delete', (req, res) => {
         },
     })
         .then(status => res.json({ data: status }))
-        .catch(err => res.json({ error: "Erro! Não foi possivel eliminar os dados!", err: err }))
+        .catch(err => res.json({error: "Erro! Não foi possivel eliminar o registo!", err: err}))
 })
 
 module.exports = router

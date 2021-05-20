@@ -47,37 +47,9 @@ export default class Index extends Component {
                                         subtitle="Gestão de Utilizadores"
                                     />
                                 </Col>
-                                <Col sm="2">
-                                    <MenuItems
-                                        route="backoffice/explorations"
-                                        title="Explorações"
-                                        subtitle="Gestão de Explorações"
-                                    />
-                                </Col>
-                                <Col sm="2">
-                                    <MenuItems
-                                        route="backoffice/explorations"
-                                        title="Explorações"
-                                        subtitle="Gestão de Explorações"
-                                    />
-                                </Col>
-                                <Col sm="2">
-                                    <MenuItems
-                                        route="backoffice/explorations"
-                                        title="Explorações"
-                                        subtitle="Gestão de Explorações"
-                                    />
-                                </Col>
+                                
                             </Row>
-                            <Row>
-                            <Col sm="2">
-                                    <MenuItems
-                                        route="backoffice/explorations"
-                                        title="Explorações"
-                                        subtitle="Gestão de Explorações"
-                                    />
-                                </Col>
-                            </Row>
+                            
                         </Container>
                     )
                 }}

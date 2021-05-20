@@ -30,17 +30,12 @@ export default class NavigationBar extends Component {
                                     if (items.data.id) {
                                         return (
                                             <>
-                                            <Link href="/profile" passHref><Nav.Link>Perfil</Nav.Link></Link>
-                                            <Link href="/backoffice" passHref><Nav.Link>Backoffice</Nav.Link></Link>
-                                            <Nav.Link onClick={() => {
-                                                logout()
-                                                fetch()
-                                            }}>Sair</Nav.Link> 
-                                        </>)
+                                                <Link href="/profile" passHref><Nav.Link>Perfil</Nav.Link></Link>
+                                                <Link href="/backoffice" passHref><Nav.Link>Backoffice</Nav.Link></Link>
+                                                <Link href="/" passHref><Nav.Link onClick={() => { logout(); fetch(); }}>Sair</Nav.Link></Link>
+                                            </>)
                                     }
-                                    // return <></>
-
-                                } }
+                                }}
                             </Me>
                         </Nav>
                     </Navbar.Collapse>

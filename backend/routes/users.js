@@ -38,7 +38,7 @@ router.post('/create', async (req, res) => {
             const token = jwt.sign({ id: status.id, }, "MySecret")
             res.json({data: token})
         })
-        .catch(err => res.json({error: err}))
+        .catch(err => res.json({error: "Erro! Não foi possivel criar o utilizador!", err: err}))
 })
 
 
@@ -78,10 +78,10 @@ router.put('/update', async (req, res) => {
         })
         .then(status => {
             status == 1
-                ? res.json({ data: "User updated sucessfuly" })
-                : res.json({ error: "The user can not be updated!" })
+                ? res.json({ data: "Sucesso! Dados de utilizador alterados com sucesso!" })
+                : res.json({ error: "Erro! Ocurreu um erro ao atualizar os dados!" })
         })
-        .catch(err => res.json({error: err}))
+        .catch(err => res.json({error: "Erro! Ocurreu um erro ao atualizar os dados!", err: err}))
 })
 
 router.delete('/delete', async (req, res) => {
@@ -89,7 +89,7 @@ router.delete('/delete', async (req, res) => {
 
     const tokenData = await userPermission.verifyPermission(token)
     if (tokenData[1] !== 'ADMIN') {
-        return res.json({ error: "Administrator permission is required!" })
+        return res.json({ error: "Erro! Permissões de administrador necessárias!" })
     }
     Model.destroy({
         where: {
@@ -98,10 +98,10 @@ router.delete('/delete', async (req, res) => {
     })
         .then(status => {
             status == 1
-                ? res.json({ data: "User deleted sucessfuly" })
-                : res.json({ error: "The user does not exists!" })
+                ? res.json({ data: "Utilizador eliminado com sucesso!" })
+                : res.json({ error: "Erro! O utilizador não existe" })
         })
-        .catch(err => res.json({error: err}))
+        .catch(err => res.json({error: "Erro! Não foi possivel eliminar o registo!", err: err}))
 })
 
 
@@ -115,14 +115,14 @@ router.post('/login', async (req, res) => {
     })
         .then(status => {
             if (!status) {
-                 return res.json({ error: "Invalid email or password!" })
+                 return res.json({ error: "Erro! Utilizador ou password inválidos!" })
             }
         
             if (bcrypt.compareSync(password, status.password)) {
                 const token = jwt.sign({ id: status.id, }, "MySecret");
                 return res.json({data: token})
             } else {
-                return res.json({ error: "Invalid email or password!" })
+                return res.json({ error: "Erro! Utilizador ou password inválidos!" })
             }
         }
         )
@@ -131,7 +131,7 @@ router.post('/login', async (req, res) => {
 
 router.post('/me', async (req, res) => {
 if(!req.body.token){
-    return res.json({ error: "No Token" })
+    return res.json({ error: "Erro! Não tem permissões!" })
 }
 let userID;
 try {
