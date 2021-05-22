@@ -64,7 +64,7 @@ router.delete('/delete', (req, res) => {
             id: id
         },
     })
-        .then(status => res.json(status))
+        .then(status => res.json({status: status}))
         .catch(err => res.json({error: "Erro! Não foi possivel eliminar o registo!", err: err}))
 })
 
