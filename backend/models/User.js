@@ -1,4 +1,4 @@
-const { DataTypes, Sequelize } = require('sequelize');
+const { DataTypes, Sequelize, STRING } = require('sequelize');
 const db = require('../config/database');
 const Organization = require('./Organization');
 const Restaurant = require('./Restaurant');
@@ -38,9 +38,9 @@ const User = db.define('User', {
         allowNull: false,
     },
     permission: {
-        type: DataTypes.STRING,
+        type: DataTypes.ARRAY(DataTypes.STRING),
         allowNull: false,
-        defaultValue: 'USER',
+        defaultValue: ['USER'],
     },
     organization: {
         type:DataTypes.UUID,
@@ -78,6 +78,6 @@ const User = db.define('User', {
 },
    // { freezeTableName: true }
    )
-//    User.sync({alter: true})
+//    User.sync({force: true})
    
 module.exports = User

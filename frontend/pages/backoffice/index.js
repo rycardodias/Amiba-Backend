@@ -1,10 +1,6 @@
 import React, { Component } from 'react'
 import Me from '../../components/Me'
-
-import MenuItems from '../../components/backend/MenuItems'
-import Row from 'react-bootstrap/Row'
-import Col from 'react-bootstrap/Col'
-import Container from 'react-bootstrap/Container'
+import MenuContainer from '../../components/backend/MenuContainer'
 
 export default class Index extends Component {
 
@@ -24,33 +20,7 @@ export default class Index extends Component {
                     }
 
                     return (
-                        <Container fluid style={{ paddingLeft: '3%', paddingRight: '3%', paddingTop: '1.5%' }}>
-                            <Row>
-                                <Col sm="2">
-                                    <MenuItems
-                                        route="backoffice/organizations"
-                                        title="Organizações"
-                                        subtitle="Gestão de Organizações"
-                                    />
-                                </Col>
-                                <Col sm="2">
-                                    <MenuItems
-                                        route="backoffice/explorations"
-                                        title="Explorações"
-                                        subtitle="Gestão de Explorações"
-                                    />
-                                </Col>
-                                <Col sm="2">
-                                    <MenuItems
-                                        route="backoffice/users"
-                                        title="Utilizadores"
-                                        subtitle="Gestão de Utilizadores"
-                                    />
-                                </Col>
-                                
-                            </Row>
-                            
-                        </Container>
+                        <MenuContainer permissions={items.data.permission} />
                     )
                 }}
             </Me>

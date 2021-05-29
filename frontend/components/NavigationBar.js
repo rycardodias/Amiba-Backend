@@ -10,16 +10,21 @@ export default class NavigationBar extends Component {
     render() {
         return (
             <>
-                <Navbar collapseOnSelect expand="lg" bg="light" variant="light">
+                <Navbar collapseOnSelect expand="lg" bg="light" variant="light" >
                     <Navbar fixed="top" />
-                    <Link href="/" passHref><Navbar.Brand>AMIBA</Navbar.Brand></Link>
+                    <Link href="/" passHref ><Navbar.Brand style={{ marginLeft: "1rem" }}>AMIBA</Navbar.Brand></Link>
                     <Navbar.Toggle aria-controls="responsive-navbar-nav" />
                     <Navbar.Collapse id="responsive-navbar-nav">
-                        <Nav className="mr-auto">
+                        <Nav className="mr-auto" >
                             <Link href="/association" passHref><Nav.Link>A Associação</Nav.Link></Link>
                             <Link href="/events" passHref><Nav.Link >Eventos/Noticias</Nav.Link></Link>
                             <Link href="/contacts" passHref><Nav.Link >Contactos</Nav.Link></Link>
-                            <Me>
+                        </Nav>
+                    </Navbar.Collapse>
+
+                    <Navbar.Collapse id="responsive-navbar-nav" className="mr-auto justify-content-end" style={{ marginRight: "1rem" }}>
+                        <Nav className="mr-auto" >
+                            <Me  >
                                 {(items, isLoaded, fetch) => {
                                     if (!isLoaded) {
                                         return <p></p>
