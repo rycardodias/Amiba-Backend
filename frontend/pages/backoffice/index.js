@@ -1,12 +1,8 @@
 import React, { Component } from 'react'
 import Me from '../../components/Me'
-import MenuContainer from '../../components/backend/MenuContainer'
+import MenuContainer from '../../components/backoffice/MenuContainer'
 
 export default class Index extends Component {
-
-    handleChange = () => {
-
-    }
     render() {
         return (
             <Me>
@@ -18,7 +14,6 @@ export default class Index extends Component {
                     if (items.error) {
                         return <p>{items.error}</p>
                     }
-
                     return (
                         <MenuContainer permissions={items.data.permission} />
                     )

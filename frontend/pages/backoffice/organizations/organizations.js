@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import Accordion from 'react-bootstrap/Accordion'
 import Card from 'react-bootstrap/Card'
-import OrganizationsCreateForm from '../../components/forms/OrganizationsCreateForm'
-import OrganizationsList from '../../components/forms/OrganizationsList'
-import { getOrganizations } from '../../lib/organizations/organizationsRequests'
+import OrganizationsCreateForm from '../../../components/forms/OrganizationsCreateForm'
+import OrganizationsList from '../../../components/forms/OrganizationsList'
+import { getOrganizations } from '../../../lib/organizations/organizationsRequests'
 
 export default class organizations extends Component {
     constructor(props) {

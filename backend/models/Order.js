@@ -1,4 +1,4 @@
-const { DataTypes, Sequelize, DATE } = require('sequelize');
+const { DataTypes } = require('sequelize');
 const db = require('../config/database')
 const User = require('./User')
 
@@ -45,8 +45,8 @@ const Order = db.define('Order', {
         allowNull: true,
     },
 },
-   )
+)
 
-//    Order.sync({force: true})
-   
+// Order.sync({ alter: true })
+
 module.exports = Order

@@ -43,7 +43,7 @@ const User = db.define('User', {
         defaultValue: ['USER'],
     },
     organization: {
-        type:DataTypes.UUID,
+        type: DataTypes.UUID,
         allowNull: true,
         references: {
             model: Organization,
@@ -51,7 +51,7 @@ const User = db.define('User', {
         }
     },
     restaurant: {
-        type:DataTypes.UUID,
+        type: DataTypes.UUID,
         allowNull: true,
         references: {
             model: Restaurant,
@@ -76,8 +76,11 @@ const User = db.define('User', {
         unique: true
     },
 },
-   // { freezeTableName: true }
-   )
-//    User.sync({force: true})
-   
+    // { freezeTableName: true }
+)
+
+// User.sync({ alter: true })
+
+
+
 module.exports = User

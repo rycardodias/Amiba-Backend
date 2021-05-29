@@ -32,20 +32,20 @@ export default class OrganizationsCreateForm extends React.Component {
     }
 
     getTypes = async () => {
-        const organizationTypes = await getOrganizationTypes()
+        const organizationTypes = (await getOrganizationTypes()).data.data
         this.setState({
-            types: organizationTypes.data,
-            type: organizationTypes.data[0].id ? organizationTypes.data[0].id : undefined,
+            types: organizationTypes,
+            type: organizationTypes[0].id ? organizationTypes[0].id : undefined,
         })
     }
 
     createOrganization = async () => {
         const { type, name, adress, locale, zipcode, telephone, mobilePhone, fiscalNumber } = this.state
         const res = await createOrganization(type, name, adress, locale, zipcode, telephone, mobilePhone, fiscalNumber)
-        // if(res.data.error) {
-        //     alert(res.data.error)
-        // }
-        console.log(res.data)
+        if(res.data.error) {
+            alert(res.data.error)
+            console.log(res.data.err)
+        }
     };
 
     saveToState = (e) => {
