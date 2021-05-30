@@ -13,22 +13,6 @@ const Animal = db.define('Animal', {
         type: DataTypes.STRING,
         allowNull: false
     },
-    exploration: {
-        type: DataTypes.UUID,
-        allowNull: false,
-        references: {
-            model: Exploration,
-            key: 'id'
-        }
-    },
-    race: {
-        type: DataTypes.UUID,
-        allowNull: false,
-        references: {
-            model: Race,
-            key: 'id'
-        }
-    },
     gender: {
         type: DataTypes.STRING,
         allowNull: true
@@ -54,7 +38,13 @@ const Animal = db.define('Animal', {
         allowNull: true,
     }
 },
-   )
-// Animal.sync({force: true})
-   
+)
+Animal.belongsTo(Race)
+Race.hasMany(Animal)
+
+Animal.belongsTo(Exploration)
+Exploration.hasMany(Animal)
+
+// Animal.sync({alter: true})
+
 module.exports = Animal

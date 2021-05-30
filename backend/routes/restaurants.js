@@ -17,9 +17,10 @@ router.get('/id/:id', (req, res) => {
 })
 
 router.post('/create', (req, res) => {
-    const { name, description, adress, locale, zipcode, fiscalNumber } = req.body
+    const { UserId, name, description, adress, locale, zipcode, fiscalNumber } = req.body
 
     Model.create({
+        UserId: UserId,
         name: name,
         description: description,
         adress: adress,
@@ -33,19 +34,16 @@ router.post('/create', (req, res) => {
 })
 
 router.put('/update', (req, res) => {
-    const { id, name, description, adress, locale, zipcode, fiscalNumber } = req.body
+    const { id, UserId, name, description, adress, locale, zipcode, fiscalNumber } = req.body
 
     if (id == undefined || id == "") {
         res.send("Error! An id must be provided!")
     }
 
     const data = {
+        UserId: UserId,
         name: name,
-        surname: surname,
-        email: email,
-        password: password,
-        active: active,
-        organization: organization,
+        description: description,
         adress: adress,
         locale: locale,
         zipcode: zipcode,

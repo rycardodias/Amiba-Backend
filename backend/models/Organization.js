@@ -1,24 +1,13 @@
 const { DataTypes, Sequelize } = require('sequelize');
 const db = require('../config/database')
-const OrganizationType = require('./OrganizationType')
+const OrganizationType = require('./OrganizationType');
+const User = require('./User');
 
 const Organization = db.define('Organization', {
     id: {
         type: DataTypes.UUID,
         primaryKey: true,
         defaultValue: DataTypes.UUIDV4
-    },
-    type: {
-        type: DataTypes.UUID,
-        allowNull: false,
-        references: {
-            model: OrganizationType,
-            key: 'id'
-        }
-    },
-    typeDescription: {
-        type: DataTypes.STRING,
-        allowNull: false,
     },
     name: {
         type: DataTypes.STRING,
@@ -53,6 +42,12 @@ const Organization = db.define('Organization', {
     },
 },
 )
-//    Organization.sync({alter: true})
+Organization.belongsTo(OrganizationType)
+OrganizationType.hasMany(Organization)
+
+Organization.belongsTo(User)
+User.hasMany(Organization)
+
+// Organization.sync({ force: true })
 
 module.exports = Organization

@@ -1,7 +1,5 @@
 const { DataTypes, Sequelize, STRING } = require('sequelize');
 const db = require('../config/database');
-const Organization = require('./Organization');
-const Restaurant = require('./Restaurant');
 
 const User = db.define('User', {
     id: {
@@ -42,22 +40,7 @@ const User = db.define('User', {
         allowNull: false,
         defaultValue: ['USER'],
     },
-    organization: {
-        type: DataTypes.UUID,
-        allowNull: true,
-        references: {
-            model: Organization,
-            key: 'id',
-        }
-    },
-    restaurant: {
-        type: DataTypes.UUID,
-        allowNull: true,
-        references: {
-            model: Restaurant,
-            key: 'id',
-        }
-    },
+    
     address: {
         type: DataTypes.STRING,
         allowNull: true,
@@ -78,6 +61,7 @@ const User = db.define('User', {
 },
     // { freezeTableName: true }
 )
+
 
 // User.sync({ alter: true })
 

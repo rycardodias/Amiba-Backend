@@ -3,6 +3,8 @@ const router = express.Router()
 const db = require('../config/database')
 
 const Model = require('../models/Animal')
+const Race = require('../models/Race')
+const Exploration = require('../models/Exploration')
 
 router.get('/', (req, res) => {
     Model.findAll()
@@ -17,12 +19,12 @@ router.get('/id/:id', (req, res) => {
 })
 
 router.post('/create', (req, res) => {
-    const { animalCode, exploration, race, gender, birthDate, weight, slaughterDate, slaughterWeight, slaughterLocal } = req.body
+    const { animalCode, ExplorationId, RaceId, gender, birthDate, weight, slaughterDate, slaughterWeight, slaughterLocal } = req.body
 
     Model.create({
         animalCode: animalCode,
-        exploration: exploration,
-        race: race,
+        ExplorationId: ExplorationId,
+        RaceId: RaceId,
         gender: gender,
         birthDate: birthDate,
         weight: weight,
@@ -36,7 +38,7 @@ router.post('/create', (req, res) => {
 
 
 router.put('/update', (req, res) => {
-    const { id, animalCode, exploration, race, gender, birthDate, weight, slaughterDate, slaughterWeight, slaughterLocal } = req.body
+    const { id, animalCode, ExplorationId, RaceId, gender, birthDate, weight, slaughterDate, slaughterWeight, slaughterLocal } = req.body
 
     if (id == undefined || id == "") {
         res.send("Error! An id must be provided!")
@@ -44,8 +46,8 @@ router.put('/update', (req, res) => {
 
     const data = {
         animalCode: animalCode,
-        exploration: exploration,
-        race: race,
+        ExplorationId: ExplorationId,
+        RaceId: RaceId,
         gender: gender,
         birthDate: birthDate,
         weight: weight,

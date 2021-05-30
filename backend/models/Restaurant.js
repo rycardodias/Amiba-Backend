@@ -1,5 +1,6 @@
 const { DataTypes, Sequelize } = require('sequelize');
 const db = require('../config/database');
+const User = require('../models/User')
 
 const Restaurant = db.define('Restaurant', {
     id: {
@@ -33,7 +34,10 @@ const Restaurant = db.define('Restaurant', {
         unique: true
     },
 },
-   )
-//    Restaurant.sync({force: true})
-   
+)
+
+Restaurant.belongsTo(User)
+User.hasMany(Restaurant)
+// Restaurant.sync({ force: true })
+
 module.exports = Restaurant

@@ -1,11 +1,13 @@
 const express = require('express')
 const router = express.Router()
 const db = require('../config/database')
+const Certification = require('../models/Certification')
+const Animal = require('../models/Animal')
 
 const Model = require('../models/Exploration')
 
 router.get('/', (req, res) => {
-    Model.findAll()
+    Model.findAll({include: Certification})
         .then(status => res.json({ data: status }))
         .catch(err => console.log(err))
 })
@@ -17,11 +19,11 @@ router.get('/id/:id', (req, res) => {
 })
 
 router.post('/create', (req, res) => {
-    const { organization, type, name, adress, locale, zipcode, telephone, mobilePhone, fiscalNumber, gpsLocalization } = req.body
+    const { OrganizationId, ExplorationTypeId, name, adress, locale, zipcode, telephone, mobilePhone, fiscalNumber, gpsLocalization } = req.body
 
     Model.create({
-        organization: organization,
-        type: type,
+        OrganizationId: OrganizationId,
+        ExplorationTypeId: ExplorationTypeId,
         name: name,
         adress: adress,
         locale: locale,
@@ -38,15 +40,15 @@ router.post('/create', (req, res) => {
 
 
 router.put('/update', (req, res) => {
-    const { id, organization, type, name, adress, locale, zipcode, telephone, mobilePhone, fiscalNumber, gpsLocalization } = req.body
+    const { id, OrganizationId, ExplorationTypeId, name, adress, locale, zipcode, telephone, mobilePhone, fiscalNumber, gpsLocalization } = req.body
 
     if (id == undefined || id == "") {
         res.send("Error! An id must be provided!")
     }
 
     const data = {
-        organization: organization,
-        type: type,
+        OrganizationId: OrganizationId,
+        ExplorationTypeId: ExplorationTypeId,
         name: name,
         adress: adress,
         locale: locale,

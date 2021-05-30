@@ -17,10 +17,10 @@ router.get('/id/:id', (req, res) => {
 })
 
 router.post('/create', (req, res) => {
-    const { exploration, certificationCode, initialDate, finalDate, description } = req.body
+    const { ExplorationId, certificationCode, initialDate, finalDate, description } = req.body
 
     Model.create({
-        exploration: exploration,
+        ExplorationId: ExplorationId,
         certificationCode: certificationCode,
         initialDate: initialDate,
         finalDate: finalDate,
@@ -32,14 +32,14 @@ router.post('/create', (req, res) => {
 
 
 router.put('/update', (req, res) => {
-    const { id, exploration, certificationCode, initialDate, finalDate, description } = req.body
+    const { id, ExplorationId, certificationCode, initialDate, finalDate, description } = req.body
 
     if (id == undefined || id == "") {
         res.send("Error! An id must be provided!")
     }
 
     const data = {
-        exploration: exploration,
+        ExplorationId: ExplorationId,
         certificationCode: certificationCode,
         initialDate: initialDate,
         finalDate: finalDate,

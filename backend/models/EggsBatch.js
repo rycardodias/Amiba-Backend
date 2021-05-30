@@ -17,14 +17,6 @@ const EggsBatch = db.define('EggsBatch', {
             key: 'id'
         }
     },
-    race: {
-        type: DataTypes.UUID,
-        allowNull: false,
-        references: {
-            model: Race,
-            key: 'id'
-        }
-    },
     caliber: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -42,7 +34,9 @@ const EggsBatch = db.define('EggsBatch', {
         allowNull: false,
     }
 },
-   )
-//    EggsBatch.sync({force: true})
-   
+)
+EggsBatch.belongsTo(Race)
+Race.hasMany(EggsBatch)
+//    EggsBatch.sync({alter: true})
+
 module.exports = EggsBatch

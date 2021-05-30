@@ -17,10 +17,10 @@ router.get('/id/:id', (req, res) => {
 })
 
 router.post('/create', (req, res) => {
-    const { specie, name, description } = req.body
+    const { SpecieId, name, description } = req.body
 
     Model.create({
-        specie: specie,
+        SpecieId: SpecieId,
         name: name,
         description: description,
     })
@@ -29,14 +29,14 @@ router.post('/create', (req, res) => {
 })
 
 router.put('/update', (req, res) => {
-    const { id, specie, name, description } = req.body
+    const { id, SpecieId, name, description } = req.body
 
     if (id == undefined || id == "") {
         res.send("Error! An id must be provided!")
     }
 
     const data = {
-        specie: specie,
+        SpecieId: SpecieId,
         name: name,
         description: description,
     }

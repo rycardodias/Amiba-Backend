@@ -17,11 +17,11 @@ router.get('/id/:id', (req, res) => {
 })
 
 router.post('/create', (req, res) => {
-    const { order, product, quantity, total, totalVAT } = req.body
+    const { OrderId, ProductId, quantity, total, totalVAT } = req.body
 
     Model.create({
-        order: order,
-        product: product,
+        OrderId: OrderId,
+        ProductId: ProductId,
         quantity: quantity,
         total: total,
         totalVAT: totalVAT
@@ -32,15 +32,15 @@ router.post('/create', (req, res) => {
 
 
 router.put('/update', (req, res) => {
-    const { id, order, product, quantity, total, totalVAT } = req.body
+    const { id, OrderId, ProductId, quantity, total, totalVAT } = req.body
 
     if (id == undefined || id == "") {
         res.send("Error! An id must be provided!")
     }
 
     const data = {
-        order: order,
-        product: product,
+        OrderId: OrderId,
+        ProductId: ProductId,
         quantity: quantity,
         total: total,
         totalVAT: totalVAT

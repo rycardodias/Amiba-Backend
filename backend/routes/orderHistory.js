@@ -17,18 +17,19 @@ router.get('/id/:id', (req, res) => {
 })
 
 router.post('/create', (req, res) => {
-    const { id, state } = req.body
+    const { id, state, OrderId } = req.body
 
     Model.create({
         id: id,
         state: state,
+        OrderId: OrderId
     })
         .then(status => res.json({ data: status }))
         .catch(err => res.send(err))
 })
 
 router.put('/update', (req, res) => {
-    const { id, state, description } = req.body
+    const { id, state, OrderId } = req.body
 
     if (id == undefined || id == "") {
         res.send("Error! An id must be provided!")
@@ -37,6 +38,7 @@ router.put('/update', (req, res) => {
     const data = {
         id: id,
         state: state,
+        OrderId: OrderId
     }
 
     Model.update(data,

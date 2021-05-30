@@ -8,14 +8,6 @@ const Race = db.define('Race', {
         primaryKey: true,
         defaultValue: DataTypes.UUIDV4
     },
-    specie: {
-        type: DataTypes.UUID,
-        allowNull: false,
-        references: {
-            model: Specie,
-            key: 'id'
-        }
-    },
     name: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -27,6 +19,8 @@ const Race = db.define('Race', {
     },
 })
 
+Race.belongsTo(Specie)
+Specie.hasMany(Race)
 // Race.sync({ alter: true })
 
 module.exports = Race

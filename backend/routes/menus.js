@@ -2,7 +2,7 @@ const express = require('express')
 const router = express.Router()
 const db = require('../config/database')
 
-const Model = require('../models/Recipe')
+const Model = require('../models/Menu')
 
 router.get('/', (req, res) => {
     Model.findAll()
@@ -17,10 +17,10 @@ router.get('/id/:id', (req, res) => {
 })
 
 router.post('/create', (req, res) => {
-    const { restaurant, name, description } = req.body
+    const { RestaurantId, name, description } = req.body
 
     Model.create({
-        restaurant: restaurant,
+        RestaurantId: RestaurantId,
         name: name,
         description: description
     })
@@ -30,14 +30,14 @@ router.post('/create', (req, res) => {
 
 
 router.put('/update', (req, res) => {
-    const { id, restaurant, name, description } = req.body
+    const { id, RestaurantId, name, description } = req.body
 
     if (id == undefined || id == "") {
         res.send("Error! An id must be provided!")
     }
 
     const data = {
-        restaurant: restaurant,
+        RestaurantId: RestaurantId,
         name: name,
         description: description
     }

@@ -17,11 +17,11 @@ router.get('/id/:id', (req, res) => {
 })
 
 router.post('/create', (req, res) => {
-    const { calibrator, race, caliber, batchNumber, name, quantity } = req.body
+    const { calibrator, RaceId, caliber, batchNumber, name, quantity } = req.body
 
     Model.create({
         calibrator: calibrator,
-        race: race,
+        RaceId: RaceId,
         caliber: caliber,
         batchNumber: batchNumber,
         name: name,
@@ -33,7 +33,7 @@ router.post('/create', (req, res) => {
 
 
 router.put('/update', (req, res) => {
-    const { id, calibrator, race, caliber, batchNumber, name, quantity } = req.body
+    const { id, calibrator, RaceId, caliber, batchNumber, name, quantity } = req.body
 
     if (id == undefined || id == "") {
         res.send("Error! An id must be provided!")
@@ -41,7 +41,7 @@ router.put('/update', (req, res) => {
 
     const data = {
         calibrator: calibrator,
-        race: race,
+        RaceId: RaceId,
         caliber: caliber,
         batchNumber: batchNumber,
         name: name,

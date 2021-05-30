@@ -8,14 +8,6 @@ const Order = db.define('Order', {
         primaryKey: true,
         defaultValue: DataTypes.UUIDV4
     },
-    user: {
-        type: DataTypes.UUID,
-        allowNull: false,
-        references: {
-            model: User,
-            key: 'id'
-        }
-    },
     total: {
         type: DataTypes.INTEGER,
         allowNull: false,
@@ -46,6 +38,9 @@ const Order = db.define('Order', {
     },
 },
 )
+
+Order.belongsTo(User)
+User.hasMany(Order)
 
 // Order.sync({ alter: true })
 

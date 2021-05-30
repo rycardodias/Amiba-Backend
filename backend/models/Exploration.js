@@ -1,30 +1,14 @@
-const { DataTypes, Sequelize } = require('sequelize');
-const db = require('../config/database');
-const ExplorationType = require('./ExplorationType');
-const Organization = require('./Organization');
+const { DataTypes, Sequelize } = require('sequelize')
+const db = require('../config/database')
+const ExplorationType = require('./ExplorationType')
+const Organization = require('./Organization')
 
 const Exploration = db.define('Exploration', {
     id: {
         type: DataTypes.UUID,
         primaryKey: true,
         defaultValue: DataTypes.UUIDV4
-    },
-    organization: {
-        type: DataTypes.UUID,
-        allowNull: false,
-        references: {
-            model: Organization,
-            key: 'id'
-        }
-    },
-    type: {
-        type: DataTypes.UUID,
-        allowNull: false,
-        references: {
-            model: ExplorationType,
-            key: 'id'
-        }
-    },
+    },  
     name: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -61,7 +45,14 @@ const Exploration = db.define('Exploration', {
         allowNull: true
     }
 },
-   )
-//    Exploration.sync({force: true})
-   
+)
+
+Exploration.belongsTo(Organization)
+Organization.hasMany(Exploration)
+
+Exploration.belongsTo(ExplorationType)
+ExplorationType.hasMany(Exploration)
+
+// Exploration.sync({ alter: true })
+
 module.exports = Exploration

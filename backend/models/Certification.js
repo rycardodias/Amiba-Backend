@@ -8,14 +8,6 @@ const Certification = db.define('Certification', {
         primaryKey: true,
         defaultValue: DataTypes.UUIDV4
     },
-    exploration: {
-        type: DataTypes.UUID,
-        allowNull: false,
-        references: {
-            model: Exploration,
-            key: 'id'
-        }
-    },
     certificationCode: {
         type: DataTypes.STRING,
         allowNull: false
@@ -33,7 +25,11 @@ const Certification = db.define('Certification', {
         allowNull: true,
     }
 },
-   )
-//    Certification.sync({force: true})
-   
+)
+
+Exploration.hasMany(Certification)
+Certification.belongsTo(Exploration)
+
+// Certification.sync({alter: true})
+
 module.exports = Certification

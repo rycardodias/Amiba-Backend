@@ -11,22 +11,6 @@ const Product = db.define('Product', {
         primaryKey: true,
         defaultValue: DataTypes.UUIDV4
     },
-    type: {
-        type: DataTypes.UUID,
-        allowNull: false,
-        references: {
-            model: ProductType,
-            key: 'id'
-        }
-    },
-    taxCode: {
-        type: DataTypes.UUID,
-        allowNull: false,
-        references: {
-            model: Taxes,
-            key: 'id'
-        }
-    },
     name: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -55,9 +39,13 @@ const Product = db.define('Product', {
             key: 'id'
         }
     },
-
 },
    )
+   Product.belongsTo(ProductType)
+   ProductType.hasMany(Product)
+
+   Product.belongsTo(Taxes)
+   Taxes.hasMany(Product)
 
 //   Product.sync({alter: true})
    

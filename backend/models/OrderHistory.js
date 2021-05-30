@@ -7,30 +7,19 @@ const OrderHistory = db.define('OrderHistory', {
         type: DataTypes.UUID,
         primaryKey: true,
         allowNull: false,
-        defaultValue:DataTypes.UUIDV4
-    },
-    order: {
-        type: DataTypes.UUID,
-        allowNull: false,
-        references: {
-            model: Order,
-            key: 'id'
-        } 
+        defaultValue: DataTypes.UUIDV4
     },
     state: {
         type: DataTypes.INTEGER,
         allowNull: false,
         unique: true
     },
-    date: {
-        type: DataTypes.DATE,
-        allowNull: false,
-        defaultValue: Sequelize.NOW
-    },
 },
-{ freezeTableName: true }
-   )
+    { freezeTableName: true }
+)
+OrderHistory.belongsTo(Order)
+Order.hasMany(OrderHistory)
 
-//   OrderHistory.sync({force: true})
-   
+//   OrderHistory.sync({alter: true})
+
 module.exports = OrderHistory

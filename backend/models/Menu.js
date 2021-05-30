@@ -1,22 +1,14 @@
-const { DataTypes, Sequelize } = require('sequelize');
+const { DataTypes } = require('sequelize');
 const db = require('../config/database')
 const Restaurant = require('./Restaurant')
 
-const MenuItem = db.define('MenuItem', {
+const Menu = db.define('Menu', {
     id: {
         type: DataTypes.UUID,
         primaryKey: true,
         defaultValue: DataTypes.UUIDV4
     },
-    restaurant: {
-        type: DataTypes.UUID,
-        allowNull: false,
-        references: {
-            model: Restaurant,
-            key: 'id'
-        }
-    },
-    name: {
+    title: {
         type: DataTypes.STRING,
         allowNull: false,
     },
@@ -24,9 +16,19 @@ const MenuItem = db.define('MenuItem', {
         type: DataTypes.STRING,
         allowNull: true,
     },
+    image: {
+        type: DataTypes.STRING
+    },
+    active: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: true
+    }
 },
-   )
+)
 
-//    MenuItem.sync({alter: true})
-   
-module.exports = MenuItem
+Menu.belongsTo(Restaurant)
+Restaurant.hasMany(Menu)
+
+// Menu.sync({ force: true })
+
+module.exports = Menu
