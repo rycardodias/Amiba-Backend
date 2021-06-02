@@ -15,7 +15,6 @@ class Me extends React.Component {
   fetch = async () => {
     const user = await getUserByToken();
     this.setState({ ...user });
-    console.log(this.state)
   };
 
   async componentDidMount() {

@@ -1,6 +1,6 @@
 import React from 'react'
 import OrganizationsList from '../../../components/forms/OrganizationsList'
-import {getOrganizations} from '../../../lib/organizations/organizationsRequests'
+import { getOrganizations } from '../../../lib/organizations/organizationsRequests'
 
 export default class list extends React.Component {
     constructor(props) {
@@ -15,8 +15,10 @@ export default class list extends React.Component {
         const res = await getOrganizations()
         this.setState({ organizationsData: res.data.data })
     }
-    render() {
+    componentDidMount() {
         this.getAllOrganizations()
+    }
+    render() {
         return (
             <OrganizationsList data={this.state.organizationsData} />
         )

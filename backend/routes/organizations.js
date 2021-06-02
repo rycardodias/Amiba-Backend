@@ -3,9 +3,10 @@ const router = express.Router()
 const db = require('../config/database')
 
 const Model = require('../models/Organization')
+const OrganizationType = require('../models/OrganizationType')
 
 router.get('/', (req, res) => {
-    Model.findAll()
+    Model.findAll({include: OrganizationType})
         .then(status => res.json({ data: status }))
         .catch(err => res.json({ error: "Erro! Não foi possivel obter os dados!", err: err }))
 })
@@ -19,7 +20,7 @@ router.get('/id/:id', (req, res) => {
 router.post('/create', async (req, res) => {
     const { OrganizationTypeId, UserId, name, adress, locale, zipcode, telephone, mobilePhone, fiscalNumber } = req.body
 
-    if (type == undefined || type == "") {
+    if (OrganizationTypeId == undefined || OrganizationTypeId == "") {
         res.json({ error: "Erro! Nenhum tipo foi indicado!" })
     }
 

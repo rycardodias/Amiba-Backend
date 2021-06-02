@@ -11,41 +11,50 @@ export default class MenuContainer extends React.Component {
         super(props)
 
         this.state = {
-            baseRoute: ""
+            // currentRoute: "",
+            // previousRoute: "",
+            stack: [""]
         }
     }
 
+    addElement = (route) => {
+        // this.setState({stack: this.state.stack.concat(route)})
+        this.setState({ stack: [route, ...this.state.stack] })
+    }
+
+    removeElement = () => {
+        this.setState({ stack: this.state.stack.splice(1) })
+    }
+
     render() {
-
-        // const routes = [
-        //     [['ADMIN', 'AMIBA'], 'backoffice/organizations', 'Organizações', 'Gestão de Organizações', 'organizations'],
-        //     [['ADMIN', 'AMIBA'], 'backoffice/organizations', 'Listar Organização', 'Gestão de Organizações', 'organizations/'],
-        //     [['ADMIN'], 'backoffice/explorations', 'Explorações', 'Gestão de Explorações', 'explorations'],
-        //     [['ADMIN'], 'backoffice/users', 'Utilizadores', 'Gestão de Utilizadores']
-        // ]
-
-        
-
         return (
             <Container>
-                { this.state.baseRoute}
-                < Row >
-                    {
-                        routes.map((value, index) => {
-                            if (verifyPermission(value.permission, this.props.permissions) && value.level === this.state.baseRoute) {
-                                return (
-                                    <Col sm="2" style={{ minWidth: '150px' }} onClick={() => this.setState({ baseRoute: value.nextLevel })}>
-                                        <MenuItems
-                                            route={value.route}
-                                            title={value.title}
-                                            subtitle={value.description}
-                                        />
-                                    </Col>
-                                )
-                            }
-                        })
-                    }
+                <Row>
+                    <>
+                        {
+                            routes.map((value, index) => {
+                                if (verifyPermission(value.permission, this.props.permissions) && (value.previousLevel === this.state.stack[0])) {
+                                    return (
+                                        <Col key={index} sm="2" style={{ minWidth: '150px' }} onClick={() => this.addElement(value.nextLevel)}>
+                                            <MenuItems
+                                                route={value.route}
+                                                title={value.title}
+                                                subtitle={value.description}
+                                            />
+                                        </Col>
+                                    )
+                                }
+                            })
 
+                        }
+                        {(this.state.stack[0] === "") ? null :
+                            <Col key={1} sm="2" style={{ minWidth: '150px' }} onClick={() => this.removeElement()}>
+                                <MenuItems route="" title="Voltar" subtitle="" />
+                            </Col>
+                        }
+
+
+                    </>
                 </Row >
             </Container >
         )

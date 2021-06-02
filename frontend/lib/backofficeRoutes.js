@@ -1,56 +1,72 @@
 const routes = [
     // ORGANIZATIONS
     {
-        level: '',
+        previousLevel: '',
+        nextLevel: 'organizations/',
         permission: ['ADMIN', 'AMIBA'],
         route: '',
         title: 'Organizações',
         description: 'Gestão de Organizações',
-        nextLevel: 'organizations/'
+        
     },
     {
-        level: 'organizations/',
+        previousLevel: 'organizations/',
+        nextLevel: 'organizations/list',
         permission: ['ADMIN', 'AMIBA'],
         route: 'backoffice/organizations/list',
         title: 'Listar Organizações',
         description: '',
-        nextLevel: 'organizations/list'
+        
     },
     {
-        level: 'organizations/',
+        previousLevel: 'organizations/',
+        nextLevel: 'organizations/create',
         permission: ['ADMIN', 'AMIBA'],
         route: 'backoffice/organizations/create',
         title: 'Criar Organização',
         description: '',
-        nextLevel: 'organizations/create'
+        
     },
     {
-        level: 'organizations/',
+        previousLevel: 'organizations/',
+        nextLevel: 'organizations/manage',
         permission: ['ADMIN', 'AMIBA'],
         route: 'backoffice/organizations/manage',
         title: 'Gerir Organização',
         description: '',
-        nextLevel: 'organizations/manage'
+        
     },
     {
-        level: 'organizations/',
+        previousLevel: 'organizations/',
+        nextLevel: 'organizations/OrganizationTypes/',
         permission: ['ADMIN', 'AMIBA'],
         route: '',
         title: 'Tipos Organizações',
         description: '',
-        nextLevel: 'organizations/'
+       
+    },
+    {
+        previousLevel: 'organizations/OrganizationTypes/',
+        nextLevel: 'organizations/OrganizationTypes/create',
+        permission: ['ADMIN', 'AMIBA'],
+        route: '',
+        title: 'Tipos Organizações',
+        description: '',
+       
     },
     
 
     // EXPLORATIONS
     {
-        level: '',
+        previousLevel: '',
+        nextLevel: 'explorations/',
         permission: ['ADMIN', 'AMIBA'],
         route: '',
         title: 'Explorações',
         description: 'Gestão de Explorações',
-        nextLevel: 'explorations/'
+        
     },
 ]
+
 
 export {routes}
