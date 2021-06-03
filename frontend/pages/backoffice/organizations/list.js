@@ -1,6 +1,11 @@
 import React from 'react'
 import OrganizationsList from '../../../components/forms/OrganizationsList'
 import { getOrganizations } from '../../../lib/organizations/organizationsRequests'
+import { removeElementStorage } from '../../../lib/storage'
+
+import Col from 'react-bootstrap/Col'
+import MenuItems from '../../../components/backoffice/MenuItems'
+
 
 export default class list extends React.Component {
     constructor(props) {
@@ -18,9 +23,15 @@ export default class list extends React.Component {
     componentDidMount() {
         this.getAllOrganizations()
     }
+
     render() {
         return (
-            <OrganizationsList data={this.state.organizationsData} />
+            <>
+                <Col key={1} sm="2" style={{ minWidth: '150px' }} onClick={() => removeElementStorage('menuStack')}>
+                    <MenuItems route="/backoffice" title="Voltar" subtitle="" />
+                </Col>
+                <OrganizationsList data={this.state.organizationsData} />
+            </>
         )
     }
 }

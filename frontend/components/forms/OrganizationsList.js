@@ -1,14 +1,9 @@
 import React from 'react'
 import Table from 'react-bootstrap/Table'
-import Col from 'react-bootstrap/Col'
-import MenuItems from '../backoffice/MenuItems'
 export default class OrganizationsList extends React.Component {
     render() {
         return (
-            <>
-                <Col key={1} sm="2" style={{ minWidth: '150px' }} onClick={() => this.removeElement()}>
-                    <MenuItems route="" title="Voltar" subtitle="" />
-                </Col>
+                
                 <Table responsive>
                     <thead>
                         <tr key="0">
@@ -42,7 +37,6 @@ export default class OrganizationsList extends React.Component {
 
                     </tbody>
                 </Table>
-            </>
         )
     }
 }
