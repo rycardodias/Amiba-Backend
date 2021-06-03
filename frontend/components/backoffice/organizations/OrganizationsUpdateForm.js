@@ -6,44 +6,55 @@ import Col from 'react-bootstrap/Col'
 import InputGroup from 'react-bootstrap/InputGroup'
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
-import { getOrganizationTypes, createOrganization } from '../../../lib/organizationsRequests'
+import { getOrganizations, getOrganizationTypes, updateOrganization } from '../../../lib/organizationsRequests'
 
-export default class OrganizationsCreateForm extends React.Component {
+export default class OrganizationsUpdateForm extends React.Component {
     constructor(props) {
         super(props)
 
         this.state = {
-            type: undefined,
-            name: undefined,
-            adress: undefined,
-            locale: undefined,
-            zipcode: undefined,
-            telephone: undefined,
-            mobilePhone: undefined,
-            fiscalNumber: undefined,
+            id: "",
+            OrganizationTypeId: "",
+            name: "",
+            address: "",
+            locale: "",
+            zipcode: "",
+            telephone: "",
+            mobilePhone: "",
+            fiscalNumber: "",
             isButtonDisabled: false,
-            types: []
+            types: [],
+            organizations: []
         }
 
     }
 
     componentDidMount() {
         this.getTypes()
+        this.getOrganizations()
+    }
+
+    getOrganizations = async () => {
+        const organizations = (await getOrganizations()).data.data
+        this.setState({
+            organizations: organizations
+        })
+        console.log(this.state.organizations)
     }
 
     getTypes = async () => {
         const organizationTypes = (await getOrganizationTypes()).data.data
         this.setState({
             types: organizationTypes,
-            type: organizationTypes[0].id ? organizationTypes[0].id : undefined,
+            OrganizationTypeId: organizationTypes[0].id ? organizationTypes[0].id : undefined,
         })
-        console.log(this.state.type)
     }
 
-    createOrganization = async () => {
-        const { type, name, adress, locale, zipcode, telephone, mobilePhone, fiscalNumber } = this.state
-        const res = await createOrganization(type, name, adress, locale, zipcode, telephone, mobilePhone, fiscalNumber)
-        if(res.data.error) {
+    updateOrganization = async () => {
+        const { id, OrganizationTypeId, name, address, locale, zipcode, telephone, mobilePhone, fiscalNumber } = this.state
+        const res = await updateOrganization(id, OrganizationTypeId, name, address, locale, zipcode, telephone, mobilePhone, fiscalNumber)
+        console.log(res.data)
+        if (res.data.error) {
             alert(res.data.error)
             console.log(res.data.err)
         }
@@ -51,24 +62,51 @@ export default class OrganizationsCreateForm extends React.Component {
 
     saveToState = (e) => {
         this.setState({ [e.target.name]: e.target.value });
-
     };
+
+    changeOrganizationState = (e) => {
+        this.state.organizations.map((organizacao) => {
+            if (organizacao.id === e.target.value) {
+                this.setState({
+                    id: organizacao.id,
+                    type: organizacao.OrganizationTypeId,
+                    name: organizacao.name,
+                    address: organizacao.address,
+                    locale: organizacao.locale,
+                    zipcode: organizacao.zipcode,
+                    telephone: organizacao.telephone,
+                    mobilePhone: organizacao.mobilePhone,
+                    fiscalNumber: organizacao.fiscalNumber,
+                })
+            }
+        })
+    }
 
     render() {
         return (
             <Card.Body>
                 <Container>
+                    <Col>
+                        <Form.Control as="select" name="id" onChange={this.changeOrganizationState} >
+                            {
+                                this.state.organizations.map((org, index) => {
+                                    return (<option key={index} value={org.id}>{org.name}</option>)
+                                })
+                            }
+                        </Form.Control>
+                    </Col>
                     <Row>
+
                         <Col>
                             <InputGroup className="mb-3">
                                 <InputGroup.Text id="name" >Nome</InputGroup.Text>
-                                <Form.Control name="name" onChange={this.saveToState} />
+                                <Form.Control name="name" value={this.state.name} onChange={this.saveToState} />
                             </InputGroup>
                         </Col>
                         <Col>
                             <InputGroup className="mb-3">
-                                <InputGroup.Text id="adress" >Morada</InputGroup.Text>
-                                <Form.Control name="adress" onChange={this.saveToState} />
+                                <InputGroup.Text id="address" >Morada</InputGroup.Text>
+                                <Form.Control name="address" value={this.state.address} onChange={this.saveToState} />
                             </InputGroup>
                         </Col>
                     </Row>
@@ -78,10 +116,10 @@ export default class OrganizationsCreateForm extends React.Component {
                             <Row>
                                 <Col>
                                     <InputGroup className="mb-3">
-                                        <InputGroup.Text id="type" >Tipo</InputGroup.Text>
-                                        <Form.Control as="select" name="type" onChange={this.saveToState} >
+                                        <InputGroup.Text id="OrganizationTypeId" >Tipo</InputGroup.Text>
+                                        <Form.Control as="select" name="OrganizationTypeId"  onChange={this.saveToState} >
                                             {
-                                                
+
                                                 this.state.types.map((type) => {
                                                     return (<option key={type.id} value={type.id}>{type.name}</option>)
                                                 })
@@ -93,7 +131,7 @@ export default class OrganizationsCreateForm extends React.Component {
 
                                     <InputGroup className="mb-3">
                                         <InputGroup.Text id="fiscalNumber" >NIF</InputGroup.Text>
-                                        <Form.Control name="fiscalNumber" onChange={this.saveToState} />
+                                        <Form.Control name="fiscalNumber" value={this.state.fiscalNumber} onChange={this.saveToState} />
                                     </InputGroup>
                                 </Col>
                             </Row>
@@ -104,13 +142,13 @@ export default class OrganizationsCreateForm extends React.Component {
                                 <Col>
                                     <InputGroup className="mb-3">
                                         <InputGroup.Text id="locale" >Localidade</InputGroup.Text>
-                                        <Form.Control name="locale" onChange={this.saveToState} />
+                                        <Form.Control name="locale" value={this.state.locale} onChange={this.saveToState} />
                                     </InputGroup>
                                 </Col>
                                 <Col>
                                     <InputGroup className="mb-3">
                                         <InputGroup.Text id="zipcode">Código-Postal</InputGroup.Text>
-                                        <Form.Control name="zipcode" onChange={this.saveToState} />
+                                        <Form.Control name="zipcode" value={this.state.zipcode} onChange={this.saveToState} />
                                     </InputGroup>
                                 </Col>
                             </Row>
@@ -123,20 +161,20 @@ export default class OrganizationsCreateForm extends React.Component {
                                 <Col>
                                     <InputGroup className="mb-3">
                                         <InputGroup.Text id="telephone" >Telefone</InputGroup.Text>
-                                        <Form.Control name="telephone" onChange={this.saveToState} />
+                                        <Form.Control name="telephone" value={this.state.telephone} onChange={this.saveToState} />
                                     </InputGroup>
                                 </Col>
                                 <Col>
                                     <InputGroup className="mb-3">
                                         <InputGroup.Text id="mobilePhone" >Telemóvel</InputGroup.Text>
-                                        <Form.Control name="mobilePhone" onChange={this.saveToState} />
+                                        <Form.Control name="mobilePhone" value={this.state.mobilePhone} onChange={this.saveToState} />
                                     </InputGroup>
                                 </Col>
                             </Row>
                         </Col>
 
                         <Col>
-                            <Button variant="outline-success" onClick={this.createOrganization} disabled={this.state.isButtonDisabled}>Adicionar Organização</Button>
+                            <Button variant="outline-success" onClick={this.updateOrganization} disabled={this.state.isButtonDisabled}>Modificar Organização</Button>
                         </Col>
                     </Row>
                 </Container >

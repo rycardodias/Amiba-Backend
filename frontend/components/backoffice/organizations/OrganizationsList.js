@@ -1,4 +1,5 @@
 import React from 'react'
+import Link from 'next/link'
 import Table from 'react-bootstrap/Table'
 export default class OrganizationsList extends React.Component {
     render() {

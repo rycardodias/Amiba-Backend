@@ -18,7 +18,7 @@ router.get('/id/:id', (req, res) => {
 })
 
 router.post('/create', async (req, res) => {
-    const { OrganizationTypeId, UserId, name, adress, locale, zipcode, telephone, mobilePhone, fiscalNumber } = req.body
+    const { OrganizationTypeId, UserId, name, address, locale, zipcode, telephone, mobilePhone, fiscalNumber } = req.body
 
     if (OrganizationTypeId == undefined || OrganizationTypeId == "") {
         res.json({ error: "Erro! Nenhum tipo foi indicado!" })
@@ -28,7 +28,7 @@ router.post('/create', async (req, res) => {
         OrganizationTypeId: OrganizationTypeId,
         UserId: UserId,
         name: name,
-        adress: adress,
+        address: address,
         locale: locale,
         zipcode: zipcode,
         telephone: telephone,
@@ -42,7 +42,7 @@ router.post('/create', async (req, res) => {
 
 
 router.put('/update', async (req, res) => {
-    const { id, OrganizationTypeId, UserId, name, adress, locale, zipcode, telephone, mobilePhone, fiscalNumber } = req.body
+    const { id, OrganizationTypeId, UserId, name, address, locale, zipcode, telephone, mobilePhone, fiscalNumber } = req.body
 
     if (id == undefined || id == "") {
         res.json({ error: "Erro! Nenhum id foi indicado!" })
@@ -55,7 +55,7 @@ router.put('/update', async (req, res) => {
         OrganizationTypeId: OrganizationTypeId,
         UserId: UserId,
         name: name,
-        adress: adress,
+        address: address,
         locale: locale,
         zipcode: zipcode,
         telephone: telephone,

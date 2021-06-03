@@ -47,7 +47,6 @@ export default class MenuContainer extends React.Component {
     render() {
         return (
             <Container>
-                {this.state.stack[0]}
                 <Row>
                     <>
                         {
