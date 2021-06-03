@@ -1,6 +1,6 @@
 import React from 'react'
-import OrganizationsList from '../../../components/forms/OrganizationsList'
-import { getOrganizations } from '../../../lib/organizations/organizationsRequests'
+import OrganizationsList from '../../../components/backoffice/organizations/OrganizationsList'
+import { getOrganizations } from '../../../lib/organizationsRequests'
 import { removeElementStorage } from '../../../lib/storage'
 
 import Col from 'react-bootstrap/Col'

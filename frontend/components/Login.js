@@ -3,7 +3,7 @@ import Modal from 'react-bootstrap/Modal'
 import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
 import Nav from 'react-bootstrap/Nav'
-import { login } from '../lib/users/userRequests'
+import { login } from '../lib/userRequests'
 
 export default class Login extends Component {
     constructor(props) {

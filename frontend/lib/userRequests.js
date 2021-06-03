@@ -1,4 +1,4 @@
-import { sendRequest } from '../requests'
+import { sendRequest } from './requests'
 import Cookies from 'js-cookie';
 import Router from 'react'
 

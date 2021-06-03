@@ -17,7 +17,7 @@ export default class MenuContainer extends React.Component {
         }
     }
 
-    addElement = (route) => {
+    addElementStack = (route) => {
         const item = [route, ...this.state.stack]
 
         this.setState({ stack: item })
@@ -54,7 +54,7 @@ export default class MenuContainer extends React.Component {
                             routes.map((value, index) => {
                                 if (verifyPermission(value.permission, this.props.permissions) && (value.previousLevel === this.state.stack[0])) {
                                     return (
-                                        <Col key={index} sm="2" style={{ minWidth: '150px' }} onClick={() => this.addElement(value.nextLevel)}>
+                                        <Col key={index} sm="2" style={{ minWidth: '150px' }} onClick={() => this.addElementStack(value.nextLevel)}>
                                             <MenuItems
                                                 route={value.route}
                                                 title={value.title}

@@ -6,7 +6,7 @@ import Col from 'react-bootstrap/Col'
 import InputGroup from 'react-bootstrap/InputGroup'
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
-import { updateAddress } from '../../lib/users/userRequests'
+import { updateAddress } from '../../lib/userRequests'
 import Cookies from 'js-cookie'
 
 export default class ProfileAddress extends React.Component {

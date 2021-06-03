@@ -4,7 +4,7 @@ import Nav from 'react-bootstrap/Nav'
 import Link from 'next/link'
 import Login from './Login'
 import Me from './Me';
-import { logout } from '../lib/users/userRequests'
+import { logout } from '../lib/userRequests'
 
 export default class NavigationBar extends Component {
     render() {

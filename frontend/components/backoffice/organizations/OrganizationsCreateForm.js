@@ -6,7 +6,7 @@ import Col from 'react-bootstrap/Col'
 import InputGroup from 'react-bootstrap/InputGroup'
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
-import { getOrganizationTypes, createOrganization } from '../../lib/organizations/organizationsRequests'
+import { getOrganizationTypes, createOrganization } from '../../../lib/organizationsRequests'
 
 export default class OrganizationsCreateForm extends React.Component {
     constructor(props) {
