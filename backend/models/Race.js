@@ -1,6 +1,5 @@
 const { DataTypes, Sequelize } = require('sequelize');
 const db = require('../config/database')
-const Specie = require('./Specie')
 
 const Race = db.define('Race', {
     id: {
@@ -19,8 +18,6 @@ const Race = db.define('Race', {
     },
 })
 
-Race.belongsTo(Specie)
-Specie.hasMany(Race)
 // Race.sync({ alter: true })
 
 module.exports = Race

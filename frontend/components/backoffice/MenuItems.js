@@ -2,6 +2,8 @@ import React from 'react'
 import Card from 'react-bootstrap/Card'
 import Link from 'next/link'
 
+import OrganizationList from '../backoffice/organizations/OrganizationsList'
+
 export default function MenuItems(props) {
     return (
         <Link href={props.route}>

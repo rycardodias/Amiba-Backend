@@ -6,7 +6,7 @@ import Col from 'react-bootstrap/Col'
 import InputGroup from 'react-bootstrap/InputGroup'
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
-import { getOrganizations, getOrganizationTypes, updateOrganization } from '../../../lib/organizationsRequests'
+import { getOrganizations, getOrganizationTypes, updateOrganization, deleteOrganization } from '../../../lib/organizationsRequests'
 
 export default class OrganizationsUpdateForm extends React.Component {
     constructor(props) {
@@ -22,7 +22,7 @@ export default class OrganizationsUpdateForm extends React.Component {
             telephone: "",
             mobilePhone: "",
             fiscalNumber: "",
-            isButtonDisabled: false,
+            isButtonDisabled: true,
             types: [],
             organizations: []
         }
@@ -36,21 +36,48 @@ export default class OrganizationsUpdateForm extends React.Component {
 
     getOrganizations = async () => {
         const organizations = (await getOrganizations()).data.data
-        this.setState({
-            organizations: organizations
-        })
-        console.log(this.state.organizations)
+
+        if (organizations.length > 0) {
+            this.setState({
+                id: organizations[0].id,
+                type: organizations[0].OrganizationTypeId,
+                name: organizations[0].name,
+                address: organizations[0].address,
+                locale: organizations[0].locale,
+                zipcode: organizations[0].zipcode,
+                telephone: organizations[0].telephone,
+                mobilePhone: organizations[0].mobilePhone,
+                fiscalNumber: organizations[0].fiscalNumber,
+                organizations: organizations,
+                isButtonDisabled: false
+            })
+        } else {
+            this.setState({
+                id: "",
+                OrganizationTypeId: "",
+                name: "",
+                address: "",
+                locale: "",
+                zipcode: "",
+                telephone: "",
+                mobilePhone: "",
+                fiscalNumber: "",
+                organizations: organizations,
+                isButtonDisabled: true,
+            })
+        }
     }
 
     getTypes = async () => {
         const organizationTypes = (await getOrganizationTypes()).data.data
-        this.setState({
-            types: organizationTypes,
-            OrganizationTypeId: organizationTypes[0].id ? organizationTypes[0].id : undefined,
-        })
+        if (organizationTypes.length > 0) {
+            this.setState({
+                types: organizationTypes,
+            })
+        }
     }
 
-    updateOrganization = async () => {
+    updateOrganizations = async () => {
         const { id, OrganizationTypeId, name, address, locale, zipcode, telephone, mobilePhone, fiscalNumber } = this.state
         const res = await updateOrganization(id, OrganizationTypeId, name, address, locale, zipcode, telephone, mobilePhone, fiscalNumber)
         console.log(res.data)
@@ -60,26 +87,38 @@ export default class OrganizationsUpdateForm extends React.Component {
         }
     };
 
+    deleteOrganizations = async () => {
+        const { id } = this.state
+        const res = (await deleteOrganization(id)).data
+        if (res.error) {
+            console.log(res.error)
+        } else {
+            this.getOrganizations()
+        }
+
+
+    }
+
     saveToState = (e) => {
         this.setState({ [e.target.name]: e.target.value });
     };
 
     changeOrganizationState = (e) => {
-        this.state.organizations.map((organizacao) => {
-            if (organizacao.id === e.target.value) {
-                this.setState({
-                    id: organizacao.id,
-                    type: organizacao.OrganizationTypeId,
-                    name: organizacao.name,
-                    address: organizacao.address,
-                    locale: organizacao.locale,
-                    zipcode: organizacao.zipcode,
-                    telephone: organizacao.telephone,
-                    mobilePhone: organizacao.mobilePhone,
-                    fiscalNumber: organizacao.fiscalNumber,
-                })
-            }
+        const organizacao = this.state.organizations.filter(organization => (organization.id === e.target.value))[0]
+
+
+        this.setState({
+            id: organizacao.id,
+            type: organizacao.OrganizationTypeId,
+            name: organizacao.name,
+            address: organizacao.address,
+            locale: organizacao.locale,
+            zipcode: organizacao.zipcode,
+            telephone: organizacao.telephone,
+            mobilePhone: organizacao.mobilePhone,
+            fiscalNumber: organizacao.fiscalNumber,
         })
+
     }
 
     render() {
@@ -117,7 +156,7 @@ export default class OrganizationsUpdateForm extends React.Component {
                                 <Col>
                                     <InputGroup className="mb-3">
                                         <InputGroup.Text id="OrganizationTypeId" >Tipo</InputGroup.Text>
-                                        <Form.Control as="select" name="OrganizationTypeId"  onChange={this.saveToState} >
+                                        <Form.Control as="select" name="OrganizationTypeId" onChange={this.saveToState} >
                                             {
 
                                                 this.state.types.map((type) => {
@@ -174,8 +213,10 @@ export default class OrganizationsUpdateForm extends React.Component {
                         </Col>
 
                         <Col>
-                            <Button variant="outline-success" onClick={this.updateOrganization} disabled={this.state.isButtonDisabled}>Modificar Organização</Button>
+                            <Button variant="outline-success" onClick={this.updateOrganizations} disabled={this.state.isButtonDisabled}>Modificar Organização</Button>
+                            <Button variant="outline-danger" onClick={this.deleteOrganizations} disabled={this.state.isButtonDisabled}>Eliminar Organização</Button>
                         </Col>
+
                     </Row>
                 </Container >
             </Card.Body >

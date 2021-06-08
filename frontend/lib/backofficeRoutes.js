@@ -1,72 +1,71 @@
 const routes = [
     // ORGANIZATIONS
     {
-        previousLevel: '',
-        nextLevel: 'organizations/',
+        route: '',
+        nextRoute: '/backoffice/organizations',
         permission: ['ADMIN', 'AMIBA'],
         route: '',
         title: 'Organizações',
         description: 'Gestão de Organizações',
-        
+
     },
     {
-        previousLevel: 'organizations/',
-        nextLevel: 'organizations/list',
+        route: 'organizations/',
+        nextRoute: 'organizations/list',
         permission: ['ADMIN', 'AMIBA'],
         route: 'backoffice/organizations/list',
         title: 'Listar Organizações',
         description: '',
-        
+
     },
     {
-        previousLevel: 'organizations/',
-        nextLevel: 'organizations/create',
+        route: 'organizations/',
+        nextRoute: 'organizations/create',
         permission: ['ADMIN', 'AMIBA'],
         route: 'backoffice/organizations/create',
         title: 'Criar Organização',
         description: '',
-        
+
     },
     {
-        previousLevel: 'organizations/',
-        nextLevel: 'organizations/manage',
+        route: 'organizations/',
+        nextRoute: 'organizations/manage',
         permission: ['ADMIN', 'AMIBA'],
         route: 'backoffice/organizations/manage',
         title: 'Gerir Organização',
         description: '',
-        
+
     },
     {
-        previousLevel: 'organizations/',
-        nextLevel: 'organizations/OrganizationTypes/',
+        route: 'organizations/',
+        nextRoute: 'organizations/OrganizationTypes/',
         permission: ['ADMIN', 'AMIBA'],
         route: '',
         title: 'Tipos Organizações',
         description: '',
-       
+
     },
     {
-        previousLevel: 'organizations/OrganizationTypes/',
-        nextLevel: 'organizations/OrganizationTypes/create',
+        route: 'organizations/OrganizationTypes/',
+        nextRoute: 'organizations/OrganizationTypes/create',
         permission: ['ADMIN', 'AMIBA'],
         route: '',
         title: 'Tipos Organizações',
         description: '',
-       
+
     },
-    
+
 
     // EXPLORATIONS
     {
-        previousLevel: '',
-        nextLevel: 'explorations/',
+        route: '',
+        nextRoute: '/backoffice/explorations',
         permission: ['ADMIN', 'AMIBA'],
         route: '',
         title: 'Explorações',
         description: 'Gestão de Explorações',
-        
+
     },
 ]
 
-
-export {routes}
+export { routes }

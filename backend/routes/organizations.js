@@ -6,7 +6,7 @@ const Model = require('../models/Organization')
 const OrganizationType = require('../models/OrganizationType')
 
 router.get('/', (req, res) => {
-    Model.findAll({include: OrganizationType})
+    Model.findAll({ include: OrganizationType })
         .then(status => res.json({ data: status }))
         .catch(err => res.json({ error: "Erro! Não foi possivel obter os dados!", err: err }))
 })
@@ -36,7 +36,7 @@ router.post('/create', async (req, res) => {
         fiscalNumber: fiscalNumber
 
     })
-        .then(status => res.json({ data: status }))
+        .then(status => res.json({ success: "Dados inseridos com sucesso!", data: status }))
         .catch(err => res.json({ error: "Erro! Não foi possivel criar a Organização!", err: err }))
 })
 
@@ -69,7 +69,14 @@ router.put('/update', async (req, res) => {
                 id: id
             },
         })
-        .then(status => res.json({ data: status }))
+        .then(status => {
+            if (status[0] === 1) {
+                res.json({ data: "Dados atualizados com sucesso!" })
+            } else {
+                res.json({ error: "Erro! Não foi possivel atualizar os dados!" })
+            }
+        })
+
         .catch(err => res.json({ error: "Erro! Não foi possivel atualizar os dados!", err: err }))
 })
 

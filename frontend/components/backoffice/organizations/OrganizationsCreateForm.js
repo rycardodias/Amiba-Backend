@@ -24,7 +24,6 @@ export default class OrganizationsCreateForm extends React.Component {
             isButtonDisabled: false,
             types: []
         }
-
     }
 
     componentDidMount() {
@@ -33,25 +32,28 @@ export default class OrganizationsCreateForm extends React.Component {
 
     getTypes = async () => {
         const organizationTypes = (await getOrganizationTypes()).data.data
-        this.setState({
-            types: organizationTypes,
-            type: organizationTypes[0].id ? organizationTypes[0].id : undefined,
-        })
-        console.log(this.state.type)
+        if (organizationTypes.length > 0) {
+            this.setState({
+                types: organizationTypes,
+                type:  organizationTypes[0].id,
+            })
+        }
     }
 
     createOrganization = async () => {
         const { type, name, adress, locale, zipcode, telephone, mobilePhone, fiscalNumber } = this.state
         const res = await createOrganization(type, name, adress, locale, zipcode, telephone, mobilePhone, fiscalNumber)
-        if(res.data.error) {
+
+        if (res.data.error) {
             alert(res.data.error)
             console.log(res.data.err)
+        } else {
+            alert(res.data.success)
         }
     };
 
     saveToState = (e) => {
         this.setState({ [e.target.name]: e.target.value });
-
     };
 
     render() {
@@ -81,7 +83,7 @@ export default class OrganizationsCreateForm extends React.Component {
                                         <InputGroup.Text id="type" >Tipo</InputGroup.Text>
                                         <Form.Control as="select" name="type" onChange={this.saveToState} >
                                             {
-                                                
+
                                                 this.state.types.map((type) => {
                                                     return (<option key={type.id} value={type.id}>{type.name}</option>)
                                                 })

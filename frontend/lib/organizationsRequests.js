@@ -16,4 +16,8 @@ const updateOrganization = async (id, OrganizationTypeId, name, address, locale,
     return await sendRequest('PUT', 'organizations/update', { id, OrganizationTypeId, name, address, locale, zipcode, telephone, mobilePhone, fiscalNumber })
 };
 
-export { getOrganizationTypes, getOrganizations, createOrganization, updateOrganization }
+const deleteOrganization = async (id) => {
+    return await sendRequest('DELETE', 'organizations/delete', { id })
+}
+
+export { getOrganizationTypes, getOrganizations, createOrganization, updateOrganization, deleteOrganization }
