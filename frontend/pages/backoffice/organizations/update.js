@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Component } from 'react'
 import Card from 'react-bootstrap/Card'
 import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
@@ -8,7 +8,7 @@ import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
 import { getOrganizations, getOrganizationTypes, updateOrganization, deleteOrganization } from '../../../lib/organizationsRequests'
 
-export default class OrganizationsUpdateForm extends React.Component {
+export default class manage extends Component {
     constructor(props) {
         super(props)
 
