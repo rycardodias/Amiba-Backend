@@ -12,7 +12,7 @@ const routes = [
         route: 'backoffice/organizations',
         nextRoute: 'organizations/list',
         permission: ['ADMIN', 'AMIBA'],
-        title: 'Listar Organizações',
+        title: 'Listar \nOrganizações',
         description: '',
 
     },
@@ -21,14 +21,6 @@ const routes = [
         nextRoute: 'organizations/create',
         permission: ['ADMIN', 'AMIBA'],
         title: 'Criar Organização',
-        description: '',
-
-    },
-    {
-        route: 'backoffice/organizations',
-        nextRoute: 'organizations/update',
-        permission: ['ADMIN', 'AMIBA'],
-        title: 'Gerir Organização',
         description: '',
 
     },

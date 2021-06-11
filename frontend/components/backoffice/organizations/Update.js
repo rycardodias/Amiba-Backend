@@ -8,7 +8,7 @@ import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
 import { getOrganizations, getOrganizationTypes, updateOrganization, deleteOrganization } from '../../../lib/organizationsRequests'
 
-export default class manage extends Component {
+export default class Update extends Component {
     constructor(props) {
         super(props)
 
@@ -24,7 +24,8 @@ export default class manage extends Component {
             fiscalNumber: "",
             isButtonDisabled: true,
             types: [],
-            organizations: []
+            organizations: [],
+            paramsId: ""
         }
 
     }
@@ -34,23 +35,43 @@ export default class manage extends Component {
         this.getOrganizations()
     }
 
+
     getOrganizations = async () => {
         const organizations = (await getOrganizations()).data.data
+        const params = this.props.id
 
-        if (organizations.length > 0) {
-            this.setState({
-                id: organizations[0].id,
-                type: organizations[0].OrganizationTypeId,
-                name: organizations[0].name,
-                address: organizations[0].address,
-                locale: organizations[0].locale,
-                zipcode: organizations[0].zipcode,
-                telephone: organizations[0].telephone,
-                mobilePhone: organizations[0].mobilePhone,
-                fiscalNumber: organizations[0].fiscalNumber,
-                organizations: organizations,
-                isButtonDisabled: false
-            })
+        const organization = organizations.filter(organization => (organization.id === params))[0]
+ 
+        if (organization) {
+            if (params) {
+                this.setState({
+                    id: organization.id,
+                    type: organization.OrganizationTypeId,
+                    name: organization.name,
+                    address: organization.address,
+                    locale: organization.locale,
+                    zipcode: organization.zipcode,
+                    telephone: organization.telephone,
+                    mobilePhone: organization.mobilePhone,
+                    fiscalNumber: organization.fiscalNumber,
+                    organizations: organizations,
+                    isButtonDisabled: false
+                })
+            } else {
+                this.setState({
+                    id: organizations[0].id,
+                    type: organizations[0].OrganizationTypeId,
+                    name: organizations[0].name,
+                    address: organizations[0].address,
+                    locale: organizations[0].locale,
+                    zipcode: organizations[0].zipcode,
+                    telephone: organizations[0].telephone,
+                    mobilePhone: organizations[0].mobilePhone,
+                    fiscalNumber: organizations[0].fiscalNumber,
+                    organizations: organizations,
+                    isButtonDisabled: false
+                })
+            }
         } else {
             this.setState({
                 id: "",
@@ -106,7 +127,6 @@ export default class manage extends Component {
     changeOrganizationState = (e) => {
         const organizacao = this.state.organizations.filter(organization => (organization.id === e.target.value))[0]
 
-
         this.setState({
             id: organizacao.id,
             type: organizacao.OrganizationTypeId,
@@ -126,10 +146,18 @@ export default class manage extends Component {
             <Card.Body>
                 <Container>
                     <Col>
-                        <Form.Control as="select" name="id" onChange={this.changeOrganizationState} >
+                        <Form.Control as="select" name="id" onChange={this.changeOrganizationState}>
+
                             {
                                 this.state.organizations.map((org, index) => {
-                                    return (<option key={index} value={org.id}>{org.name}</option>)
+                                    if (org.id === this.state.id) {
+                                        return (<option value={org.id} selected>
+                                            {this.state.name}
+                                        </option>)
+                                    } else {
+
+                                        return (<option key={index} value={org.id}>{org.name}</option>)
+                                    }
                                 })
                             }
                         </Form.Control>

@@ -9,20 +9,20 @@ import Button from 'react-bootstrap/Button'
 
 import { getOrganizationTypes, createOrganization } from '../../../lib/organizationsRequests'
 
-export default class create extends Component {
+export default class Create extends Component {
     constructor(props) {
         super(props)
 
         this.state = {
-            type: undefined,
-            name: undefined,
-            adress: undefined,
-            locale: undefined,
-            zipcode: undefined,
-            telephone: undefined,
-            mobilePhone: undefined,
-            fiscalNumber: undefined,
-            isButtonDisabled: false,
+            type: "",
+            name: "",
+            address: "",
+            locale: "",
+            zipcode: "",
+            telephone: "",
+            mobilePhone: "",
+            fiscalNumber: "",
+            isButtonDisabled: true,
             types: []
         }
     }
@@ -30,6 +30,7 @@ export default class create extends Component {
     componentDidMount() {
         this.getTypes()
     }
+
     getTypes = async () => {
         const organizationTypes = (await getOrganizationTypes()).data.data
         if (organizationTypes.length > 0) {
@@ -41,36 +42,53 @@ export default class create extends Component {
     }
 
     createOrganization = async () => {
-        const { type, name, adress, locale, zipcode, telephone, mobilePhone, fiscalNumber } = this.state
-        const res = await createOrganization(type, name, adress, locale, zipcode, telephone, mobilePhone, fiscalNumber)
+        const { type, name, address, locale, zipcode, telephone, mobilePhone, fiscalNumber } = this.state
+        const res = await createOrganization(type, name, address, locale, zipcode, telephone, mobilePhone, fiscalNumber)
 
         if (res.data.error) {
+
             alert(res.data.error)
             console.log(res.data.err)
         } else {
+            this.setState({
+                type: "",
+                name: "",
+                address: "",
+                locale: "",
+                zipcode: "",
+                telephone: "",
+                mobilePhone: "",
+                fiscalNumber: ""
+            })
             alert(res.data.success)
         }
     };
 
-    saveToState = (e) => {
-        this.setState({ [e.target.name]: e.target.value });
+    saveToState = async (e) => {
+        const { name, address, locale, zipcode, telephone, mobilePhone, fiscalNumber, } = this.state
+        await this.setState({ [e.target.name]: e.target.value });
+        if (name != "" && address != "" && locale != "" && zipcode != "" && telephone != "" && mobilePhone != "" && fiscalNumber != "") {
+            this.setState({ isButtonDisabled: false })
+        }
     };
 
     render() {
+        const { name, address, locale, zipcode, telephone, mobilePhone, fiscalNumber, isButtonDisabled, types } = this.state
         return (
             <Card.Body>
                 <Container>
+
                     <Row>
                         <Col>
                             <InputGroup className="mb-3">
                                 <InputGroup.Text id="name" >Nome</InputGroup.Text>
-                                <Form.Control name="name" onChange={this.saveToState} />
+                                <Form.Control name="name" value={name} onChange={this.saveToState} />
                             </InputGroup>
                         </Col>
                         <Col>
                             <InputGroup className="mb-3">
-                                <InputGroup.Text id="adress" >Morada</InputGroup.Text>
-                                <Form.Control name="adress" onChange={this.saveToState} />
+                                <InputGroup.Text id="address" >Morada</InputGroup.Text>
+                                <Form.Control name="address" value={address} onChange={this.saveToState} />
                             </InputGroup>
                         </Col>
                     </Row>
@@ -84,7 +102,7 @@ export default class create extends Component {
                                         <Form.Control as="select" name="type" onChange={this.saveToState} >
                                             {
 
-                                                this.state.types.map((type) => {
+                                                types.map((type) => {
                                                     return (<option key={type.id} value={type.id}>{type.name}</option>)
                                                 })
                                             }
@@ -95,7 +113,7 @@ export default class create extends Component {
 
                                     <InputGroup className="mb-3">
                                         <InputGroup.Text id="fiscalNumber" >NIF</InputGroup.Text>
-                                        <Form.Control name="fiscalNumber" onChange={this.saveToState} />
+                                        <Form.Control name="fiscalNumber" value={fiscalNumber} onChange={this.saveToState} />
                                     </InputGroup>
                                 </Col>
                             </Row>
@@ -106,13 +124,13 @@ export default class create extends Component {
                                 <Col>
                                     <InputGroup className="mb-3">
                                         <InputGroup.Text id="locale" >Localidade</InputGroup.Text>
-                                        <Form.Control name="locale" onChange={this.saveToState} />
+                                        <Form.Control name="locale" value={locale} onChange={this.saveToState} />
                                     </InputGroup>
                                 </Col>
                                 <Col>
                                     <InputGroup className="mb-3">
                                         <InputGroup.Text id="zipcode">Código-Postal</InputGroup.Text>
-                                        <Form.Control name="zipcode" onChange={this.saveToState} />
+                                        <Form.Control name="zipcode" value={zipcode} onChange={this.saveToState} />
                                     </InputGroup>
                                 </Col>
                             </Row>
@@ -125,20 +143,20 @@ export default class create extends Component {
                                 <Col>
                                     <InputGroup className="mb-3">
                                         <InputGroup.Text id="telephone" >Telefone</InputGroup.Text>
-                                        <Form.Control name="telephone" onChange={this.saveToState} />
+                                        <Form.Control name="telephone" value={telephone} onChange={this.saveToState} />
                                     </InputGroup>
                                 </Col>
                                 <Col>
                                     <InputGroup className="mb-3">
                                         <InputGroup.Text id="mobilePhone" >Telemóvel</InputGroup.Text>
-                                        <Form.Control name="mobilePhone" onChange={this.saveToState} />
+                                        <Form.Control name="mobilePhone" value={mobilePhone} onChange={this.saveToState} />
                                     </InputGroup>
                                 </Col>
                             </Row>
                         </Col>
 
                         <Col>
-                            <Button variant="outline-success" onClick={this.createOrganization} disabled={this.state.isButtonDisabled}>Adicionar Organização</Button>
+                            <Button variant="outline-success" onClick={this.createOrganization} disabled={isButtonDisabled}>Adicionar Organização</Button>
                         </Col>
                     </Row>
                 </Container >

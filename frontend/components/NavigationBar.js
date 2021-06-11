@@ -14,7 +14,7 @@ export default class NavigationBar extends Component {
                     <Navbar fixed="top" />
                     <Link href="/" passHref ><Navbar.Brand style={{ marginLeft: "1rem" }}>AMIBA</Navbar.Brand></Link>
                     <Navbar.Toggle aria-controls="responsive-navbar-nav" />
-                    <Navbar.Collapse id="responsive-navbar-nav">
+                    <Navbar.Collapse id="responsive-navbar-nav" style={{ marginLeft: "1rem"}}>
                         <Nav className="mr-auto" >
                             <Link href="/association" passHref><Nav.Link>A Associação</Nav.Link></Link>
                             <Link href="/events" passHref><Nav.Link >Eventos/Noticias</Nav.Link></Link>
@@ -22,7 +22,7 @@ export default class NavigationBar extends Component {
                         </Nav>
                     </Navbar.Collapse>
 
-                    <Navbar.Collapse id="responsive-navbar-nav" className="mr-auto justify-content-end" style={{ marginRight: "1rem" }}>
+                    <Navbar.Collapse id="responsive-navbar-nav" className="mr-auto justify-content-end" style={{ marginLeft: "1rem", marginRight: "1rem" }}>
                         <Nav className="mr-auto" >
                             <Me  >
                                 {(items, isLoaded, fetch) => {

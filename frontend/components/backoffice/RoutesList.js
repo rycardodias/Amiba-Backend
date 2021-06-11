@@ -16,7 +16,7 @@ export const RoutesList = (props) => {
                         routes.map((value, index) => {
                             if (verifyPermission(value.permission, props.permission) && (value.route === props.route)) {
                                 return (
-                                    <Col key={index} sm="2" style={{ minWidth: '150px' }}>
+                                    <Col key={index} sm="2" style={{ minWidth: '200px', paddingBottom: '.5rem' }}>
                                         <MenuItems
                                             route={value.nextRoute}
                                             title={value.title}
