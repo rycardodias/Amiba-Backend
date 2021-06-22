@@ -20,7 +20,7 @@ router.get('/id/:id', (req, res) => {
 router.post('/create', async (req, res) => {
     const { OrganizationTypeId, UserId, name, address, locale, zipcode, telephone, mobilePhone, fiscalNumber } = req.body
 
-    if (OrganizationTypeId == undefined || OrganizationTypeId == "") {
+    if (!OrganizationTypeId) {
         res.json({ error: "Erro! Nenhum tipo foi indicado!" })
     }
 
@@ -34,7 +34,6 @@ router.post('/create', async (req, res) => {
         telephone: telephone,
         mobilePhone: mobilePhone,
         fiscalNumber: fiscalNumber
-
     })
         .then(status => res.json({ success: "Dados inseridos com sucesso!", data: status }))
         .catch(err => res.json({ error: "Erro! Não foi possivel criar a Organização!", err: err }))
@@ -44,10 +43,10 @@ router.post('/create', async (req, res) => {
 router.put('/update', async (req, res) => {
     const { id, OrganizationTypeId, UserId, name, address, locale, zipcode, telephone, mobilePhone, fiscalNumber } = req.body
 
-    if (id == undefined || id == "") {
+    if (!id) {
         res.json({ error: "Erro! Nenhum id foi indicado!" })
     }
-    if (OrganizationTypeId == "") {
+    if (!OrganizationTypeId) {
         res.json({ error: "Erro! Nenhum tipo foi indicado!" })
     }
 

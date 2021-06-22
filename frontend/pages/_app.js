@@ -5,9 +5,11 @@ import Layout from '../components/Layout';
 
 function MyApp({ Component, pageProps }) {
   return (
-    <Layout>
-      <Component {...pageProps} />
-    </Layout>
+    // <div style={{ backgroundImage: "url(/background.jpg)", height: '100%', backgroundPosition: 'center', backgroundRepeat: 'no-repeat', backgroundSize: 'cover' }}>
+      <Layout >
+        <Component  {...pageProps} />
+      </Layout>
+    // </div>
   )
 }
 

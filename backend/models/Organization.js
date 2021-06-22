@@ -12,33 +12,39 @@ const Organization = db.define('Organization', {
     name: {
         type: DataTypes.STRING,
         allowNull: false,
+        validate: {
+            notEmpty: {
+                msg: "Name field is required",
+            }
+        }
     },
     address: {
         type: DataTypes.STRING,
-        allowNull: false,
     },
     locale: {
         type: DataTypes.STRING,
-        allowNull: false,
     },
     zipcode: {
         type: DataTypes.STRING,
-        allowNull: false,
     },
     telephone: {
-        type: DataTypes.STRING,
-        allowNull: true,
+        type: DataTypes.INTEGER,
         unique: true
     },
     mobilePhone: {
-        type: DataTypes.STRING,
-        allowNull: true,
+        type: DataTypes.INTEGER,
         unique: true
     },
     fiscalNumber: {
         type: DataTypes.INTEGER,
-        allowNull: true,
-        unique: true
+        allowNull: false,
+        unique: true,
+        validate: {
+            notEmpty: {
+                msg: "FiscalNumber field is required",
+               
+            },
+        }
     },
 },
 )
@@ -48,6 +54,6 @@ OrganizationType.hasMany(Organization)
 Organization.belongsTo(User)
 User.hasMany(Organization)
 
-// Organization.sync({ force: true })
+// Organization.sync({ alter: true })
 
 module.exports = Organization

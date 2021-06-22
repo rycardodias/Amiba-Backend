@@ -7,14 +7,14 @@ export default class Layout extends React.Component {
 
     render() {
         return (
-            <>
+            <div >
                 <Meta />
                 <NavigationBar/>
                 <Container style={{paddingTop: "1rem"}}>
                     {this.props.children}
                 </Container>
 
-            </>
+            </div>
         )
     }
 }
