@@ -1,14 +1,12 @@
 import React from 'react'
 import OrganizationCreate from '../../../components/backoffice/organizations/OrganizationCreate'
 import Me from '../../../components/Me'
-import { routes } from '../../../lib/backofficeRoutes'
-import { verifyPermission } from '../../../lib/permissions'
-import Router from 'next/router'
+import { useRouter } from 'next/router'
 
 export default function Create(props) {
-
+    const { pathname } = useRouter()
     return (
-        <Me>
+        <Me url={pathname}>
             {(items, isLoaded, fetch) => {
 
                 if (!isLoaded) {
@@ -21,7 +19,6 @@ export default function Create(props) {
                 return (
                     <OrganizationCreate />
                 )
-
             }
             }
 

@@ -18,6 +18,18 @@ const urlPermissions = [
     {
         url: "/backoffice/organizations",
         permission: ["ADMIN", "AMIBA"]
+    },
+    {
+        url: "/backoffice/organizations/list",
+        permission: ["ADMIN", "AMIBA"]
+    },
+    {
+        url: "/backoffice/organizations/create",
+        permission: ["ADMIN", "AMIBA"]
+    },
+    {
+        url: "/backoffice/organizations/update/[id]",
+        permission: ["ADMIN", "AMIBA"]
     }
 ]
 

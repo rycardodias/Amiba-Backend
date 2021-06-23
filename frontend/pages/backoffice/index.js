@@ -3,10 +3,10 @@ import { RoutesList } from '../../components/backoffice/RoutesList'
 import { useRouter } from 'next/router'
 
 export default function Index() {
-    const route = useRouter()
+    const {pathname} = useRouter()
 
     return (
-        <Me url={route.pathname}>
+        <Me url={pathname}>
             {(items, isLoaded, fetch) => {
                 if (!isLoaded) {
                     return <p>Loading...</p>
@@ -15,7 +15,7 @@ export default function Index() {
                     return <p>{items.error}</p>
                 }
                 return (
-                    <RoutesList permission={items.data.permission} route={route.pathname} previousRoute="" />
+                    <RoutesList permission={items.data.permission} route={pathname} previousRoute="" />
                 )
             }
             }

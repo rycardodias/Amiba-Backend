@@ -1,7 +1,7 @@
 const routes = [
     // ORGANIZATIONS
     {
-        route: '',
+        route: '/backoffice',
         nextRoute: '/backoffice/organizations',
         permission: ['ADMIN', 'AMIBA'],
         title: 'Organizações',
@@ -51,7 +51,7 @@ const routes = [
 
     // EXPLORATIONS
     {
-        route: '',
+        route: '/backoffice',
         nextRoute: '/backoffice/explorations',
         permission: ['ADMIN', 'AMIBA'],
         title: 'Explorações',
@@ -61,7 +61,7 @@ const routes = [
 
     //USERS
     {
-        route: '',
+        route: '/backoffice',
         nextRoute: '/backoffice/users',
         permission: ['ADMIN'],
         title: 'Utilizadores',
@@ -71,7 +71,7 @@ const routes = [
 
     //ORDERS
     {
-        route: '',
+        route: '/backoffice',
         nextRoute: '/backoffice/orders',
         permission: ['ADMIN', 'AMIBA'],
         title: 'Encomendas',
@@ -81,7 +81,7 @@ const routes = [
 
     //RESTAURANTS
     {
-        route: '',
+        route: '/backoffice',
         nextRoute: '/backoffice/restaurants',
         permission: ['ADMIN','AMIBA'],
         title: 'Restaurantes',
