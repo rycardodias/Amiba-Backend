@@ -5,7 +5,7 @@ import { RoutesList } from '../../../components/backoffice/RoutesList'
 export default class Index extends Component {
     render() {
         return (
-            <Me>
+            <Me >
                 {(items, isLoaded, fetch) => {
 
                     if (!isLoaded) {
@@ -16,6 +16,7 @@ export default class Index extends Component {
                     }
                     return (
                         <RoutesList permission={items.data.permission} route="backoffice/organizations" previousRoute="/backoffice" />
+                        
                     )
                 }
                 }

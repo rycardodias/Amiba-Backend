@@ -5,7 +5,7 @@ import { RoutesList } from '../../components/backoffice/RoutesList'
 export default class Index extends Component {
     render() {
         return (
-            <Me>
+            <Me url="backoffice">
                 {(items, isLoaded, fetch) => {
 
                     if (!isLoaded) {

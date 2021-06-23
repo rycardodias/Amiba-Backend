@@ -10,4 +10,15 @@ const verifyPermission = (perm1, perm2) => {
     return false
 }
 
-export { verifyPermission }
+const urlPermissions = [
+    {
+        url: "backoffice",
+        permission: ["ADMIN", "AMIBA"]
+    },
+    {
+        url: "teste2",
+        permission: ["BANANA" ]
+    }
+]
+
+export { verifyPermission, urlPermissions }
