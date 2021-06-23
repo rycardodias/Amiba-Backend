@@ -1,6 +1,6 @@
 import React from 'react'
-import OrganizationCreate from '../../../components/backoffice/organizations/organizationTypes/OrganizationTypesCreate'
-import Me from '../../../components/Me'
+import OrganizationCreate from '../../../../components/backoffice/organizations/organizationTypes/OrganizationTypesCreate'
+import Me from '../../../../components/Me'
 import { useRouter } from 'next/router'
 
 export default function Create(props) {

@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
-import OrganizationUpdate from '../../../../components/backoffice/organizations/organizationTypes/OrganizationTypesUpdate'
-import Me from '../../../../components/Me'
+import OrganizationUpdate from '../../../../../components/backoffice/organizations/organizationTypes/OrganizationTypesUpdate'
+import Me from '../../../../../components/Me'
 
 export default function Items(props) {
     const { pathname, query } = useRouter();

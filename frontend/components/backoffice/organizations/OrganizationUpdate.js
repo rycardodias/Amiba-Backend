@@ -52,17 +52,7 @@ export default class OrganizationUpdate extends Component {
                 isButtonDisabled: false
             })
         } else {
-            this.setState({
-                type: undefined,
-                name: undefined,
-                address: undefined,
-                locale: undefined,
-                zipcode: undefined,
-                telephone: undefined,
-                mobilePhone: undefined,
-                fiscalNumber: undefined,
-                isButtonDisabled: true
-            })
+            Router.push('/backoffice/organizations/list', null, { shallow: true })
         }
     }
 
@@ -85,8 +75,7 @@ export default class OrganizationUpdate extends Component {
             console.log(res.data.err)
             return
         }
-        Router.push('/backoffice/organizations', null, { shallow: true }
-        )
+        Router.push('/backoffice/organizations/list', null, { shallow: true } )
     };
 
     deleteOrganizations = async () => {
@@ -95,8 +84,7 @@ export default class OrganizationUpdate extends Component {
         if (res.error) {
             alert(res.error)
         } else {
-            this.getOrganizations()
-            alert(res.sucess)
+            Router.push('/backoffice/organizations/list', null, { shallow: true } )
         }
 
     }

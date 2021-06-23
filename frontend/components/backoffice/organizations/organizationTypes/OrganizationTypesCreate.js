@@ -2,29 +2,22 @@ import React, { Component } from 'react'
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
 import Link from 'next/link'
-import { getOrganizationTypes } from '../../../../lib/requests/organizationsRequests'
+import { createOrganizationTypes } from '../../../../lib/requests/organizationsTypesRequests'
 
 export default class Create extends Component {
     constructor(props) {
         super(props)
 
         this.state = {
-            type: undefined,
             name: undefined,
-            address: undefined,
-            locale: undefined,
-            zipcode: undefined,
-            telephone: undefined,
-            mobilePhone: undefined,
-            fiscalNumber: undefined,
+            description: undefined,
             isButtonDisabled: true,
-            types: []
         }
     }
 
-    createOrganization = async () => {
+    createType = async () => {
         const { name, description } = this.state
-        const res = await createOrganization(name, description)
+        const res = await createOrganizationTypes(name, description)
 
         if (res.data.error) {
 
@@ -36,6 +29,7 @@ export default class Create extends Component {
                 description: undefined,
                 isButtonDisabled: true
             })
+            
             alert(res.data.success)
         }
     };
@@ -55,7 +49,7 @@ export default class Create extends Component {
     }
 
     render() {
-        const { name, description } = this.state
+        const { name, description, isButtonDisabled } = this.state
         return (
             <>
                 <Link href="/backoffice/organizations/organizationTypes">Voltar</Link>
@@ -71,7 +65,7 @@ export default class Create extends Component {
                     </Form.Group>
 
                     <div style={{ marginTop: '0.5rem' }}>
-                        <Button variant="outline-success" onClick={this.createOrganization} disabled={isButtonDisabled}>Adicionar Tipo Organização</Button>
+                        <Button variant="outline-success" onClick={this.createType} disabled={isButtonDisabled}>Adicionar Tipo Organização</Button>
                     </div>
                 </Form>
             </>

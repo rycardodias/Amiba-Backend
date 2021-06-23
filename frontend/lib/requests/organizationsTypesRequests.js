@@ -4,20 +4,17 @@ const getOrganizationTypes = async () => {
     return await sendRequest('GET', 'organizationTypes');
 };
 
-// const getOrganizations = async () => {
-//     return await sendRequest('GET', 'organizations');
-// };
+const createOrganizationTypes = async (name, description) => {
+    return await sendRequest('POST', 'organizationTypes/create', { name, description })
+};
 
-// const createOrganization = async (OrganizationTypeId, name, address, locale, zipcode, telephone, mobilePhone, fiscalNumber) => {
-//     return await sendRequest('POST', 'organizations/create', { OrganizationTypeId, name, address, locale, zipcode, telephone, mobilePhone, fiscalNumber })
-// };
 
-// const updateOrganization = async (id, OrganizationTypeId, name, address, locale, zipcode, telephone, mobilePhone, fiscalNumber) => {
-//     return await sendRequest('PUT', 'organizations/update', { id, OrganizationTypeId, name, address, locale, zipcode, telephone, mobilePhone, fiscalNumber })
-// };
+const updateOrganizationTypes = async (id, name, description) => {
+    return await sendRequest('PUT', 'organizationTypes/update', { id, name, description })
+};
 
-// const deleteOrganization = async (id) => {
-//     return await sendRequest('DELETE', 'organizations/delete', { id })
-// }
+const deleteOrganizationTypes = async (id) => {
+    return await sendRequest('DELETE', 'organizationTypes/delete', { id })
+}
 
-export { getOrganizationTypes,  }
+export { getOrganizationTypes, createOrganizationTypes, updateOrganizationTypes, deleteOrganizationTypes }

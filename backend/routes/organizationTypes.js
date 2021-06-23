@@ -23,7 +23,7 @@ router.post('/create', (req, res) => {
         name: name,
         description: description,
     })
-        .then(status => res.json({ data: status }))
+        .then(status => res.json({ success: "Dados inseridos com sucesso!", data: status }))
         .catch(err => res.send(err))
 })
 

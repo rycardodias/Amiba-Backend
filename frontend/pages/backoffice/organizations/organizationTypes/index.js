@@ -15,7 +15,7 @@ export default function Index() {
                     return <p>{items.error}</p>
                 }
                 return (
-                    <RoutesList permission={items.data.permission} route={pathname} previousRoute="/backoffice/organizationTypes" />
+                    <RoutesList permission={items.data.permission} route={pathname} previousRoute="/backoffice/organizations" />
                 )
             }
             }
