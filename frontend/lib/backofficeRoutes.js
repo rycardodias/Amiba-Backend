@@ -2,31 +2,31 @@ const routes = [
     // ORGANIZATIONS
     {
         route: '',
-        nextRoute: 'backoffice/organizations',
+        nextRoute: '/backoffice/organizations',
         permission: ['ADMIN', 'AMIBA'],
         title: 'Organizações',
         description: 'Gestão de Organizações',
 
     },
     {
-        route: 'backoffice/organizations',
-        nextRoute: 'organizations/list',
+        route: '/backoffice/organizations',
+        nextRoute: '/backoffice/organizations/list',
         permission: ['ADMIN', 'AMIBA'],
-        title: 'Listar \nOrganizações',
+        title: 'Listar Organizações',
         description: '',
 
     },
     {
-        route: 'backoffice/organizations',
-        nextRoute: 'organizations/create',
+        route: '/backoffice/organizations',
+        nextRoute: '/backoffice/organizations/create',
         permission: ['ADMIN', 'AMIBA'],
         title: 'Criar Organização',
         description: '',
 
     },
     {
-        route: 'backoffice/organizations',
-        nextRoute: 'organizations/organizationTypes',
+        route: '/backoffice/organizations',
+        nextRoute: '/backoffice/organizations/organizationTypes',
         permission: ['ADMIN', 'AMIBA'],
         title: 'Tipos Organizações',
         description: '',
@@ -34,14 +34,14 @@ const routes = [
     },
     // ORGANIZATIONS/ORGANIZATION TYPES
     {
-        route: 'backoffice/organizations/organizationTypes',
+        route: '/backoffice/organizations/organizationTypes',
         nextRoute: '/backoffice/organizations/OrganizationTypes/list',
         permission: ['ADMIN', 'AMIBA'],
         title: 'Listar Tipos',
         description: '',
     },
     {
-        route: 'backoffice/organizations/organizationTypes',
+        route: '/backoffice/organizations/organizationTypes',
         nextRoute: '/backoffice/organizations/organizationTypes/create',
         permission: ['ADMIN', 'AMIBA'],
         title: 'Criar Tipos',
@@ -52,7 +52,7 @@ const routes = [
     // EXPLORATIONS
     {
         route: '',
-        nextRoute: 'backoffice/explorations',
+        nextRoute: '/backoffice/explorations',
         permission: ['ADMIN', 'AMIBA'],
         title: 'Explorações',
         description: 'Gestão de Explorações',
@@ -62,7 +62,7 @@ const routes = [
     //USERS
     {
         route: '',
-        nextRoute: 'backoffice/users',
+        nextRoute: '/backoffice/users',
         permission: ['ADMIN'],
         title: 'Utilizadores',
         description: 'Gestão de Utilizadores',
@@ -72,7 +72,7 @@ const routes = [
     //ORDERS
     {
         route: '',
-        nextRoute: 'backoffice/orders',
+        nextRoute: '/backoffice/orders',
         permission: ['ADMIN', 'AMIBA'],
         title: 'Encomendas',
         description: 'Gestão de Encomendas',
@@ -82,7 +82,7 @@ const routes = [
     //RESTAURANTS
     {
         route: '',
-        nextRoute: 'backoffice/restaurants',
+        nextRoute: '/backoffice/restaurants',
         permission: ['ADMIN','AMIBA'],
         title: 'Restaurantes',
         description: 'Gestão de Restaurantes',
@@ -91,8 +91,8 @@ const routes = [
 
     //RESTAURANTS/MENUS
     {
-        route: 'backoffice/restaurants',
-        nextRoute: 'backoffice/restaurants/', //TODO
+        route: '/backoffice/restaurants',
+        nextRoute: '/backoffice/restaurants', //TODO
         permission: ['ADMIN','AMIBA'],
         title: 'Menus',
         description: 'Gestão de Menus',

@@ -12,12 +12,12 @@ const verifyPermission = (perm1, perm2) => {
 
 const urlPermissions = [
     {
-        url: "backoffice",
+        url: "/backoffice",
         permission: ["ADMIN", "AMIBA"]
     },
     {
-        url: "teste2",
-        permission: ["BANANA" ]
+        url: "/backoffice/organizations",
+        permission: ["ADMIN", "AMIBA"]
     }
 ]
 

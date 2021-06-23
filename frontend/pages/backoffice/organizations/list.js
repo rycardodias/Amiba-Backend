@@ -28,29 +28,31 @@ export default class list extends React.Component {
                 <Table responsive>
                     <thead>
                         <tr key="0">
-                            <th key="1">Nome</th>
-                            <th key="2">Tipo</th>
-                            <th key="3">Telefone</th>
-                            <th key="4">Telemovel</th>
-                            <th key="5">Localidade</th>
-                            <th key="6">Código-Postal</th>
-                            <th key="7">Morada</th>
-                            <th key="8">NIF</th>
+                            <th >Nome</th>
+                            <th >Tipo</th>
+                            <th >Telefone</th>
+                            <th >Telemovel</th>
+                            <th >Localidade</th>
+                            <th >Código-Postal</th>
+                            <th >Morada</th>
+                            <th >NIF</th>
                         </tr>
                     </thead>
                     <tbody>
                         {this.state.organizationsData.map((organization, index) => {
                             return (
-                                <Link href={{ pathname: `update/${organization.id}` }} ><tr key={index}>
-                                    <td>{organization.name}</td>
-                                    <td>{organization.OrganizationType.name}</td>
-                                    <td>{organization.telephone}</td>
-                                    <td>{organization.mobilePhone}</td>
-                                    <td>{organization.locale}</td>
-                                    <td>{organization.zipcode}</td>
-                                    <td>{organization.address}</td>
-                                    <td>{organization.fiscalNumber}</td>
-                                </tr></Link>
+                                <Link key={index} href={{ pathname: `update/${organization.id}` }} >
+                                    <tr key={index}>
+                                        <td>{organization.name}</td>
+                                        <td>{organization.OrganizationType.name}</td>
+                                        <td>{organization.telephone}</td>
+                                        <td>{organization.mobilePhone}</td>
+                                        <td>{organization.locale}</td>
+                                        <td>{organization.zipcode}</td>
+                                        <td>{organization.address}</td>
+                                        <td>{organization.fiscalNumber}</td>
+                                    </tr>
+                                </Link>
                             )
                         })}
                     </tbody>

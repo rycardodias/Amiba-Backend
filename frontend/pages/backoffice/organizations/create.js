@@ -17,16 +17,11 @@ export default function Create(props) {
                 if (items.error) {
                     return <p>{items.error}</p>
                 }
-                //routes.filter(item => item.route = "backoffice/explorations")[0].permission)
-                if (verifyPermission(items.data.permission, ["ADMIN", "AMIBA"])) {
-                    return (
-                        <OrganizationCreate />
-                    )
-                } else {
-                    return (
-                        <p>Erro! Não tem permissões</p>
-                    )
-                }
+
+                return (
+                    <OrganizationCreate />
+                )
+
             }
             }
 
