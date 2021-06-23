@@ -15,6 +15,7 @@ const urlPermissions = [
         url: "/backoffice",
         permission: ["ADMIN", "AMIBA"]
     },
+    //organizations/
     {
         url: "/backoffice/organizations",
         permission: ["ADMIN", "AMIBA"]
@@ -30,7 +31,24 @@ const urlPermissions = [
     {
         url: "/backoffice/organizations/update/[id]",
         permission: ["ADMIN", "AMIBA"]
-    }
+    },
+    //organizations/organizationTypes
+    { 
+        url: "/backoffice/organizations/organizationTypes",
+        permission: ["ADMIN", "AMIBA"]
+    },
+    {
+        url: "/backoffice/organizations/organizationTypes/list",
+        permission: ["ADMIN", "AMIBA"]
+    },
+    {
+        url: "/backoffice/organizations/organizationTypes/create",
+        permission: ["ADMIN", "AMIBA"]
+    },
+    {
+        url: "/backoffice/organizations/organizationTypes/update/[id]",
+        permission: ["ADMIN", "AMIBA"]
+    },
 ]
 
 export { verifyPermission, urlPermissions }

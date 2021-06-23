@@ -35,7 +35,7 @@ const routes = [
     // ORGANIZATIONS/ORGANIZATION TYPES
     {
         route: '/backoffice/organizations/organizationTypes',
-        nextRoute: '/backoffice/organizations/OrganizationTypes/list',
+        nextRoute: '/backoffice/organizations/organizationTypes/list',
         permission: ['ADMIN', 'AMIBA'],
         title: 'Listar Tipos',
         description: '',

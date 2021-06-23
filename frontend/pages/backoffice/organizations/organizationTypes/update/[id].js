@@ -1,11 +1,11 @@
+import { useRouter } from "next/router";
+import OrganizationUpdate from '../../../../components/backoffice/organizations/organizationTypes/OrganizationTypesUpdate'
 import Me from '../../../../components/Me'
-import { RoutesList } from '../../../../components/backoffice/RoutesList'
-import { useRouter } from 'next/router'
 
-export default function Index() {
-    const {pathname} = useRouter()
+export default function Items(props) {
+    const { pathname, query } = useRouter();
     return (
-        <Me url={pathname} >
+        <Me url={pathname}>
             {(items, isLoaded, fetch) => {
 
                 if (!isLoaded) {
@@ -14,12 +14,13 @@ export default function Index() {
                 if (items.error) {
                     return <p>{items.error}</p>
                 }
+
                 return (
-                    <RoutesList permission={items.data.permission} route={pathname} previousRoute="/backoffice/organizationTypes" />
+                    <OrganizationUpdate id={query.id} />
                 )
             }
             }
-        </Me >
-    )
 
+        </Me>
+    )
 }

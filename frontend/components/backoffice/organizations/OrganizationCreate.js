@@ -80,7 +80,6 @@ export default class Create extends Component {
             <>
                 <Link href="/backoffice/organizations">Voltar</Link>
                 <Form >
-                    {fiscalNumber}
                     <Form.Group controlId="name" >
                         <Form.Label >Nome</Form.Label>
                         <Form.Control name="name" value={name} onChange={this.saveToState} placeholder="Inserir nome" />
