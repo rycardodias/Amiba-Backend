@@ -22,12 +22,20 @@ const Menu = db.define('Menu', {
     active: {
         type: DataTypes.BOOLEAN,
         defaultValue: true
+    },
+    RestaurantId: {
+        type: DataTypes.UUID,
+        allowNull: false,
+        references: {
+            model: Restaurant,
+            key: 'id'
+        }
     }
 },
 )
 
-Menu.belongsTo(Restaurant)
-Restaurant.hasMany(Menu)
+// Menu.belongsTo(Restaurant)
+// Restaurant.hasMany(Menu)
 
 // Menu.sync({ force: true })
 

@@ -15,9 +15,8 @@ export default function Create(props) {
                 if (items.error) {
                     return <p>{items.error}</p>
                 }
-
                 return (
-                    <OrganizationCreate />
+                    <OrganizationCreate UserId={items.data.id}/>
                 )
             }
             }

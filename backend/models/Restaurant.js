@@ -33,11 +33,19 @@ const Restaurant = db.define('Restaurant', {
         allowNull: true,
         unique: true
     },
+    UserId: {
+        type: DataTypes.UUID,
+        allowNull: false,
+        references: {
+            model: User,
+            key: 'id'
+        }
+    }
 },
 )
 
-Restaurant.belongsTo(User)
-User.hasMany(Restaurant)
+// Restaurant.belongsTo(User)
+// User.hasMany(Restaurant)
 // Restaurant.sync({ force: true })
 
 module.exports = Restaurant

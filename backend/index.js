@@ -44,6 +44,6 @@ app.use('/explorationEggs', require('./routes/explorationEggs'))
 app.use('/animals', require('./routes/animals'))
 app.use('/animalProducts', require('./routes/animalProducts'))
 
-
+// db.sync({ force: true })
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, console.log(`Server started on port http://127.0.0.1:${PORT}`))

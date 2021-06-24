@@ -23,14 +23,14 @@ const ExplorationEgg = db.define('ExplorationEgg', {
 },
 )
 
-Exploration.belongsToMany(EggsBatch, { through: ExplorationEgg })
-EggsBatch.belongsToMany(Exploration, { through: ExplorationEgg })
+// Exploration.belongsToMany(EggsBatch, { through: ExplorationEgg })
+// EggsBatch.belongsToMany(Exploration, { through: ExplorationEgg })
 
-ExplorationEgg.belongsTo(Exploration)
-Exploration.hasMany(ExplorationEgg)
+// ExplorationEgg.belongsTo(Exploration)
+// Exploration.hasMany(ExplorationEgg)
 
-ExplorationEgg.belongsTo(EggsBatch)
-EggsBatch.hasMany(ExplorationEgg)
+// ExplorationEgg.belongsTo(EggsBatch)
+// EggsBatch.hasMany(ExplorationEgg)
 
 //    ExplorationEgg.sync({alter: true})
 

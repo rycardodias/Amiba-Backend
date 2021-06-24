@@ -23,12 +23,20 @@ const Certification = db.define('Certification', {
     description: {
         type: DataTypes.STRING,
         allowNull: true,
+    },
+    ExplorationId: {
+        type: DataTypes.UUID,
+        allowNull: false,
+        references: {
+            model: Exploration,
+            key: 'id'
+        }
     }
 },
 )
 
-Exploration.hasMany(Certification)
-Certification.belongsTo(Exploration)
+// Exploration.hasMany(Certification)
+// Certification.belongsTo(Exploration)
 
 // Certification.sync({alter: true})
 

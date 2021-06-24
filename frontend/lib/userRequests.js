@@ -5,7 +5,7 @@ const login = async (email, password) => {
     const response = await sendRequest('POST', 'users/login', { email, password });
     if (response.data.data) {
         Cookies.set('token', response.data.data, {
-            path: '',
+            Path: '',
             expires: 1000 * 24 * 365 * 60 * 60, // 1 year cookie
         });
     }
@@ -13,7 +13,6 @@ const login = async (email, password) => {
 };
 
 const logout = () => {
-    Cookies.set('token', '', {path: ''});
     Cookies.remove('token')
 };
 

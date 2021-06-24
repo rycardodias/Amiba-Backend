@@ -12,6 +12,7 @@ export default class OrganizationUpdate extends Component {
         this.state = {
             id: undefined,
             OrganizationTypeId: undefined,
+            UserId: undefined,
             name: undefined,
             address: undefined,
             locale: undefined,
@@ -41,6 +42,7 @@ export default class OrganizationUpdate extends Component {
             this.setState({
                 id: params ? org.id : organizations[0].id,
                 OrganizationTypeId: params ? org.OrganizationTypeId : organizations[0].OrganizationTypeId,
+                UserId: params ? org.UserId : organizations[0].UserId,
                 name: params ? org.name : organizations[0].name,
                 address: params ? org.address : organizations[0].address,
                 locale: params ? org.locale : organizations[0].locale,
@@ -66,16 +68,16 @@ export default class OrganizationUpdate extends Component {
     }
 
     updateOrganizations = async () => {
-        const { id, OrganizationTypeId, name, address, locale, zipcode, telephone, mobilePhone, fiscalNumber } = this.state
+        const { id, OrganizationTypeId, UserId, name, address, locale, zipcode, telephone, mobilePhone, fiscalNumber } = this.state
 
-        const res = await updateOrganization(id, OrganizationTypeId, name, address, locale, zipcode, telephone, mobilePhone, fiscalNumber)
+        const res = await updateOrganization(id, OrganizationTypeId, UserId, name, address, locale, zipcode, telephone, mobilePhone, fiscalNumber)
         // alert(res.data.data)
         if (res.data.error) {
             alert(res.data.error)
             console.log(res.data.err)
             return
         }
-        Router.push('/backoffice/organizations/list', null, { shallow: true } )
+        Router.push('/backoffice/organizations/list', null, { shallow: true })
     };
 
     deleteOrganizations = async () => {
@@ -84,7 +86,7 @@ export default class OrganizationUpdate extends Component {
         if (res.error) {
             alert(res.error)
         } else {
-            Router.push('/backoffice/organizations/list', null, { shallow: true } )
+            Router.push('/backoffice/organizations/list', null, { shallow: true })
         }
 
     }

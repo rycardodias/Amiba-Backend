@@ -39,13 +39,29 @@ const Product = db.define('Product', {
             key: 'id'
         }
     },
+    ProductTypeId: {
+        type: DataTypes.UUID,
+        allowNull: false,
+        references: {
+            model: ProductType,
+            key: 'id'
+        }
+    },
+    TaxesId: {
+        type: DataTypes.UUID,
+        allowNull: false,
+        references: {
+            model: Taxes,
+            key: 'id'
+        }
+    }
 },
    )
-   Product.belongsTo(ProductType)
-   ProductType.hasMany(Product)
+//    Product.belongsTo(ProductType)
+//    ProductType.hasMany(Product)
 
-   Product.belongsTo(Taxes)
-   Taxes.hasMany(Product)
+//    Product.belongsTo(Taxes)
+//    Taxes.hasMany(Product)
 
 //   Product.sync({alter: true})
    

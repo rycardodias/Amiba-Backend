@@ -1,4 +1,4 @@
-const { DataTypes, Sequelize } = require('sequelize');
+const { DataTypes, Sequelize, UUID } = require('sequelize');
 const db = require('../config/database')
 const OrganizationType = require('./OrganizationType');
 const User = require('./User');
@@ -42,18 +42,41 @@ const Organization = db.define('Organization', {
         validate: {
             notEmpty: {
                 msg: "FiscalNumber field is required",
-               
+
             },
         }
     },
+    OrganizationTypeId: {
+        type: DataTypes.UUID,
+        allowNull: false,
+        references: {
+            model: OrganizationType,
+            key: 'id'
+        }
+    },
+    UserId: {
+        type: DataTypes.UUID,
+        allowNull: false,
+        references: {
+            model: User,
+            key: 'id'
+        }
+    }
 },
 )
 Organization.belongsTo(OrganizationType)
 OrganizationType.hasMany(Organization)
 
+
 Organization.belongsTo(User)
 User.hasMany(Organization)
 
-// Organization.sync({ alter: true })
+// Organization.sync({ force: true })
+// db.query("ALTER TABLE \"Organizations\" DROP CONSTRAINT \"Organizations_OrganizationTypeId_fkey\", " +
+//     " ADD CONSTRAINT \"Organizations_OrganizationTypeId_fkey\" FOREIGN KEY(\"OrganizationTypeId\") REFERENCES \"OrganizationTypes\" " +
+//     "ON UPDATE NO ACTION;")
+// db.query("ALTER TABLE \"Organizations\" DROP CONSTRAINT \"Organizations_UserId_fkey\", " +
+//     " ADD CONSTRAINT \"Organizations_UserId_fkey\" FOREIGN KEY(\"UserId\") REFERENCES \"Users\" " +
+//     "ON UPDATE NO ACTION;")
 
 module.exports = Organization

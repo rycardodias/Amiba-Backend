@@ -21,14 +21,30 @@ const OrderLine = db.define('OrderLine', {
         type: DataTypes.INTEGER,
         allowNull: false,
     },
+    OrderId: {
+        type: DataTypes.UUID,
+        allowNull: false,
+        references: {
+            model: Order,
+            key: 'id'
+        }
+    },
+    ProductId: {
+        type: DataTypes.UUID,
+        allowNull: false,
+        references: {
+            model: Product,
+            key: 'id'
+        }
+    }
 },
 )
 
-OrderLine.belongsTo(Order)
-Order.hasMany(OrderLine)
+// OrderLine.belongsTo(Order)
+// Order.hasMany(OrderLine)
 
-OrderLine.belongsTo(Product)
-Product.hasMany(OrderLine)
+// OrderLine.belongsTo(Product)
+// Product.hasMany(OrderLine)
 
 //    OrderLine.sync({force: true})
 

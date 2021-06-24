@@ -3,7 +3,7 @@ import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
 import Link from 'next/link'
 import { createOrganizationTypes } from '../../../../lib/requests/organizationsTypesRequests'
-
+import Router from 'next/router'
 export default class Create extends Component {
     constructor(props) {
         super(props)
@@ -20,17 +20,10 @@ export default class Create extends Component {
         const res = await createOrganizationTypes(name, description)
 
         if (res.data.error) {
-
             alert(res.data.error)
-            console.log(res.data.err)
+            console.log("err:", res.data.err)
         } else {
-            this.setState({
-                name: undefined,
-                description: undefined,
-                isButtonDisabled: true
-            })
-            
-            alert(res.data.success)
+            Router.push('/backoffice/organizations/organizationTypes/list', null, { shallow: true })
         }
     };
 

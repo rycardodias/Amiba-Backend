@@ -36,14 +36,30 @@ const Animal = db.define('Animal', {
     slaughterLocal: {
         type: DataTypes.STRING,
         allowNull: true,
+    },
+    RaceId: {
+        type: DataTypes.UUID,
+        allowNull: false,
+        references: {
+            model: Race,
+            key: 'id'
+        }
+    },
+    ExplorationId: {
+        type: DataTypes.UUID,
+        allowNull: false,
+        references: {
+            model: Exploration,
+            key: 'id'
+        }
     }
 },
 )
-Animal.belongsTo(Race)
-Race.hasMany(Animal)
+// Animal.belongsTo(Race)
+// Race.hasMany(Animal)
 
-Animal.belongsTo(Exploration)
-Exploration.hasMany(Animal)
+// Animal.belongsTo(Exploration)
+// Exploration.hasMany(Animal)
 
 // Animal.sync({alter: true})
 

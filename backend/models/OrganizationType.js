@@ -17,8 +17,10 @@ const OrganizationType = db.define('OrganizationType', {
         allowNull: true,
     },
 },
-   )
+)
 
-//   OrganizationType.sync({force: true})
-   
+// OrganizationType.sync({alter: true})
+// db.sync({ force: true })
+
+
 module.exports = OrganizationType

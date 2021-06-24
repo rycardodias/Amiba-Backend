@@ -43,16 +43,32 @@ const Exploration = db.define('Exploration', {
     gpsLocalization: {
         type: DataTypes.STRING,
         allowNull: true
+    },
+    OrganizationId: {
+        type: DataTypes.UUID,
+        allowNull: false,
+        references: {
+            model: Organization,
+            key: 'id'
+        }
+    },
+    ExplorationTypeId: {
+        type: DataTypes.UUID,
+        allowNull: false,
+        references: {
+            model: ExplorationType,
+            key: 'id'
+        }
     }
 },
 )
 
-Exploration.belongsTo(Organization)
-Organization.hasMany(Exploration)
+// Exploration.belongsTo(Organization)
+// Organization.hasMany(Exploration)
 
-Exploration.belongsTo(ExplorationType)
-ExplorationType.hasMany(Exploration)
+// Exploration.belongsTo(ExplorationType)
+// ExplorationType.hasMany(Exploration)
 
-// Exploration.sync({ alter: true })
+// Exploration.sync({ force: true })
 
 module.exports = Exploration

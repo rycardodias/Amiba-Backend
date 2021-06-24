@@ -4,7 +4,6 @@ const db = require('../config/database')
 
 const Model = require('../models/Organization')
 const OrganizationType = require('../models/OrganizationType')
-
 router.get('/', (req, res) => {
     Model.findAll({ include: OrganizationType })
         .then(status => res.json({ data: status }))

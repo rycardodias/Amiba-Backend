@@ -32,11 +32,19 @@ const EggsBatch = db.define('EggsBatch', {
     quantity: {
         type: DataTypes.INTEGER,
         allowNull: false,
+    },
+    RaceId: {
+        type: DataTypes.UUID,
+        allowNull: false,
+        references: {
+            model: Race,
+            key: 'id'
+        }
     }
 },
 )
-EggsBatch.belongsTo(Race)
-Race.hasMany(EggsBatch)
+// EggsBatch.belongsTo(Race)
+// Race.hasMany(EggsBatch)
 //    EggsBatch.sync({alter: true})
 
 module.exports = EggsBatch

@@ -16,7 +16,7 @@ export default function Items(props) {
                 }
 
                 return (
-                    <OrganizationUpdate id={query.id} />
+                    <OrganizationUpdate id={query.id} UserId={items.data.id} />
                 )
             }
             }

@@ -3,13 +3,14 @@ import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
 import Link from 'next/link'
 import { getOrganizationTypes, createOrganization } from '../../../lib/organizationsRequests'
-
+import Router from 'next/router'
 export default class Create extends Component {
     constructor(props) {
         super(props)
 
         this.state = {
-            type: undefined,
+            OrganizationTypeId: undefined,
+            UserId: this.props.UserId,
             name: undefined,
             address: undefined,
             locale: undefined,
@@ -31,32 +32,20 @@ export default class Create extends Component {
         if (organizationTypes.length > 0) {
             this.setState({
                 types: organizationTypes,
-                type: organizationTypes[0].id,
+                OrganizationTypeId: organizationTypes[0].id,
             })
         }
     }
 
     createOrganization = async () => {
-        const { type, name, address, locale, zipcode, telephone, mobilePhone, fiscalNumber } = this.state
-        const res = await createOrganization(type, name, address, locale, zipcode, telephone, mobilePhone, fiscalNumber)
+        const { OrganizationTypeId, UserId, name, address, locale, zipcode, telephone, mobilePhone, fiscalNumber } = this.state
+        const res = await createOrganization(OrganizationTypeId, UserId, name, address, locale, zipcode, telephone, mobilePhone, fiscalNumber)
 
         if (res.data.error) {
-
             alert(res.data.error)
-            console.log(res.data.err)
+            console.log("err:", res.data.err)
         } else {
-            this.setState({
-                type: undefined,
-                name: undefined,
-                address: undefined,
-                locale: undefined,
-                zipcode: undefined,
-                telephone: undefined,
-                mobilePhone: undefined,
-                fiscalNumber: undefined,
-                isButtonDisabled: true
-            })
-            alert(res.data.success)
+            Router.push('/backoffice/organizations/list', null, { shallow: true })
         }
     };
 
@@ -65,9 +54,9 @@ export default class Create extends Component {
     };
 
     verifyNulls = () => {
-        const { name, address, locale, zipcode, telephone, mobilePhone, fiscalNumber } = this.state
+        const { OrganizationTypeId, UserId, name, address, locale, zipcode, telephone, mobilePhone, fiscalNumber } = this.state
 
-        if (name && address && locale && zipcode && telephone && mobilePhone && fiscalNumber) {
+        if (OrganizationTypeId && UserId && name && address && locale && zipcode && telephone && mobilePhone && fiscalNumber) {
             this.setState({ isButtonDisabled: false })
         } else {
             this.setState({ isButtonDisabled: true })

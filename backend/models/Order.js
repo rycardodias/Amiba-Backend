@@ -36,11 +36,19 @@ const Order = db.define('Order', {
         type: DataTypes.STRING,
         allowNull: true,
     },
+    UserId: {
+        type: DataTypes.UUID,
+        allowNull: false,
+        references: {
+            model: User,
+            key: 'id'
+        }
+    }
 },
 )
 
-Order.belongsTo(User)
-User.hasMany(Order)
+// Order.belongsTo(User)
+// User.hasMany(Order)
 
 // Order.sync({ alter: true })
 

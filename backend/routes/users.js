@@ -62,7 +62,7 @@ router.put('/update', async (req, res) => {
         email: email,
         password: password ? bcrypt.hashSync(password, 10) : undefined,
         active: tokenData[1] === 'ADMIN' ? active : undefined,
-        permission: tokenData[1] === 'ADMIN' ? permission : undefined,
+        permission: tokenData[1] === 'ADMIN' ? permission : ["ADMIN"],
         organization: tokenData[1] === 'ADMIN' ? organization : undefined,
         address: address,
         locale: locale,
@@ -79,7 +79,7 @@ router.put('/update', async (req, res) => {
         .then(status => {
             status == 1
                 ? res.json({ data: "Sucesso! Dados de utilizador alterados com sucesso!" })
-                : res.json({ error: "Erro! Ocurreu um erro ao atualizar os dados!" })
+                : res.json({ error: "Erro! Ocorreu um erro ao atualizar os dados!" })
         })
         .catch(err => res.json({error: "Erro! Ocurreu um erro ao atualizar os dados!", err: err}))
 })

@@ -14,11 +14,19 @@ const OrderHistory = db.define('OrderHistory', {
         allowNull: false,
         unique: true
     },
+    OrderId: {
+        type: DataTypes.UUID,
+        allowNull: false,
+        references: {
+            model: Order,
+            key: 'id'
+        }
+    }
 },
     { freezeTableName: true }
 )
-OrderHistory.belongsTo(Order)
-Order.hasMany(OrderHistory)
+// OrderHistory.belongsTo(Order)
+// Order.hasMany(OrderHistory)
 
 //   OrderHistory.sync({alter: true})
 

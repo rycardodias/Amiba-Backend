@@ -8,6 +8,7 @@ import { routes } from '../../lib/backofficeRoutes'
 import MenuItems from '../backoffice/MenuItems'
 
 export const RoutesList = (props) => {
+   
     return (
         <Container>
             <Row>
@@ -27,7 +28,7 @@ export const RoutesList = (props) => {
                             }
                         })
                     }
-                    {!props.route ? null : 
+                    {props.route === "/backoffice" ? null : 
                         <Col key={1} sm="2" style={{ minWidth: '150px' }} >
                             <MenuItems route={props.previousRoute} title="Voltar" subtitle="" />
                         </Col>
