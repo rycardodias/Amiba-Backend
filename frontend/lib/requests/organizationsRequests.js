@@ -8,6 +8,10 @@ const getOrganizations = async () => {
     return await sendRequest('GET', 'organizations');
 };
 
+const getOrganizationId = async (id) => {
+    return await sendRequest('GET', 'organizations/id' + id);
+};
+
 const createOrganization = async (OrganizationTypeId, UserId, name, address, locale, zipcode, telephone, mobilePhone, fiscalNumber) => {
     return await sendRequest('POST', 'organizations/create', { OrganizationTypeId, UserId, name, address, locale, zipcode, telephone, mobilePhone, fiscalNumber })
 };
@@ -20,4 +24,4 @@ const deleteOrganization = async (id) => {
     return await sendRequest('DELETE', 'organizations/delete', { id })
 }
 
-export { getOrganizationTypes, getOrganizations, createOrganization, updateOrganization, deleteOrganization }
+export { getOrganizationTypes, getOrganizations, getOrganizationId, createOrganization, updateOrganization, deleteOrganization }

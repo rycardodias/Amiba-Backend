@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
-import { getOrganizations, getOrganizationTypes, updateOrganization, deleteOrganization } from '../../../lib/requests/requests/organizationsRequests'
+import { getOrganizations, getOrganizationTypes, updateOrganization, deleteOrganization } from '../../../lib/requests/organizationsRequests'
 import Link from 'next/link'
 import Router from 'next/router'
 
@@ -33,24 +33,20 @@ export default class OrganizationUpdate extends Component {
 
 
     getOrganizations = async () => {
-        const organizations = (await getOrganizations()).data.data
-        const params = this.props.id
+        const organization = (await getOrganizationId(this.props.id)).data.data
 
-        const org = organizations.filter(organization => (organization.id === params))[0]
-
-        if (org) {
+        if (organization) {
             this.setState({
-                id: params ? org.id : organizations[0].id,
-                OrganizationTypeId: params ? org.OrganizationTypeId : organizations[0].OrganizationTypeId,
-                UserId: params ? org.UserId : organizations[0].UserId,
-                name: params ? org.name : organizations[0].name,
-                address: params ? org.address : organizations[0].address,
-                locale: params ? org.locale : organizations[0].locale,
-                zipcode: params ? org.zipcode : organizations[0].zipcode,
-                telephone: params ? org.telephone : organizations[0].telephone,
-                mobilePhone: params ? org.mobilePhone : organizations[0].mobilePhone,
-                fiscalNumber: params ? org.fiscalNumber : organizations[0].fiscalNumber,
-                organizations: organizations,
+                id: organization.id,
+                OrganizationTypeId: organization.OrganizationTypeId,
+                UserId: organization.UserId,
+                name: organization.name,
+                address: organization.address,
+                locale: organization.locale,
+                zipcode: organization.zipcode,
+                telephone: organization.telephone,
+                mobilePhone: organization.mobilePhone,
+                fiscalNumber: organization.fiscalNumber,
                 isButtonDisabled: false
             })
         } else {
