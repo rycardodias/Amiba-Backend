@@ -33,8 +33,13 @@ export default class ProfileAddress extends React.Component {
 
     updateUser = async () => {
         if (this.state.address !== "" && this.state.locale !== "" && this.state.zipcode !== "") {
-            return await updateAddress(this.state.id, Cookies.get('token'),
+            const update = await updateAddress(this.state.id, Cookies.get('token'),
                 this.state.address, this.state.locale, this.state.zipcode)
+            if (update) {
+                alert("Campos alterados com sucesso")
+                return
+            }
+            alert("Falhou")
         }
 
     };
