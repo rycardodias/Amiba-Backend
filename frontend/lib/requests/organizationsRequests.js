@@ -9,7 +9,7 @@ const getOrganizations = async () => {
 };
 
 const getOrganizationId = async (id) => {
-    return await sendRequest('GET', 'organizations/id' + id);
+    return await sendRequest('GET', 'organizations/id/' + id);
 };
 
 const createOrganization = async (OrganizationTypeId, UserId, name, address, locale, zipcode, telephone, mobilePhone, fiscalNumber) => {

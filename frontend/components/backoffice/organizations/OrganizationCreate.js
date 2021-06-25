@@ -19,7 +19,7 @@ export default class Create extends Component {
             mobilePhone: undefined,
             fiscalNumber: undefined,
             isButtonDisabled: true,
-            types: []
+            organizationTypes: []
         }
     }
 
@@ -31,7 +31,7 @@ export default class Create extends Component {
         const organizationTypes = (await getOrganizationTypes()).data.data
         if (organizationTypes.length > 0) {
             this.setState({
-                types: organizationTypes,
+                organizationTypes: organizationTypes,
                 OrganizationTypeId: organizationTypes[0].id,
             })
         }
@@ -64,7 +64,7 @@ export default class Create extends Component {
     }
 
     render() {
-        const { name, address, locale, zipcode, telephone, mobilePhone, fiscalNumber, isButtonDisabled, types } = this.state
+        const { name, address, locale, zipcode, telephone, mobilePhone, fiscalNumber, isButtonDisabled, organizationTypes } = this.state
         return (
             <>
                 <Link href="/backoffice/organizations">Voltar</Link>
@@ -78,7 +78,7 @@ export default class Create extends Component {
                         <Form.Label>Tipo Organização</Form.Label>
                         <Form.Control as="select" name="OrganizationTypeId" onChange={this.saveToState} placeholder="Tipo Organização" >
                             {
-                                types.map((type) => { return (<option key={type.id} value={type.id}>{type.name}</option>) })
+                                organizationTypes.map((type) => { return (<option key={type.id} value={type.id}>{type.name}</option>) })
                             }
                         </Form.Control>
                     </Form.Group>

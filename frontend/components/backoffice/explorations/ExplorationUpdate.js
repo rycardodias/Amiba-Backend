@@ -91,6 +91,7 @@ export default class OrganizationUpdate extends Component {
 
     saveToState = (e) => {
         this.setState({ [e.target.name]: e.target.value }, this.verifyNulls);
+        console.log(this.state.defaultValue)
     };
 
     verifyNulls = () => {
@@ -119,6 +120,9 @@ export default class OrganizationUpdate extends Component {
                         <Form.Control as="select" name="ExplorationTypeId" onChange={this.saveToState} placeholder="Tipo Exploração" >
                             {
                                 explorationTypes.map((type) => {
+                                    if (type.id === ExplorationTypeId) {
+                                        return (<option key={type.id} value={type.id} selected>{type.name}</option>)
+                                    }
                                     return (<option key={type.id} value={type.id}>{type.name}</option>)
                                 })
                             }
