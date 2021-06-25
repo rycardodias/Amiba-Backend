@@ -1,8 +1,9 @@
+import React from 'react'
 import Me from '../../../components/Me'
-import { RoutesList } from '../../../components/backoffice/RoutesList'
+import ExplorationList from '../../../components/backoffice/explorations/ExplorationList'
 import { useRouter } from 'next/router'
 
-export default function Index() {
+export default function List() {
     const {pathname} = useRouter()
     return (
         <Me url={pathname} >
@@ -15,11 +16,10 @@ export default function Index() {
                     return <p>{items.error}</p>
                 }
                 return (
-                    <RoutesList permission={items.data.permission} route={pathname} previousRoute="/backoffice" />
+                    <ExplorationList />
                 )
             }
             }
         </Me >
     )
-
 }

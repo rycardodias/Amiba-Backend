@@ -13,7 +13,7 @@ const Exploration = db.define('Exploration', {
         type: DataTypes.STRING,
         allowNull: false,
     },
-    adress: {
+    address: {
         type: DataTypes.STRING,
         allowNull: false,
     },
@@ -63,12 +63,19 @@ const Exploration = db.define('Exploration', {
 },
 )
 
-// Exploration.belongsTo(Organization)
-// Organization.hasMany(Exploration)
+Exploration.belongsTo(Organization)
+Organization.hasMany(Exploration)
 
-// Exploration.belongsTo(ExplorationType)
-// ExplorationType.hasMany(Exploration)
+Exploration.belongsTo(ExplorationType)
+ExplorationType.hasMany(Exploration)
 
 // Exploration.sync({ force: true })
+
+// db.query("ALTER TABLE \"Explorations\" DROP CONSTRAINT \"Explorations_ExplorationTypeId_fkey\", " +
+//     " ADD CONSTRAINT \"Explorations_ExplorationTypeId_fkey\" FOREIGN KEY(\"ExplorationTypeId\") REFERENCES \"ExplorationTypes\" " +
+//     "ON UPDATE NO ACTION;")
+//     db.query("ALTER TABLE \"Explorations\" DROP CONSTRAINT \"Explorations_OrganizationId_fkey\", " +
+//     " ADD CONSTRAINT \"Explorations_OrganizationId_fkey\" FOREIGN KEY(\"OrganizationId\") REFERENCES \"Organizations\" " +
+//     "ON UPDATE NO ACTION;")
 
 module.exports = Exploration

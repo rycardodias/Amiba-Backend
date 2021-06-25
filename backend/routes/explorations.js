@@ -1,13 +1,13 @@
 const express = require('express')
 const router = express.Router()
 const db = require('../config/database')
-const Certification = require('../models/Certification')
-const Animal = require('../models/Animal')
 
 const Model = require('../models/Exploration')
+const ExplorationType = require('../models/ExplorationType')
+const Organization = require('../models/Organization')
 
 router.get('/', (req, res) => {
-    Model.findAll({include: Certification})
+    Model.findAll({include: [Organization, ExplorationType]})
         .then(status => res.json({ data: status }))
         .catch(err => console.log(err))
 })
@@ -19,13 +19,13 @@ router.get('/id/:id', (req, res) => {
 })
 
 router.post('/create', (req, res) => {
-    const { OrganizationId, ExplorationTypeId, name, adress, locale, zipcode, telephone, mobilePhone, fiscalNumber, gpsLocalization } = req.body
+    const { OrganizationId, ExplorationTypeId, name, address, locale, zipcode, telephone, mobilePhone, fiscalNumber, gpsLocalization } = req.body
 
     Model.create({
         OrganizationId: OrganizationId,
         ExplorationTypeId: ExplorationTypeId,
         name: name,
-        adress: adress,
+        address: address,
         locale: locale,
         zipcode: zipcode,
         telephone: telephone,
@@ -40,7 +40,7 @@ router.post('/create', (req, res) => {
 
 
 router.put('/update', (req, res) => {
-    const { id, OrganizationId, ExplorationTypeId, name, adress, locale, zipcode, telephone, mobilePhone, fiscalNumber, gpsLocalization } = req.body
+    const { id, OrganizationId, ExplorationTypeId, name, address, locale, zipcode, telephone, mobilePhone, fiscalNumber, gpsLocalization } = req.body
 
     if (id == undefined || id == "") {
         res.send("Error! An id must be provided!")
@@ -50,7 +50,7 @@ router.put('/update', (req, res) => {
         OrganizationId: OrganizationId,
         ExplorationTypeId: ExplorationTypeId,
         name: name,
-        adress: adress,
+        address: address,
         locale: locale,
         zipcode: zipcode,
         telephone: telephone,
@@ -78,7 +78,7 @@ router.delete('/delete', (req, res) => {
         },
     })
         .then(status => res.json(status))
-        .catch(err => res.json({error: "Erro! Não foi possivel eliminar o registo!", err: err}))
+        .catch(err => res.json({ error: "Erro! Não foi possivel eliminar o registo!", err: err }))
 })
 
 module.exports = router

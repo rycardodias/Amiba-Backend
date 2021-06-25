@@ -1,7 +1,7 @@
 import React from 'react'
 import Table from 'react-bootstrap/Table'
 import Link from 'next/link'
-import { getOrganizations } from '../../../lib/organizationsRequests'
+import { getOrganizations } from '../../../lib/requests/organizationsRequests'
 
 export default class list extends React.Component {
     constructor(props) {

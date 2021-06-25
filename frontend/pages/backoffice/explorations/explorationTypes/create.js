@@ -1,11 +1,12 @@
-import Me from '../../../components/Me'
-import { RoutesList } from '../../../components/backoffice/RoutesList'
+import React from 'react'
+import OrganizationCreate from '../../../../components/backoffice/organizations/organizationTypes/OrganizationTypesCreate'
+import Me from '../../../../components/Me'
 import { useRouter } from 'next/router'
 
-export default function Index() {
-    const {pathname} = useRouter()
+export default function Create(props) {
+    const { pathname } = useRouter()
     return (
-        <Me url={pathname} >
+        <Me url={pathname}>
             {(items, isLoaded, fetch) => {
 
                 if (!isLoaded) {
@@ -14,12 +15,13 @@ export default function Index() {
                 if (items.error) {
                     return <p>{items.error}</p>
                 }
+
                 return (
-                    <RoutesList permission={items.data.permission} route={pathname} previousRoute="/backoffice" />
+                    <OrganizationCreate />
                 )
             }
             }
-        </Me >
-    )
 
+        </Me>
+    );
 }

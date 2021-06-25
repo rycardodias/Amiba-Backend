@@ -49,6 +49,43 @@ const urlPermissions = [
         url: "/backoffice/organizations/organizationTypes/update/[id]",
         permission: ["ADMIN", "AMIBA"]
     },
+
+
+
+    //EXPLORATIONS/
+    {
+        url: "/backoffice/explorations",
+        permission: ["ADMIN", "AMIBA"]
+    },
+    {
+        url: "/backoffice/explorations/list",
+        permission: ["ADMIN", "AMIBA"]
+    },
+    {
+        url: "/backoffice/explorations/create",
+        permission: ["ADMIN", "AMIBA"]
+    },
+    {
+        url: "/backoffice/explorations/update/[id]",
+        permission: ["ADMIN", "AMIBA"]
+    },
+    //explorations/explorationTypes
+    { 
+        url: "/backoffice/explorations/explorationTypes",
+        permission: ["ADMIN", "AMIBA"]
+    },
+    {
+        url: "/backoffice/explorations/explorationTypes/list",
+        permission: ["ADMIN", "AMIBA"]
+    },
+    {
+        url: "/backoffice/explorations/explorationTypes/create",
+        permission: ["ADMIN", "AMIBA"]
+    },
+    {
+        url: "/backoffice/explorations/explorationTypes/update/[id]",
+        permission: ["ADMIN", "AMIBA"]
+    },
 ]
 
 export { verifyPermission, urlPermissions }

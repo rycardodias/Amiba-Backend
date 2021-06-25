@@ -55,8 +55,47 @@ const routes = [
         nextRoute: '/backoffice/explorations',
         permission: ['ADMIN', 'AMIBA'],
         title: 'Explorações',
-        description: 'Gestão de Explorações',
+        description: 'Gestão de Organizações',
 
+    },
+    {
+        route: '/backoffice/explorations',
+        nextRoute: '/backoffice/explorations/list',
+        permission: ['ADMIN', 'AMIBA'],
+        title: 'Listar Explorações',
+        description: '',
+
+    },
+    {
+        route: '/backoffice/explorations',
+        nextRoute: '/backoffice/explorations/create',
+        permission: ['ADMIN', 'AMIBA'],
+        title: 'Criar Explorações',
+        description: '',
+
+    },
+    {
+        route: '/backoffice/explorations',
+        nextRoute: '/backoffice/explorations/explorationTypes',
+        permission: ['ADMIN', 'AMIBA'],
+        title: 'Tipos Explorações',
+        description: '',
+
+    },
+    // EXPLORATION/EXPLORATION TYPES
+    {
+        route: '/backoffice/explorations/explorationTypes',
+        nextRoute: '/backoffice/explorations/explorationTypes/list',
+        permission: ['ADMIN', 'AMIBA'],
+        title: 'Listar Tipos',
+        description: '',
+    },
+    {
+        route: '/backoffice/explorations/explorationTypes',
+        nextRoute: '/backoffice/explorations/explorationTypes/create',
+        permission: ['ADMIN', 'AMIBA'],
+        title: 'Criar Tipos',
+        description: '',
     },
 
     //USERS

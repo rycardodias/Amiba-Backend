@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
-import { getOrganizations, getOrganizationTypes, updateOrganization, deleteOrganization } from '../../../lib/organizationsRequests'
+import { getOrganizations, getOrganizationTypes, updateOrganization, deleteOrganization } from '../../../lib/requests/requests/organizationsRequests'
 import Link from 'next/link'
 import Router from 'next/router'
 

@@ -1,4 +1,4 @@
-import { sendRequest } from './requests'
+import { sendRequest } from '../requests'
 
 const getOrganizationTypes = async () => {
     return await sendRequest('GET', 'organizationTypes');

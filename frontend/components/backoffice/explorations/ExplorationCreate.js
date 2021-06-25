@@ -2,15 +2,16 @@ import React, { Component } from 'react'
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
 import Link from 'next/link'
-import { getOrganizationTypes, createOrganization } from '../../../lib/requests/organizationsRequests'
+import { getExplorationTypes, createExploration } from '../../../lib/requests/explorationsRequests'
+import { getOrganizations } from '../../../lib/requests/organizationsRequests'
 import Router from 'next/router'
 export default class Create extends Component {
     constructor(props) {
         super(props)
 
         this.state = {
-            OrganizationTypeId: undefined,
-            UserId: this.props.UserId,
+            OrganizationId: undefined,
+            ExplorationTypeId: undefined,
             name: undefined,
             address: undefined,
             locale: undefined,
@@ -18,8 +19,10 @@ export default class Create extends Component {
             telephone: undefined,
             mobilePhone: undefined,
             fiscalNumber: undefined,
+            gpsLocalization: undefined,
             isButtonDisabled: true,
-            types: []
+            explorationTypes: [],
+            organizations: []
         }
     }
 
@@ -28,24 +31,31 @@ export default class Create extends Component {
     }
 
     getTypes = async () => {
-        const organizationTypes = (await getOrganizationTypes()).data.data
-        if (organizationTypes.length > 0) {
+        const explorationTypes = (await getExplorationTypes()).data.data
+        if (explorationTypes.length > 0) {
             this.setState({
-                types: organizationTypes,
-                OrganizationTypeId: organizationTypes[0].id,
+                explorationTypes: explorationTypes,
+                ExplorationTypeId: explorationTypes[0].id,
+            })
+        }
+        const organizations = (await getOrganizations()).data.data
+        if (organizations.length > 0) {
+            this.setState({
+                organizations: organizations,
+                OrganizationId: organizations[0].id,
             })
         }
     }
 
-    createOrganization = async () => {
-        const { OrganizationTypeId, UserId, name, address, locale, zipcode, telephone, mobilePhone, fiscalNumber } = this.state
-        const res = await createOrganization(OrganizationTypeId, UserId, name, address, locale, zipcode, telephone, mobilePhone, fiscalNumber)
+    createExploration = async () => {
+        const { OrganizationId, ExplorationTypeId, name, address, locale, zipcode, telephone, mobilePhone, fiscalNumber, gpsLocalization } = this.state
+        const res = await createExploration(OrganizationId, ExplorationTypeId, name, address, locale, zipcode, telephone, mobilePhone, fiscalNumber, gpsLocalization)
 
         if (res.data.error) {
             alert(res.data.error)
             console.log("err:", res.data.err)
         } else {
-            Router.push('/backoffice/organizations/list', null, { shallow: true })
+            Router.push('/backoffice/explorations/list', null, { shallow: true })
         }
     };
 
@@ -54,9 +64,9 @@ export default class Create extends Component {
     };
 
     verifyNulls = () => {
-        const { OrganizationTypeId, UserId, name, address, locale, zipcode, telephone, mobilePhone, fiscalNumber } = this.state
+        const { OrganizationId, ExplorationTypeId, name, address, locale, zipcode, telephone, mobilePhone, fiscalNumber, gpsLocalization } = this.state
 
-        if (OrganizationTypeId && UserId && name && address && locale && zipcode && telephone && mobilePhone && fiscalNumber) {
+        if (OrganizationId && ExplorationTypeId && name && address && locale && zipcode && telephone && mobilePhone && fiscalNumber, gpsLocalization) {
             this.setState({ isButtonDisabled: false })
         } else {
             this.setState({ isButtonDisabled: true })
@@ -64,21 +74,30 @@ export default class Create extends Component {
     }
 
     render() {
-        const { name, address, locale, zipcode, telephone, mobilePhone, fiscalNumber, isButtonDisabled, types } = this.state
+        const { name, address, locale, zipcode, telephone, mobilePhone, fiscalNumber, gpsLocalization, isButtonDisabled, organizations, explorationTypes } = this.state
         return (
             <>
-                <Link href="/backoffice/organizations">Voltar</Link>
+                <Link href="/backoffice/explorations">Voltar</Link>
                 <Form >
                     <Form.Group controlId="name" >
                         <Form.Label >Nome</Form.Label>
                         <Form.Control name="name" value={name} onChange={this.saveToState} placeholder="Inserir nome" />
                     </Form.Group>
 
-                    <Form.Group controlId="OrganizationTypeId">
-                        <Form.Label>Tipo Organização</Form.Label>
-                        <Form.Control as="select" name="OrganizationTypeId" onChange={this.saveToState} placeholder="Tipo Organização" >
+                    <Form.Group controlId="OrganizationId">
+                        <Form.Label>Organização</Form.Label>
+                        <Form.Control as="select" name="OrganizationId" onChange={this.saveToState} placeholder="Organização" >
                             {
-                                types.map((type) => { return (<option key={type.id} value={type.id}>{type.name}</option>) })
+                                organizations.map((type) => { return (<option key={type.id} value={type.id}>{type.name}</option>) })
+                            }
+                        </Form.Control>
+                    </Form.Group>
+
+                    <Form.Group controlId="ExplorationTypeId">
+                        <Form.Label>Tipo Exploração</Form.Label>
+                        <Form.Control as="select" name="ExplorationTypeId" onChange={this.saveToState} placeholder="Tipo Exploração" >
+                            {
+                                explorationTypes.map((type) => { return (<option key={type.id} value={type.id}>{type.name}</option>) })
                             }
                         </Form.Control>
                     </Form.Group>
@@ -109,8 +128,12 @@ export default class Create extends Component {
                         <Form.Label>Telemóvel</Form.Label>
                         <Form.Control name="mobilePhone" value={mobilePhone} onChange={this.saveToState} placeholder="Telemovel" />
                     </Form.Group>
+                    <Form.Group controlId="gpsLocalization">
+                        <Form.Label>Telemóvel</Form.Label>
+                        <Form.Control name="gpsLocalization" value={gpsLocalization} onChange={this.saveToState} placeholder="GPS" />
+                    </Form.Group>
                     <div style={{ marginTop: '0.5rem' }}>
-                        <Button variant="outline-success" onClick={this.createOrganization} disabled={isButtonDisabled}>Adicionar Organização</Button>
+                        <Button variant="outline-success" onClick={this.createExploration} disabled={isButtonDisabled}>Adicionar Exploração</Button>
                     </div>
                 </Form>
             </>

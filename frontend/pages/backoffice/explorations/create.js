@@ -1,11 +1,12 @@
+import React from 'react'
+import ExplorationCreate from '../../../components/backoffice/explorations/ExplorationCreate'
 import Me from '../../../components/Me'
-import { RoutesList } from '../../../components/backoffice/RoutesList'
 import { useRouter } from 'next/router'
 
-export default function Index() {
-    const {pathname} = useRouter()
+export default function Create(props) {
+    const { pathname } = useRouter()
     return (
-        <Me url={pathname} >
+        <Me url={pathname}>
             {(items, isLoaded, fetch) => {
 
                 if (!isLoaded) {
@@ -15,11 +16,11 @@ export default function Index() {
                     return <p>{items.error}</p>
                 }
                 return (
-                    <RoutesList permission={items.data.permission} route={pathname} previousRoute="/backoffice" />
+                    <ExplorationCreate UserId={items.data.id}/>
                 )
             }
             }
-        </Me >
-    )
 
+        </Me>
+    );
 }
