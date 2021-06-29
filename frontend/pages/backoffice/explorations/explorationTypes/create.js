@@ -1,5 +1,5 @@
 import React from 'react'
-import OrganizationCreate from '../../../../components/backoffice/organizations/organizationTypes/OrganizationTypesCreate'
+import ExplorationTypesCreate from '../../../../components/backoffice/explorations/explorationTypes/ExplorationTypesCreate'
 import Me from '../../../../components/Me'
 import { useRouter } from 'next/router'
 
@@ -17,7 +17,7 @@ export default function Create(props) {
                 }
 
                 return (
-                    <OrganizationCreate />
+                    <ExplorationTypesCreate />
                 )
             }
             }

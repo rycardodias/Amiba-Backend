@@ -1,5 +1,5 @@
 import Me from '../../../../components/Me'
-import OrganizationList from '../../../../components/backoffice/organizations/organizationTypes/OrganizationTypesList'
+import ExplorationTypesList from '../../../../components/backoffice/explorations/explorationTypes/ExplorationTypesList'
 import { useRouter } from 'next/router'
 
 export default function List() {
@@ -15,7 +15,7 @@ export default function List() {
                     return <p>{items.error}</p>
                 }
                 return (
-                    <OrganizationList />
+                    <ExplorationTypesList />
                 )
             }
             }

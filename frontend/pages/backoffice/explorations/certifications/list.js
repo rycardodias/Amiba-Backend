@@ -1,13 +1,13 @@
-import Me from '../../components/Me'
-import { RoutesList } from '../../components/backoffice/RoutesList'
+import Me from '../../../../components/Me'
+import CertificationList from '../../../../components/backoffice/explorations/certifications/CertificationList'
 import { useRouter } from 'next/router'
 
-export default function Index() {
+export default function List() {
     const {pathname} = useRouter()
-
     return (
-        <Me url={pathname}>
+        <Me url={pathname} >
             {(items, isLoaded, fetch) => {
+
                 if (!isLoaded) {
                     return <p>Loading...</p>
                 }
@@ -15,11 +15,10 @@ export default function Index() {
                     return <p>{items.error}</p>
                 }
                 return (
-                    <RoutesList title="Backoffice" permission={items.data.permission} route={pathname} previousRoute="" />
+                    <CertificationList />
                 )
             }
             }
         </Me >
     )
-
 }

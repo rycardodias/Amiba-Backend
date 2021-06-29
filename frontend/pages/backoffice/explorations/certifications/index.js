@@ -16,8 +16,8 @@ export default function Index() {
                 }
                 return (
                     <>
-                        <TitleAndBack backLink="/backoffice/organizations" title="Menu de Tipos de Organizações" />
-                        <RoutesList permission={items.data.permission} route={pathname} previousRoute="/backoffice/organizations" />
+                        <TitleAndBack backLink="/backoffice/explorations/" title="Menu de Certificações" />
+                        <RoutesList permission={items.data.permission} route={pathname} previousRoute="/backoffice/explorations" />
                     </>
                 )
             }

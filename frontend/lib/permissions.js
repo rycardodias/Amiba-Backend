@@ -86,6 +86,23 @@ const urlPermissions = [
         url: "/backoffice/explorations/explorationTypes/update/[id]",
         permission: ["ADMIN", "AMIBA"]
     },
+     //explorations/certifications
+     { 
+        url: "/backoffice/explorations/certifications",
+        permission: ["ADMIN", "AMIBA"]
+    },
+    {
+        url: "/backoffice/explorations/certifications/list",
+        permission: ["ADMIN", "AMIBA"]
+    },
+    {
+        url: "/backoffice/explorations/certifications/create",
+        permission: ["ADMIN", "AMIBA"]
+    },
+    {
+        url: "/backoffice/explorations/certifications/update/[id]",
+        permission: ["ADMIN", "AMIBA"]
+    },
 ]
 
 export { verifyPermission, urlPermissions }

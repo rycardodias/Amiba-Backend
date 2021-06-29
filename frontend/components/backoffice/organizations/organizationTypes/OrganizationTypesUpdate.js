@@ -2,8 +2,8 @@ import React, { Component } from 'react'
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
 import { getOrganizationTypes, updateOrganizationTypes, deleteOrganizationTypes } from '../../../../lib/requests/organizationsTypesRequests'
-import Link from 'next/link'
 import Router from 'next/router'
+import { TitleAndBack } from '../../TitleAndBack'
 
 export default class OrganizationUpdate extends Component {
     constructor(props) {
@@ -83,7 +83,7 @@ export default class OrganizationUpdate extends Component {
     render() {
         return (
             <>
-                <Link href="/backoffice/organizations/organizationTypes/list">Voltar</Link>
+                <TitleAndBack backLink="/backoffice/organizations/organizationTypes/list" title="Alterar Tipo de Organização" />
 
                 <Form>
                     <Form.Group controlId="name" >

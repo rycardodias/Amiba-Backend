@@ -1,6 +1,7 @@
 const routes = [
     // ORGANIZATIONS
     {
+        title: '',
         route: '/backoffice',
         nextRoute: '/backoffice/organizations',
         permission: ['ADMIN', 'AMIBA'],
@@ -9,6 +10,7 @@ const routes = [
 
     },
     {
+        title: 'Organizações',
         route: '/backoffice/organizations',
         nextRoute: '/backoffice/organizations/list',
         permission: ['ADMIN', 'AMIBA'],
@@ -37,14 +39,14 @@ const routes = [
         route: '/backoffice/organizations/organizationTypes',
         nextRoute: '/backoffice/organizations/organizationTypes/list',
         permission: ['ADMIN', 'AMIBA'],
-        title: 'Listar Tipos',
+        title: 'Listar Tipos Organizações',
         description: '',
     },
     {
         route: '/backoffice/organizations/organizationTypes',
         nextRoute: '/backoffice/organizations/organizationTypes/create',
         permission: ['ADMIN', 'AMIBA'],
-        title: 'Criar Tipos',
+        title: 'Criar Tipo Organização',
         description: '',
     },
 
@@ -70,7 +72,7 @@ const routes = [
         route: '/backoffice/explorations',
         nextRoute: '/backoffice/explorations/create',
         permission: ['ADMIN', 'AMIBA'],
-        title: 'Criar Explorações',
+        title: 'Criar Exploração',
         description: '',
 
     },
@@ -82,21 +84,45 @@ const routes = [
         description: '',
 
     },
+    {
+        route: '/backoffice/explorations',
+        nextRoute: '/backoffice/explorations/certifications',
+        permission: ['ADMIN', 'AMIBA'],
+        title: 'Certificações',
+        description: '',
+
+    },
     // EXPLORATION/EXPLORATION TYPES
     {
         route: '/backoffice/explorations/explorationTypes',
         nextRoute: '/backoffice/explorations/explorationTypes/list',
         permission: ['ADMIN', 'AMIBA'],
-        title: 'Listar Tipos',
+        title: 'Listar Tipos Explorações',
         description: '',
     },
     {
         route: '/backoffice/explorations/explorationTypes',
         nextRoute: '/backoffice/explorations/explorationTypes/create',
         permission: ['ADMIN', 'AMIBA'],
-        title: 'Criar Tipos',
+        title: 'Criar Tipo Exploração',
         description: '',
     },
+    // EXPLORATION/CERTIFICATIONS
+    {
+        route: '/backoffice/explorations/certifications',
+        nextRoute: '/backoffice/explorations/certifications/list',
+        permission: ['ADMIN', 'AMIBA'],
+        title: 'Listar Certificações',
+        description: '',
+    },
+    {
+        route: '/backoffice/explorations/certifications',
+        nextRoute: '/backoffice/explorations/certifications/create',
+        permission: ['ADMIN', 'AMIBA'],
+        title: 'Criar Certificação',
+        description: '',
+    },
+    
 
     //USERS
     {

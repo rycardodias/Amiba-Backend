@@ -3,15 +3,16 @@ const router = express.Router()
 const db = require('../config/database')
 
 const Model = require('../models/Certification')
+const Exploration = require('../models/Exploration')
 
 router.get('/', (req, res) => {
-    Model.findAll()
+    Model.findAll({include: [Exploration]})
         .then(status => res.json({ data: status }))
         .catch(err => console.log(err))
 })
 
 router.get('/id/:id', (req, res) => {
-    Model.findByPk(req.params.id)
+    Model.findByPk(req.params.id, {include: [Exploration]})
         .then(status => res.json({ data: status }))
         .catch(err => console.log(err))
 })

@@ -2,8 +2,8 @@ import React, { Component } from 'react'
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
 import { getOrganizationId, getOrganizationTypes, updateOrganization, deleteOrganization } from '../../../lib/requests/organizationsRequests'
-import Link from 'next/link'
 import Router from 'next/router'
+import { TitleAndBack } from '../TitleAndBack'
 
 export default class OrganizationUpdate extends Component {
     constructor(props) {
@@ -106,7 +106,7 @@ export default class OrganizationUpdate extends Component {
         const { id, OrganizationTypeId, UserId, name, address, locale, zipcode, telephone, mobilePhone, fiscalNumber, organizationTypes } = this.state
         return (
             <>
-                <Link href="/backoffice/organizations/list">Voltar</Link>
+                <TitleAndBack backLink="/backoffice/organizations/list" title="Alterar Organização" />
 
                 <Form>
                     <Form.Group controlId="name" >

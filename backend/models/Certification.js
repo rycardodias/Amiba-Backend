@@ -13,11 +13,11 @@ const Certification = db.define('Certification', {
         allowNull: false
     },
     initialDate: {
-        type: DataTypes.DATE,
+        type: DataTypes.DATEONLY,
         allowNull: false,
     },
     finalDate: {
-        type: DataTypes.DATE,
+        type: DataTypes.DATEONLY,
         allowNull: false,
     },
     description: {
@@ -35,9 +35,13 @@ const Certification = db.define('Certification', {
 },
 )
 
-// Exploration.hasMany(Certification)
-// Certification.belongsTo(Exploration)
+Exploration.hasMany(Certification)
+Certification.belongsTo(Exploration)
 
-// Certification.sync({alter: true})
+// Certification.sync({force: true})
+
+// db.query("ALTER TABLE \"Certifications\" DROP CONSTRAINT \"Certifications_ExplorationId_fkey\", " +
+//     " ADD CONSTRAINT \"Certifications_ExplorationId_fkey\" FOREIGN KEY(\"ExplorationId\") REFERENCES \"Explorations\" " +
+//     "ON UPDATE NO ACTION;")
 
 module.exports = Certification

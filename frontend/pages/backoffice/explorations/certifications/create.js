@@ -1,25 +1,27 @@
-import Me from '../../components/Me'
-import { RoutesList } from '../../components/backoffice/RoutesList'
+import React from 'react'
+import CertificationCreate from '../../../../components/backoffice/explorations/certifications/CertificationCreate'
+import Me from '../../../../components/Me'
 import { useRouter } from 'next/router'
 
-export default function Index() {
-    const {pathname} = useRouter()
-
+export default function Create(props) {
+    const { pathname } = useRouter()
     return (
         <Me url={pathname}>
             {(items, isLoaded, fetch) => {
+
                 if (!isLoaded) {
                     return <p>Loading...</p>
                 }
                 if (items.error) {
                     return <p>{items.error}</p>
                 }
+
                 return (
-                    <RoutesList title="Backoffice" permission={items.data.permission} route={pathname} previousRoute="" />
+                    <CertificationCreate />
                 )
             }
             }
-        </Me >
-    )
 
+        </Me>
+    );
 }

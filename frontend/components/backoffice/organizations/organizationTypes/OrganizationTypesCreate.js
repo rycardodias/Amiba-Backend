@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
-import Link from 'next/link'
 import { createOrganizationTypes } from '../../../../lib/requests/organizationsTypesRequests'
 import Router from 'next/router'
+import { TitleAndBack } from '../../TitleAndBack'
 export default class Create extends Component {
     constructor(props) {
         super(props)
@@ -45,7 +45,8 @@ export default class Create extends Component {
         const { name, description, isButtonDisabled } = this.state
         return (
             <>
-                <Link href="/backoffice/organizations/organizationTypes">Voltar</Link>
+                <TitleAndBack backLink="/backoffice/organizations/organizationTypes" title="Criar Tipo de Organização"></TitleAndBack>
+
                 <Form >
                     <Form.Group controlId="name" >
                         <Form.Label >Nome</Form.Label>

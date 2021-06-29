@@ -1,9 +1,10 @@
 import Me from '../../../components/Me'
 import { RoutesList } from '../../../components/backoffice/RoutesList'
 import { useRouter } from 'next/router'
+import  { TitleAndBack } from '../../../components/backoffice/TitleAndBack'
 
 export default function Index() {
-    const {pathname} = useRouter()
+    const { pathname } = useRouter()
     return (
         <Me url={pathname} >
             {(items, isLoaded, fetch) => {
@@ -15,7 +16,10 @@ export default function Index() {
                     return <p>{items.error}</p>
                 }
                 return (
-                    <RoutesList permission={items.data.permission} route={pathname} previousRoute="/backoffice" />
+                    <>
+                        <TitleAndBack backLink="/backoffice/" title="Menu de Organizações" />
+                        <RoutesList permission={items.data.permission} route={pathname} previousRoute="/backoffice" />
+                    </>
                 )
             }
             }

@@ -2,7 +2,7 @@ import React from 'react'
 import Table from 'react-bootstrap/Table'
 import Link from 'next/link'
 import { getOrganizationTypes } from '../../../../lib/requests/organizationsTypesRequests'
-
+import { TitleAndBack } from '../../TitleAndBack'
 export default class list extends React.Component {
     constructor(props) {
         super(props)
@@ -24,7 +24,7 @@ export default class list extends React.Component {
         return (
             <>
 
-                <Link href="/backoffice/organizations/organizationTypes">Voltar</Link>
+                <TitleAndBack backLink="/backoffice/explorations/explorationTypes" title="Lista de Tipos de Explorações" />
                 <Table responsive>
                     <thead>
                         <tr key="0">

@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
-import Link from 'next/link'
 import { getExplorationTypes, createExploration } from '../../../lib/requests/explorationsRequests'
 import { getOrganizations } from '../../../lib/requests/organizationsRequests'
 import Router from 'next/router'
+import { TitleAndBack } from '../TitleAndBack'
 export default class Create extends Component {
     constructor(props) {
         super(props)
@@ -77,7 +77,7 @@ export default class Create extends Component {
         const { name, address, locale, zipcode, telephone, mobilePhone, fiscalNumber, gpsLocalization, isButtonDisabled, organizations, explorationTypes } = this.state
         return (
             <>
-                <Link href="/backoffice/explorations">Voltar</Link>
+                <TitleAndBack backLink="/backoffice/explorations" title="Criar Exploração" />
                 <Form >
                     <Form.Group controlId="name" >
                         <Form.Label >Nome</Form.Label>
