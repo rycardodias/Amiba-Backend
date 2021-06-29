@@ -10,15 +10,15 @@ export default class Create extends Component {
         super(props)
 
         this.state = {
-            OrganizationTypeId: undefined,
+            OrganizationTypeId: "",
             UserId: this.props.UserId, //FIXME buscar os utilizadores por array
-            name: undefined,
-            address: undefined,
-            locale: undefined,
-            zipcode: undefined,
-            telephone: undefined,
-            mobilePhone: undefined,
-            fiscalNumber: undefined,
+            name: "",
+            address: "",
+            locale: "",
+            zipcode: "",
+            telephone: "",
+            mobilePhone: "",
+            fiscalNumber: "",
             isButtonDisabled: true,
             organizationTypes: []
         }

@@ -96,7 +96,7 @@ export default class OrganizationUpdate extends Component {
     verifyNulls = () => {
         const { id, OrganizationTypeId, UserId, name, address, locale, zipcode, telephone, mobilePhone, fiscalNumber } = this.state
 
-        if (id && OrganizationTypeId && UserId && name && fiscalNumber) {
+        if (id && OrganizationTypeId && UserId && name && address && locale && zipcode && telephone && mobilePhone && fiscalNumber) {
             this.setState({ isButtonDisabled: false })
         } else {
             this.setState({ isButtonDisabled: true })

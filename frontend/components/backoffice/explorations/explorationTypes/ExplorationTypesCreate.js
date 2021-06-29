@@ -9,8 +9,8 @@ export default class Create extends Component {
         super(props)
 
         this.state = {
-            name: undefined,
-            description: undefined,
+            name: "",
+            description: "",
             isButtonDisabled: true,
         }
     }

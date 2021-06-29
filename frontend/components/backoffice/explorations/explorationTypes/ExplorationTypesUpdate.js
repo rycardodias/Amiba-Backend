@@ -10,9 +10,9 @@ export default class OrganizationUpdate extends Component {
         super(props)
 
         this.state = {
-            id: undefined,
-            name: undefined,
-            description: undefined,
+            id: "",
+            name: "",
+            description: "",
             isButtonDisabled: true,
         }
     }

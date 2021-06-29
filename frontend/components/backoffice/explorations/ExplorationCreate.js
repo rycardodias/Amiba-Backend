@@ -10,16 +10,16 @@ export default class Create extends Component {
         super(props)
 
         this.state = {
-            OrganizationId: undefined,
-            ExplorationTypeId: undefined,
-            name: undefined,
-            address: undefined,
-            locale: undefined,
-            zipcode: undefined,
-            telephone: undefined,
-            mobilePhone: undefined,
-            fiscalNumber: undefined,
-            gpsLocalization: undefined,
+            OrganizationId: "",
+            ExplorationTypeId: "",
+            name: "",
+            address: "",
+            locale: "",
+            zipcode: "",
+            telephone: "",
+            mobilePhone: "",
+            fiscalNumber: "",
+            gpsLocalization: "",
             isButtonDisabled: true,
             explorationTypes: [],
             organizations: []
