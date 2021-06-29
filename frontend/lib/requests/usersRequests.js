@@ -16,8 +16,8 @@ const createUser = async (name, surname, email, password, address, locale, zipco
     return await sendRequest('POST', 'users/create', { name, surname, email, password, address, locale, zipcode, fiscalNumber, telephone, mobilePhone })
 };
 
-const updateUser = async (id, name, surname, email, password, address, locale, zipcode, fiscalNumber, telephone, mobilePhone) => {
-    return await sendRequest('PUT', 'users/update', { id, name, surname, email, password, address, locale, zipcode, fiscalNumber, telephone, mobilePhone })
+const updateUser = async (token, id, name, surname, email, password, address, locale, zipcode, fiscalNumber, telephone, mobilePhone) => {
+    return await sendRequest('PUT', 'users/update', { token, id, name, surname, email, password, address, locale, zipcode, fiscalNumber, telephone, mobilePhone })
 };
 
 const deleteUser = async (token, id) => {

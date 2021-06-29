@@ -63,7 +63,7 @@ router.put('/update', async (req, res) => {
         email: email,
         password: password ? bcrypt.hashSync(password, 10) : undefined,
         active: tokenData[1] === 'ADMIN' ? active : undefined,
-        permission: tokenData[1] === 'ADMIN' ? permission : ["ADMIN"],
+        permission: tokenData[1] === 'ADMIN' ? permission : undefined,
         address: address,
         locale: locale,
         zipcode: zipcode,

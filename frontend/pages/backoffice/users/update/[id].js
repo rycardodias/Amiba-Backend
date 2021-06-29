@@ -16,7 +16,7 @@ export default function Update(props) {
                 }
 
                 return (
-                    <UserUpdate id={query.id} UserId={items.data.id} />
+                    <UserUpdate id={query.id} />
                 )
             }
             }

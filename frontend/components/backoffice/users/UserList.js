@@ -31,14 +31,12 @@ export default class list extends React.Component {
                             <th >Nome</th>
                             <th >NIF</th>
                             <th >Email</th>
-                            <th >Organização</th>
                             <th >Telefone</th>
                             <th >Telemovel</th>
                             <th >Localidade</th>
                             <th >Código-Postal</th>
                             <th >Morada</th>
                             <th >Permissões</th>
-                            <th >Ativo</th>
 
                         </tr>
                     </thead>
@@ -46,19 +44,16 @@ export default class list extends React.Component {
                         {this.state.usersData.map((item, index) => {
                             return (
                                 <Link key={index} href={{ pathname: `update/${item.id}` }} >
-                                    {console.log(item)}
                                     <tr key={index}>
                                         <td>{item.name + " " + item.surname}</td>
                                         <td>{item.fiscalNumber}</td>
                                         <td>{item.email}</td>
-                                        <td>{item.organization}</td>
                                         <td>{item.telephone}</td>
                                         <td>{item.mobilePhone}</td>
                                         <td>{item.locale}</td>
                                         <td>{item.zipcode}</td>
                                         <td>{item.address}</td>
                                         <td>{item.permission}</td>
-                                        <td>{item.active}</td>
                                     </tr>
                                 </Link>
                             )
