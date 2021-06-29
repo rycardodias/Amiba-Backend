@@ -11,31 +11,42 @@ const Animal = db.define('Animal', {
     },
     animalCode: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
+        validate: {
+            notEmpty: {
+                msg: "animalCode field is required",
+            }
+        }
     },
     gender: {
         type: DataTypes.STRING,
-        allowNull: true
     },
     birthDate: {
-        type: DataTypes.DATE,
+        type: DataTypes.DATEONLY,
         allowNull: false,
+        validate: {
+            notEmpty: {
+                msg: "birthDate field is required",
+            }
+        }
     },
     weight: {
         type: DataTypes.INTEGER,
         allowNull: false,
+        validate: {
+            notEmpty: {
+                msg: "weight field is required",
+            }
+        }
     },
     slaughterDate: {
-        type: DataTypes.DATE,
-        allowNull: true,
+        type: DataTypes.DATEONLY,
     },
     slaughterWeight: {
         type: DataTypes.INTEGER,
-        allowNull: true
     },
     slaughterLocal: {
         type: DataTypes.STRING,
-        allowNull: true,
     },
     RaceId: {
         type: DataTypes.UUID,

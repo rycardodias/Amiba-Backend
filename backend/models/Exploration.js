@@ -12,37 +12,57 @@ const Exploration = db.define('Exploration', {
     name: {
         type: DataTypes.STRING,
         allowNull: false,
+        validate: {
+            notEmpty: {
+                msg: "name field is required",
+            }
+        }
     },
     address: {
         type: DataTypes.STRING,
         allowNull: false,
+        validate: {
+            notEmpty: {
+                msg: "address field is required",
+            }
+        }
     },
     locale: {
         type: DataTypes.STRING,
         allowNull: false,
+        validate: {
+            notEmpty: {
+                msg: "locale field is required",
+            }
+        }
     },
     zipcode: {
         type: DataTypes.STRING,
         allowNull: false,
+        validate: {
+            notEmpty: {
+                msg: "zipcode field is required",
+            }
+        }
     },
     telephone: {
         type: DataTypes.STRING,
-        allowNull: true,
-        unique: true
     },
     mobilePhone: {
         type: DataTypes.STRING,
-        allowNull: true,
-        unique: true
     },
     fiscalNumber: {
         type: DataTypes.INTEGER,
-        allowNull: true,
+        allowNull: false,
+        validate: {
+            notEmpty: {
+                msg: "fiscalNumber field is required",
+            }
+        },
         unique: true
     },
     gpsLocalization: {
         type: DataTypes.STRING,
-        allowNull: true
     },
     OrganizationId: {
         type: DataTypes.UUID,
@@ -69,7 +89,7 @@ Organization.hasMany(Exploration)
 Exploration.belongsTo(ExplorationType)
 ExplorationType.hasMany(Exploration)
 
-// Exploration.sync({ force: true })
+// Exploration.sync({ alter: true })
 
 // db.query("ALTER TABLE \"Explorations\" DROP CONSTRAINT \"Explorations_ExplorationTypeId_fkey\", " +
 //     " ADD CONSTRAINT \"Explorations_ExplorationTypeId_fkey\" FOREIGN KEY(\"ExplorationTypeId\") REFERENCES \"ExplorationTypes\" " +

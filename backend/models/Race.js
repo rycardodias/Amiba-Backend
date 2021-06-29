@@ -10,11 +10,15 @@ const Race = db.define('Race', {
     name: {
         type: DataTypes.STRING,
         allowNull: false,
+        validate: {
+            notEmpty: {
+                msg: "name field is required",
+            }
+        },
         unique: true
     },
     description: {
         type: DataTypes.STRING,
-        allowNull: true
     },
 })
 

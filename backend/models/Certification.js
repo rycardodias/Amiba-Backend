@@ -10,19 +10,33 @@ const Certification = db.define('Certification', {
     },
     certificationCode: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
+        validate: {
+            notEmpty: {
+                msg: "certificationCode field is required",
+            }
+        }
     },
     initialDate: {
         type: DataTypes.DATEONLY,
         allowNull: false,
+        validate: {
+            notEmpty: {
+                msg: "initialDate field is required",
+            }
+        }
     },
     finalDate: {
         type: DataTypes.DATEONLY,
         allowNull: false,
+        validate: {
+            notEmpty: {
+                msg: "finalDate field is required",
+            }
+        }
     },
     description: {
         type: DataTypes.STRING,
-        allowNull: true,
     },
     ExplorationId: {
         type: DataTypes.UUID,
@@ -38,7 +52,7 @@ const Certification = db.define('Certification', {
 Exploration.hasMany(Certification)
 Certification.belongsTo(Exploration)
 
-// Certification.sync({force: true})
+// Certification.sync({alter: true})
 
 // db.query("ALTER TABLE \"Certifications\" DROP CONSTRAINT \"Certifications_ExplorationId_fkey\", " +
 //     " ADD CONSTRAINT \"Certifications_ExplorationId_fkey\" FOREIGN KEY(\"ExplorationId\") REFERENCES \"Explorations\" " +

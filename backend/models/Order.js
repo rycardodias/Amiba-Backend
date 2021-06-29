@@ -11,30 +11,53 @@ const Order = db.define('Order', {
     total: {
         type: DataTypes.INTEGER,
         allowNull: false,
+        validate: {
+            notEmpty: {
+                msg: "total field is required",
+            }
+        },
     },
     totalVAT: {
         type: DataTypes.INTEGER,
         allowNull: false,
+        validate: {
+            notEmpty: {
+                msg: "totalVAT field is required",
+            }
+        },
     },
     adress: {
         type: DataTypes.STRING,
         allowNull: false,
+        validate: {
+            notEmpty: {
+                msg: "adress field is required",
+            }
+        },
     },
     locale: {
         type: DataTypes.STRING,
         allowNull: false,
+        validate: {
+            notEmpty: {
+                msg: "locale field is required",
+            }
+        },
     },
     zipcode: {
         type: DataTypes.STRING,
         allowNull: false,
+        validate: {
+            notEmpty: {
+                msg: "zipcode field is required",
+            }
+        },
     },
     observation: {
         type: DataTypes.STRING,
-        allowNull: true,
     },
     fiscalNumber: {
         type: DataTypes.STRING,
-        allowNull: true,
     },
     UserId: {
         type: DataTypes.UUID,

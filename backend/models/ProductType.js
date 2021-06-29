@@ -10,11 +10,15 @@ const ProductType = db.define('ProductType', {
     name: {
         type: DataTypes.STRING,
         allowNull: false,
+        validate: {
+            notEmpty: {
+                msg: "name field is required",
+            }
+        },
         unique: true
     },
     description: {
         type: DataTypes.STRING,
-        allowNull: true,
     },
 },
    )

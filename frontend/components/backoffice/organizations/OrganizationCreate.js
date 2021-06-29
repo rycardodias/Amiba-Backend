@@ -11,7 +11,7 @@ export default class Create extends Component {
 
         this.state = {
             OrganizationTypeId: undefined,
-            UserId: this.props.UserId,
+            UserId: this.props.UserId, //FIXME buscar os utilizadores por array
             name: undefined,
             address: undefined,
             locale: undefined,

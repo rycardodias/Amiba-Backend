@@ -5,7 +5,7 @@ import Link from 'next/link'
 export const TitleAndBack = (props) => {
     return (
         <h4 style={{ display: 'inline-block' }}>
-            <Link href={props.backLink}><BsArrow90DegLeft /></Link>
+            <Link href={props.backLink} passHref><BsArrow90DegLeft /></Link>
             {props.title}
         </h4>
     )

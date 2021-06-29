@@ -11,16 +11,21 @@ const Menu = db.define('Menu', {
     title: {
         type: DataTypes.STRING,
         allowNull: false,
+        validate: {
+            notEmpty: {
+                msg: "title field is required",
+            }
+        },
     },
     description: {
         type: DataTypes.STRING,
-        allowNull: true,
     },
     image: {
         type: DataTypes.STRING
     },
     active: {
         type: DataTypes.BOOLEAN,
+        allowNull: false,
         defaultValue: true
     },
     RestaurantId: {

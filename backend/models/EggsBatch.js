@@ -20,18 +20,38 @@ const EggsBatch = db.define('EggsBatch', {
     caliber: {
         type: DataTypes.STRING,
         allowNull: false,
+        validate: {
+            notEmpty: {
+                msg: "caliber field is required",
+            }
+        }
     },
     batchNumber: {
         type: DataTypes.STRING,
         allowNull: false,
+        validate: {
+            notEmpty: {
+                msg: "batchNumber field is required",
+            }
+        }
     },
     name: {
         type: DataTypes.STRING,
         allowNull: false,
+        validate: {
+            notEmpty: {
+                msg: "name field is required",
+            }
+        }
     },
     quantity: {
         type: DataTypes.INTEGER,
         allowNull: false,
+        validate: {
+            notEmpty: {
+                msg: "quantity field is required",
+            }
+        }
     },
     RaceId: {
         type: DataTypes.UUID,

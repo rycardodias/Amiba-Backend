@@ -10,15 +10,24 @@ const Taxes = db.define('Taxes', {
     VATcode: {
         type: DataTypes.STRING,
         allowNull: false,
+        validate: {
+            notEmpty: {
+                msg: "VATcode field is required",
+            }
+        },
         unique: true
     },
     percentage: {
         type: DataTypes.INTEGER,
-        allowNull: false
+        allowNull: false,
+        validate: {
+            notEmpty: {
+                msg: "percentage field is required",
+            }
+        },
     },
     description: {
         type: DataTypes.STRING,
-        allowNull: true,
     },
 },
     { freezeTableName: true }

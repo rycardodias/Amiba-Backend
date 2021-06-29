@@ -10,15 +10,19 @@ const ExplorationType = db.define('ExplorationType', {
     name: {
         type: DataTypes.STRING,
         allowNull: false,
+        validate: {
+            notEmpty: {
+                msg: "name field is required",
+            }
+        },
         unique: true
     },
     description: {
         type: DataTypes.STRING,
-        allowNull: true,
     },
 },
    )
 
-//    ExplorationType.sync({force: true})
+//    ExplorationType.sync({alter: true})
    
 module.exports = ExplorationType

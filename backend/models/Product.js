@@ -14,14 +14,23 @@ const Product = db.define('Product', {
     name: {
         type: DataTypes.STRING,
         allowNull: false,
+        validate: {
+            notEmpty: {
+                msg: "name field is required",
+            }
+        },
     },
     description: {
         type: DataTypes.STRING,
-        allowNull: true,
     },
     price: {
         type: DataTypes.INTEGER,
         allowNull: false,
+        validate: {
+            notEmpty: {
+                msg: "price field is required",
+            }
+        },
     },
     animal: {
         type: DataTypes.UUID,

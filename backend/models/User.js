@@ -10,10 +10,20 @@ const User = db.define('User', {
     name: {
         type: DataTypes.STRING,
         allowNull: false,
+        validate: {
+            notEmpty: {
+                msg: "name field is required",
+            }
+        },
     },
     surname: {
         type: DataTypes.STRING,
         allowNull: false,
+        validate: {
+            notEmpty: {
+                msg: "surname field is required",
+            }
+        },
     },
     email: {
         type: DataTypes.STRING,
@@ -23,21 +33,40 @@ const User = db.define('User', {
         validate: {
             isEmail: {
                 msg: 'Please enter an email'
+            },
+            notEmpty: {
+                msg: "email field is required",
             }
         }
     },
     password: {
         type: DataTypes.STRING,
         allowNull: false,
+        validate: {
+            notEmpty: {
+                msg: "password field is required",
+            }
+        },
+        
     },
     active: {
-        type: DataTypes.INTEGER,
-        defaultValue: 1,
+        type: DataTypes.BOOLEAN,
+        defaultValue: true,
         allowNull: false,
+        validate: {
+            notEmpty: {
+                msg: "active field is required",
+            }
+        },
     },
     permission: {
         type: DataTypes.ARRAY(DataTypes.STRING),
         allowNull: false,
+        validate: {
+            notEmpty: {
+                msg: "permission field is required",
+            }
+        },
         defaultValue: ['USER'],
     },
     
@@ -63,7 +92,7 @@ const User = db.define('User', {
 )
 
 
-// User.sync({ alter: true })
+// User.sync({ force: true })
 
 
 

@@ -6,12 +6,16 @@ const OrderHistory = db.define('OrderHistory', {
     id: {
         type: DataTypes.UUID,
         primaryKey: true,
-        allowNull: false,
         defaultValue: DataTypes.UUIDV4
     },
     state: {
         type: DataTypes.INTEGER,
         allowNull: false,
+        validate: {
+            notEmpty: {
+                msg: "state field is required",
+            }
+        },
         unique: true
     },
     OrderId: {

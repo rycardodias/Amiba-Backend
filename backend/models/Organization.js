@@ -20,12 +20,30 @@ const Organization = db.define('Organization', {
     },
     address: {
         type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+            notEmpty: {
+                msg: "address field is required",
+            }
+        },
     },
     locale: {
         type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+            notEmpty: {
+                msg: "locale field is required",
+            }
+        },
     },
     zipcode: {
         type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+            notEmpty: {
+                msg: "zipcode field is required",
+            }
+        },
     },
     telephone: {
         type: DataTypes.INTEGER,
@@ -71,7 +89,7 @@ OrganizationType.hasMany(Organization)
 Organization.belongsTo(User)
 User.hasMany(Organization)
 
-// Organization.sync({ force: true })
+// Organization.sync({ alter: true })
 // db.query("ALTER TABLE \"Organizations\" DROP CONSTRAINT \"Organizations_OrganizationTypeId_fkey\", " +
 //     " ADD CONSTRAINT \"Organizations_OrganizationTypeId_fkey\" FOREIGN KEY(\"OrganizationTypeId\") REFERENCES \"OrganizationTypes\" " +
 //     "ON UPDATE NO ACTION;")

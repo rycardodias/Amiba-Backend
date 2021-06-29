@@ -22,11 +22,15 @@ const AnimalProduct = db.define('AnimalProduct', {
     },
     weight: {
         type: DataTypes.INTEGER,
-        allowNull: false
+        allowNull: false,
+        validate: {
+            notEmpty: {
+                msg: "weight field is required",
+            }
+        }
     },
     description: {
         type: DataTypes.STRING,
-        allowNull: true,
     }
 },
 )

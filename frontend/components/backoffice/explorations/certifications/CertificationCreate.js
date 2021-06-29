@@ -10,11 +10,11 @@ export default class Create extends Component {
         super(props)
 
         this.state = {
-            ExplorationId: undefined,
-            certificationCode: undefined,
-            initialDate: undefined,
-            finalDate: undefined,
-            description: undefined,
+            ExplorationId: "",
+            certificationCode: "",
+            initialDate: "",
+            finalDate: "",
+            description: "",
             isButtonDisabled: true,
             explorations: []
         }
@@ -65,10 +65,9 @@ export default class Create extends Component {
         const { ExplorationId, certificationCode, initialDate, finalDate, description, isButtonDisabled, explorations } = this.state
 
         return (
-
             <>
-
                 <TitleAndBack backLink="/backoffice/explorations/certifications" title="Criar Certificação" />
+                
                 <Form >
                     <Form.Group controlId="certificationCode" >
                         <Form.Label >Código</Form.Label>

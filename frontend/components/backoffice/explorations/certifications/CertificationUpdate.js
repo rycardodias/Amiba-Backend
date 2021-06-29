@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
-import { getCertificationId, updateCertifications, deleteCertification } from '../../../../lib/requests/certificationsRequests'
+import { getCertificationId, deleteCertification, updateCertification } from '../../../../lib/requests/certificationsRequests'
 import Router from 'next/router'
 import { TitleAndBack } from '../../TitleAndBack'
 
@@ -50,7 +50,8 @@ export default class OrganizationUpdate extends Component {
         const { id, ExplorationId, certificationCode, initialDate, finalDate, description } = this.state
 
         if (id && ExplorationId && certificationCode && initialDate && finalDate) {
-            const res = await updateCertifications(id, ExplorationId, certificationCode, initialDate, finalDate, description)
+            console.log("entra")
+            const res = await updateCertification(id, ExplorationId, certificationCode, initialDate, finalDate, description)
             if (res.data.error) {
                 alert(res.data.error)
                 console.log(res.data.err)

@@ -11,22 +11,47 @@ const Restaurant = db.define('Restaurant', {
     name: {
         type: DataTypes.STRING,
         allowNull: false,
+        validate: {
+            notEmpty: {
+                msg: "name field is required",
+            }
+        },
     },
     description: {
         type: DataTypes.STRING,
         allowNull: false,
+        validate: {
+            notEmpty: {
+                msg: "description field is required",
+            }
+        },
     },
-    adress: {
+    address: {
         type: DataTypes.STRING,
-        allowNull: true,
+        allowNull: false,
+        validate: {
+            notEmpty: {
+                msg: "address field is required",
+            }
+        },
     },
     locale: {
         type: DataTypes.STRING,
-        allowNull: true,
+        allowNull: false,
+        validate: {
+            notEmpty: {
+                msg: "locale field is required",
+            }
+        },
     },
     zipcode: {
         type: DataTypes.STRING,
-        allowNull: true,
+        allowNull: false,
+        validate: {
+            notEmpty: {
+                msg: "zipcode field is required",
+            }
+        },
     },
     fiscalNumber: {
         type: DataTypes.INTEGER,
@@ -46,6 +71,6 @@ const Restaurant = db.define('Restaurant', {
 
 // Restaurant.belongsTo(User)
 // User.hasMany(Restaurant)
-// Restaurant.sync({ force: true })
+// Restaurant.sync({ alter: true })
 
 module.exports = Restaurant

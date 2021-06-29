@@ -12,14 +12,29 @@ const OrderLine = db.define('OrderLine', {
     quantity: {
         type: DataTypes.INTEGER,
         allowNull: false,
+        validate: {
+            notEmpty: {
+                msg: "quantity field is required",
+            }
+        },
     },
     total: {
         type: DataTypes.INTEGER,
         allowNull: false,
+        validate: {
+            notEmpty: {
+                msg: "total field is required",
+            }
+        },
     },
     totalVAT: {
         type: DataTypes.INTEGER,
         allowNull: false,
+        validate: {
+            notEmpty: {
+                msg: "totalVAT field is required",
+            }
+        },
     },
     OrderId: {
         type: DataTypes.UUID,
