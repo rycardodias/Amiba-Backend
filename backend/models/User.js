@@ -87,12 +87,21 @@ const User = db.define('User', {
         allowNull: true,
         unique: true
     },
+    telephone: {
+        type: DataTypes.INTEGER,
+        unique: true
+    },
+    mobilePhone: {
+        type: DataTypes.INTEGER,
+        unique: true
+    },
+    
 },
     // { freezeTableName: true }
 )
 
 
-// User.sync({ force: true })
+// User.sync({ alter: true })
 
 
 

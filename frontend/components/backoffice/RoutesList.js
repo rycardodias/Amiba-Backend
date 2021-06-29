@@ -28,11 +28,6 @@ export const RoutesList = (props) => {
                             }
                         })
                     }
-                    {/* {props.route === "/backoffice" ? null : 
-                        <Col key={1} sm="2" style={{ minWidth: '150px' }} >
-                            <MenuItems route={props.previousRoute} title="Voltar" subtitle="" />
-                        </Col>
-                    } */}
                 </>
             </Row>
         </Container>

@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import ExplorationUpdate from '../../../../components/backoffice/explorations/ExplorationUpdate'
+import UserUpdate from '../../../../components/backoffice/users/UserUpdate'
 import Me from '../../../../components/Me'
 
 export default function Update(props) {
@@ -16,7 +16,7 @@ export default function Update(props) {
                 }
 
                 return (
-                    <ExplorationUpdate id={query.id} UserId={items.data.id} />
+                    <UserUpdate id={query.id} UserId={items.data.id} />
                 )
             }
             }

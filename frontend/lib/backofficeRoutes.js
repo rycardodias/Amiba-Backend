@@ -133,6 +133,14 @@ const routes = [
         description: 'Gestão de Utilizadores',
 
     },
+    {
+        route: '/backoffice/users',
+        nextRoute: '/backoffice/users/list',
+        permission: ['ADMIN'],
+        title: 'Lista de Utilizadores',
+        description: '',
+
+    },
 
     //ORDERS
     {

@@ -20,18 +20,19 @@ router.get('/id/:id', (req, res) => {
 })
 
 router.post('/create', async (req, res) => {
-    const { name, surname, email, password, organization, address, locale, zipcode, fiscalNumber } = req.body
+    const { name, surname, email, password,  address, locale, zipcode, fiscalNumber, telephone, mobilePhone } = req.body
 
     Model.create({
         name: name,
         surname: surname,
         email: email,
         password: bcrypt.hashSync(password, 10),
-        organization: organization,
         address: address,
         locale: locale,
         zipcode: zipcode,
-        fiscalNumber: fiscalNumber
+        fiscalNumber: fiscalNumber,
+        telephone: telephone,
+        mobilePhone: mobilePhone
 
     })
         .then(status => {
@@ -43,7 +44,7 @@ router.post('/create', async (req, res) => {
 
 
 router.put('/update', async (req, res) => {
-    const { token, id, name, surname, email, password, active, permission, organization, address, locale, zipcode, fiscalNumber } = req.body
+    const { token, id, name, surname, email, password, active, permission, address, locale, zipcode, fiscalNumber, telephone, mobilePhone } = req.body
 
     if (!token) {
         return res.json({ error: "Token must be provided!" })
@@ -63,11 +64,12 @@ router.put('/update', async (req, res) => {
         password: password ? bcrypt.hashSync(password, 10) : undefined,
         active: tokenData[1] === 'ADMIN' ? active : undefined,
         permission: tokenData[1] === 'ADMIN' ? permission : ["ADMIN"],
-        organization: tokenData[1] === 'ADMIN' ? organization : undefined,
         address: address,
         locale: locale,
         zipcode: zipcode,
-        fiscalNumber: fiscalNumber
+        fiscalNumber: fiscalNumber,
+        telephone: telephone,
+        mobilePhone: mobilePhone
     }
 
     Model.update(data,

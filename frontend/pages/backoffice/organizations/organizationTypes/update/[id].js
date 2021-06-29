@@ -2,7 +2,7 @@ import { useRouter } from "next/router";
 import OrganizationUpdate from '../../../../../components/backoffice/organizations/organizationTypes/OrganizationTypesUpdate'
 import Me from '../../../../../components/Me'
 
-export default function Items(props) {
+export default function Update(props) {
     const { pathname, query } = useRouter();
     return (
         <Me url={pathname}>
