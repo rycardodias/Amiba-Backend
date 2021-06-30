@@ -64,22 +64,6 @@ const Organization = db.define('Organization', {
             },
         }
     },
-    OrganizationTypeId: {
-        type: DataTypes.UUID,
-        allowNull: false,
-        references: {
-            model: OrganizationType,
-            key: 'id'
-        }
-    },
-    UserId: {
-        type: DataTypes.UUID,
-        allowNull: false,
-        references: {
-            model: User,
-            key: 'id'
-        }
-    }
 },
 )
 Organization.belongsTo(OrganizationType)
@@ -89,7 +73,7 @@ OrganizationType.hasMany(Organization)
 Organization.belongsTo(User)
 User.hasMany(Organization)
 
-// Organization.sync({ alter: true })
+// Organization.sync({ force: true })
 // db.query("ALTER TABLE \"Organizations\" DROP CONSTRAINT \"Organizations_OrganizationTypeId_fkey\", " +
 //     " ADD CONSTRAINT \"Organizations_OrganizationTypeId_fkey\" FOREIGN KEY(\"OrganizationTypeId\") REFERENCES \"OrganizationTypes\" " +
 //     "ON UPDATE NO ACTION;")

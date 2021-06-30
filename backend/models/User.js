@@ -72,19 +72,15 @@ const User = db.define('User', {
     
     address: {
         type: DataTypes.STRING,
-        allowNull: true,
     },
     locale: {
         type: DataTypes.STRING,
-        allowNull: true,
     },
     zipcode: {
         type: DataTypes.STRING,
-        allowNull: true,
     },
     fiscalNumber: {
         type: DataTypes.INTEGER,
-        allowNull: true,
         unique: true
     },
     telephone: {

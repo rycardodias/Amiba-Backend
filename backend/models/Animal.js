@@ -7,14 +7,10 @@ const Animal = db.define('Animal', {
     id: {
         type: DataTypes.UUID,
         primaryKey: true,
-        defaultValue: DataTypes.UUIDV4
-    },
-    animalCode: {
-        type: DataTypes.STRING,
         allowNull: false,
         validate: {
             notEmpty: {
-                msg: "animalCode field is required",
+                msg: "id field is required",
             }
         }
     },

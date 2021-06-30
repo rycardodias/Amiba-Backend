@@ -64,22 +64,6 @@ const Exploration = db.define('Exploration', {
     gpsLocalization: {
         type: DataTypes.STRING,
     },
-    OrganizationId: {
-        type: DataTypes.UUID,
-        allowNull: false,
-        references: {
-            model: Organization,
-            key: 'id'
-        }
-    },
-    ExplorationTypeId: {
-        type: DataTypes.UUID,
-        allowNull: false,
-        references: {
-            model: ExplorationType,
-            key: 'id'
-        }
-    }
 },
 )
 
@@ -89,7 +73,7 @@ Organization.hasMany(Exploration)
 Exploration.belongsTo(ExplorationType)
 ExplorationType.hasMany(Exploration)
 
-// Exploration.sync({ alter: true })
+// Exploration.sync({ force: true })
 
 // db.query("ALTER TABLE \"Explorations\" DROP CONSTRAINT \"Explorations_ExplorationTypeId_fkey\", " +
 //     " ADD CONSTRAINT \"Explorations_ExplorationTypeId_fkey\" FOREIGN KEY(\"ExplorationTypeId\") REFERENCES \"ExplorationTypes\" " +

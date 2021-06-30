@@ -17,16 +17,14 @@ router.get('/id/:id', (req, res) => {
 })
 
 router.post('/create', (req, res) => {
-    const { ProductTypeId, TaxId, name, description, price, animal, eggsBatch } = req.body
+    const { ProductTypeId, tax, name, description, price } = req.body
 
     Model.create({
         ProductTypeId: ProductTypeId,
-        TaxId: TaxId,
+        tax: tax,
         name: name,
         description: description,
         price: price,
-        animal: animal,
-        eggsBatch: eggsBatch
 
     })
         .then(status => res.json({ data: status }))
@@ -35,7 +33,7 @@ router.post('/create', (req, res) => {
 
 
 router.put('/update', (req, res) => {
-    const { id, ProductTypeId, TaxId, name, description, price, animal, eggsBatch } = req.body
+    const { id, ProductTypeId, tax, name, description, price } = req.body
 
     if (id == undefined || id == "") {
         res.send("Error! An id must be provided!")
@@ -43,12 +41,10 @@ router.put('/update', (req, res) => {
 
     const data = {
         ProductTypeId: ProductTypeId,
-        TaxId: TaxId,
+        tax: tax,
         name: name,
         description: description,
         price: price,
-        animal: animal,
-        eggsBatch: eggsBatch
     }
 
     Model.update(data,

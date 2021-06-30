@@ -1,9 +1,6 @@
 const { DataTypes, Sequelize } = require('sequelize');
 const db = require('../config/database');
 const ProductType = require('./ProductType');
-const Taxes = require('./Taxes');
-const Animal = require('./Animal');
-const EggsBatch = require('./EggsBatch');
 
 const Product = db.define('Product', {
     id: {
@@ -32,21 +29,14 @@ const Product = db.define('Product', {
             }
         },
     },
-    animal: {
-        type: DataTypes.UUID,
-        allowNull: true,
-        references: {
-            model: Animal,
-            key: 'id'
-        }
-    },
-    eggsBatch: {
-        type: DataTypes.UUID,
-        allowNull: true,
-        references: {
-            model: EggsBatch,
-            key: 'id'
-        }
+    tax: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        validate: {
+            notEmpty: {
+                msg: "price field is required",
+            }
+        },
     },
     ProductTypeId: {
         type: DataTypes.UUID,
@@ -56,22 +46,15 @@ const Product = db.define('Product', {
             key: 'id'
         }
     },
-    TaxesId: {
-        type: DataTypes.UUID,
-        allowNull: false,
-        references: {
-            model: Taxes,
-            key: 'id'
-        }
-    }
+
 },
-   )
+)
 //    Product.belongsTo(ProductType)
 //    ProductType.hasMany(Product)
 
 //    Product.belongsTo(Taxes)
 //    Taxes.hasMany(Product)
 
-//   Product.sync({alter: true})
-   
+//   Product.sync({force: true})
+
 module.exports = Product
