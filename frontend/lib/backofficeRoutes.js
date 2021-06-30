@@ -142,15 +142,7 @@ const routes = [
 
     },
 
-    //ORDERS
-    {
-        route: '/backoffice',
-        nextRoute: '/backoffice/orders',
-        permission: ['ADMIN', 'AMIBA'],
-        title: 'Encomendas',
-        description: 'Gestão de Encomendas',
-
-    },
+    
 
     //RESTAURANTS
     {
@@ -169,6 +161,16 @@ const routes = [
         permission: ['ADMIN','AMIBA'],
         title: 'Menus',
         description: 'Gestão de Menus',
+
+    },
+
+    //ORDERS
+    {
+        route: '/backoffice',
+        nextRoute: '/backoffice/orders',
+        permission: ['ADMIN', 'AMIBA'],
+        title: 'Encomendas',
+        description: 'Gestão de Encomendas',
 
     },
 ]
