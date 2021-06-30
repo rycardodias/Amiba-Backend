@@ -4,6 +4,10 @@ import Button from 'react-bootstrap/Button'
 import { deleteExploration, getExplorationId, getExplorationTypes, updateExploration } from '../../../lib/requests/explorationsRequests'
 import Router from 'next/router'
 import { TitleAndBack } from '../TitleAndBack'
+
+const componentName = 'Exploração'
+const backURL = '/backoffice/explorations/list'
+
 export default class OrganizationUpdate extends Component {
     constructor(props) {
         super(props)
@@ -50,7 +54,7 @@ export default class OrganizationUpdate extends Component {
                 isButtonDisabled: false
             })
         } else {
-            Router.push('/backoffice/explorations/list', null, { shallow: true })
+            Router.push(backURL, null, { shallow: true })
         }
     }
 
@@ -64,7 +68,7 @@ export default class OrganizationUpdate extends Component {
         }
     }
 
-    updateExploration = async () => {
+    update = async () => {
         const { id, OrganizationId, ExplorationTypeId, name, address, locale, zipcode, telephone, mobilePhone, fiscalNumber, gpsLocalization } = this.state
 
         const res = await updateExploration(id, OrganizationId, ExplorationTypeId, name, address, locale, zipcode, telephone, mobilePhone, fiscalNumber, gpsLocalization)
@@ -74,16 +78,16 @@ export default class OrganizationUpdate extends Component {
             console.log(res.data.err)
             return
         }
-        Router.push('/backoffice/explorations/list', null, { shallow: true })
+        Router.push(backURL, null, { shallow: true })
     };
 
-    deleteExploration = async () => {
+    delete = async () => {
         const { id } = this.state
         const res = (await deleteExploration(id)).data
         if (res.error) {
             alert(res.error)
         } else {
-            Router.push('/backoffice/explorations/list', null, { shallow: true })
+            Router.push(backURL, null, { shallow: true })
         }
 
     }
@@ -107,7 +111,7 @@ export default class OrganizationUpdate extends Component {
         const { id, OrganizationId, ExplorationTypeId, name, address, locale, zipcode, telephone, mobilePhone, fiscalNumber, gpsLocalization, explorationTypes } = this.state
         return (
             <>
-                <TitleAndBack backLink="/backoffice/explorations/list" title="Alterar Exploração" />
+                <TitleAndBack backLink={backURL} title={`Alterar ${componentName}`} />
 
                 <Form>
                     <Form.Group controlId="name" >
@@ -154,8 +158,8 @@ export default class OrganizationUpdate extends Component {
                         <Form.Control name="gpsLocalization" value={gpsLocalization} onChange={this.saveToState} placeholder="GPS" />
                     </Form.Group>
                     <div style={{ marginTop: '0.5rem' }}>
-                        <Button variant="outline-success" onClick={this.updateExploration} disabled={this.state.isButtonDisabled}>Modificar Exploração</Button>
-                        <Button variant="outline-danger" onClick={this.deleteExploration} disabled={this.state.isButtonDisabled}>Eliminar Exploração</Button>
+                        <Button variant="outline-success" onClick={this.update} disabled={isButtonDisabled}>Alterar {componentName}</Button>
+                        <Button variant="outline-danger" onClick={this.delete} disabled={isButtonDisabled}>Eliminar {componentName}</Button>
                     </div>
                 </Form >
             </>

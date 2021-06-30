@@ -1,49 +1,51 @@
 import React from 'react'
 import Table from 'react-bootstrap/Table'
 import Link from 'next/link'
-import { getOrganizationTypes } from '../../../../lib/requests/organizationsTypesRequests'
+import { getMenus } from '../../../../lib/requests/menusRequests'
 
 import { TitleAndBack } from '../../TitleAndBack'
-export default class list extends React.Component {
+export default class List extends React.Component {
     constructor(props) {
         super(props)
 
         this.state = {
-            organizationsData: []
+            menusData: []
         }
     }
 
-    getAllOrganizationTypes = async () => {
-        const res = await getOrganizationTypes()
-        this.setState({ organizationsData: res.data.data })
+    getMenus = async () => {
+        const res = await getMenus()
+        this.setState({ menusData: res.data.data })
     }
     componentDidMount() {
-        this.getAllOrganizationTypes()
+        this.getMenus()
     }
 
     render() {
         return (
             <>
-                <TitleAndBack backLink="/backoffice/organizations/organizationTypes" title="Tipos de Organizações"/>
+                <TitleAndBack backLink="/backoffice/restaurants/menus" title="Menus de Restaurantes"/>
                 
                 <Table responsive>
                     <thead>
                         <tr key="0">
-                            <th >Nome</th>
+                            <th >Titulo</th>
                             <th >Descrição</th>
-                            <th >Data Registo</th>
-                            <th >Data Alteração</th>
+                            <th >Restaurante</th>
+                            <th >Imagem</th>
+                            <th >Activo</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {this.state.organizationsData.map((item, index) => {
+                        {this.state.menusData.map((item, index) => {
                             return (
                                 <Link key={index} href={{ pathname: `update/${item.id}` }} >
                                     <tr key={index}>
-                                        <td>{item.name}</td>
+                                        <td>{item.title}</td>
                                         <td>{item.description}</td>
-                                        <td>{item.createdAt}</td>
-                                        <td>{item.updatedAt}</td>
+                                        <td>{item.Restaurant.name}</td>
+                                        <td>{item.image}</td>
+                                        <td>{item.active}</td>
                                     </tr>
                                 </Link>
                             )

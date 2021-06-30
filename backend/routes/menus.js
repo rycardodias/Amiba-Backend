@@ -3,26 +3,28 @@ const router = express.Router()
 const db = require('../config/database')
 
 const Model = require('../models/Menu')
+const Restaurant = require('../models/Restaurant')
 
 router.get('/', (req, res) => {
-    Model.findAll()
+    Model.findAll({ include: [Restaurant] })
         .then(status => res.json({ data: status }))
         .catch(err => console.log(err))
 })
 
 router.get('/id/:id', (req, res) => {
-    Model.findByPk(req.params.id)
+    Model.findByPk(req.params.id, { include: [Restaurant] })
         .then(status => res.json({ data: status }))
         .catch(err => console.log(err))
 })
 
 router.post('/create', (req, res) => {
-    const { RestaurantId, name, description } = req.body
+    const { RestaurantId, title, description, image, active } = req.body
 
     Model.create({
         RestaurantId: RestaurantId,
-        name: name,
-        description: description
+        title: title,
+        description: description,
+        image: image,
     })
         .then(status => res.json({ data: status }))
         .catch(err => res.send(err))
@@ -30,16 +32,18 @@ router.post('/create', (req, res) => {
 
 
 router.put('/update', (req, res) => {
-    const { id, RestaurantId, name, description } = req.body
+    const { id, RestaurantId, title, description, image, active } = req.body
 
-    if (id == undefined || id == "") {
-        res.send("Error! An id must be provided!")
+    if (!id) {
+        res.json({error: "Error! An id must be provided!"})
     }
 
     const data = {
         RestaurantId: RestaurantId,
-        name: name,
-        description: description
+        title: title,
+        description: description,
+        image: image,
+        active: active,
     }
 
     Model.update(data,
@@ -61,7 +65,7 @@ router.delete('/delete', (req, res) => {
         },
     })
         .then(status => res.json(status))
-        .catch(err => res.json({error: "Erro! Não foi possivel eliminar o registo!", err: err}))
+        .catch(err => res.json({ error: "Erro! Não foi possivel eliminar o registo!", err: err }))
 })
 
 module.exports = router

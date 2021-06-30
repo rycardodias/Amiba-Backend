@@ -5,6 +5,9 @@ import { getCertificationId, deleteCertification, updateCertification } from '..
 import Router from 'next/router'
 import { TitleAndBack } from '../../TitleAndBack'
 
+const componentName = 'Certificação'
+const backURL = '/backoffice/explorations/certifications/list'
+
 export default class OrganizationUpdate extends Component {
     constructor(props) {
         super(props)
@@ -41,12 +44,12 @@ export default class OrganizationUpdate extends Component {
                 isButtonDisabled: false
             })
         } else {
-            Router.push('/backoffice/explorations/certifications/list', null, { shallow: true })
+            Router.push(backURL, null, { shallow: true })
         }
     }
 
 
-    updateCertifications = async () => {
+    update = async () => {
         const { id, ExplorationId, certificationCode, initialDate, finalDate, description } = this.state
 
         if (id && ExplorationId && certificationCode && initialDate && finalDate) {
@@ -57,21 +60,21 @@ export default class OrganizationUpdate extends Component {
                 console.log(res.data.err)
                 return
             }
-            Router.push('/backoffice/explorations/certifications/list', null, { shallow: true })
+            Router.push(backURL, null, { shallow: true })
         } else {
             alert("Erro! Existem campos inválidos!")
         }
 
     };
 
-    deleteCertification = async () => {
+    delete = async () => {
         const { id } = this.state
 
         const res = (await deleteCertification(id)).data
         if (res.error) {
             alert(res.error)
         } else {
-            Router.push('/backoffice/explorations/certifications/list', null, { shallow: true })
+            Router.push(backURL, null, { shallow: true })
         }
     }
 
@@ -95,7 +98,7 @@ export default class OrganizationUpdate extends Component {
 
         return (
             <>
-                <TitleAndBack backLink="/backoffice/explorations/certifications/list" title="Alterar Certificação" />
+                <TitleAndBack backLink={backURL} title={`Alterar ${componentName}`} />
 
                 <Form>
                     <Form.Group controlId="certificationCode" >
@@ -122,8 +125,8 @@ export default class OrganizationUpdate extends Component {
                         <Form.Control name="description" value={description} onChange={this.saveToState} placeholder="Inserir Descrição" />
                     </Form.Group>
                     <div style={{ marginTop: '0.5rem' }}>
-                        <Button variant="outline-success" onClick={this.updateCertifications} disabled={isButtonDisabled}>Modificar Certificação</Button>
-                        <Button variant="outline-danger" onClick={this.deleteCertification} disabled={isButtonDisabled}>Eliminar Certificação</Button>
+                        <Button variant="outline-success" onClick={this.update} disabled={isButtonDisabled}>Alterar {componentName}</Button>
+                        <Button variant="outline-danger" onClick={this.delete} disabled={isButtonDisabled}>Eliminar {componentName}</Button>
                     </div>
                 </Form >
             </>

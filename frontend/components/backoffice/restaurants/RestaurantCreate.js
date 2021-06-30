@@ -117,7 +117,7 @@ export default class Create extends Component {
                         <Form.Control name="mobilePhone" value={mobilePhone} onChange={this.saveToState} placeholder="Telemovel" />
                     </Form.Group>
                     <div style={{ marginTop: '0.5rem' }}>
-                        <Button variant="outline-success" onClick={this.createRestaurant} disabled={isButtonDisabled}>Adicionar Organização</Button>
+                        <Button variant="outline-success" onClick={this.createRestaurant} disabled={isButtonDisabled}>Adicionar Restaurante</Button>
                     </div>
                 </Form>
             </>

@@ -6,6 +6,9 @@ import { getUsers } from '../../../lib/requests/usersRequests'
 import Router from 'next/router'
 import { TitleAndBack } from '../TitleAndBack'
 
+const componentName = 'Restaurante'
+const backURL = '/backoffice/restaurants/list'
+
 export default class OrganizationUpdate extends Component {
     constructor(props) {
         super(props)
@@ -58,13 +61,13 @@ export default class OrganizationUpdate extends Component {
                 mobilePhone: restaurant.mobilePhone
             })
         } else {
-            Router.push('/backoffice/restaurants/list', null, { shallow: true })
+            Router.push(backURL, null, { shallow: true })
         }
     }
 
 
 
-    updateRestaurant = async () => {
+    update = async () => {
         const { id, UserId, name, description, address, locale, zipcode, fiscalNumber, telephone, mobilePhone } = this.state
 
         const res = await updateRestaurant(id, UserId, name, description, address, locale, zipcode, fiscalNumber, telephone, mobilePhone)
@@ -74,17 +77,17 @@ export default class OrganizationUpdate extends Component {
             console.log(res.data.err)
             return
         }
-        Router.push('/backoffice/restaurants/list', null, { shallow: true })
+        Router.push(backURL, null, { shallow: true })
 
     };
 
-    deleteRestaurant = async () => {
+    delete = async () => {
         const { id } = this.state
         const res = (await deleteRestaurant(id)).data
         if (res.error) {
             alert(res.error)
         } else {
-            Router.push('/backoffice/restaurants/list', null, { shallow: true })
+            Router.push(backURL, null, { shallow: true })
         }
 
     }
@@ -107,8 +110,7 @@ export default class OrganizationUpdate extends Component {
         const { id, UserId, name, description, address, locale, zipcode, fiscalNumber, telephone, mobilePhone, isButtonDisabled, usersData } = this.state
         return (
             <>
-                <TitleAndBack backLink="/backoffice/restaurants/list" title="Alterar Restaurante" />
-                {UserId}
+                <TitleAndBack backLink={backURL} title={`Alterar ${componentName}`} />
                 <Form>
                     <Form.Group controlId="name" >
                         <Form.Label >Nome</Form.Label>
@@ -155,8 +157,8 @@ export default class OrganizationUpdate extends Component {
                         <Form.Control name="mobilePhone" value={mobilePhone} onChange={this.saveToState} placeholder="mobilePhone" />
                     </Form.Group>
                     <div style={{ marginTop: '0.5rem' }}>
-                        <Button variant="outline-success" onClick={this.updateRestaurant} disabled={isButtonDisabled}>Modificar Restaurante</Button>
-                        <Button variant="outline-danger" onClick={this.deleteRestaurant} disabled={isButtonDisabled}>Eliminar Restaurante</Button>
+                        <Button variant="outline-success" onClick={this.update} disabled={isButtonDisabled}>Alterar {componentName}</Button>
+                        <Button variant="outline-danger" onClick={this.delete} disabled={isButtonDisabled}>Eliminar {componentName}</Button>
                     </div>
                 </Form >
             </>

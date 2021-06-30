@@ -1,67 +1,74 @@
 import React, { Component } from 'react'
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
-import { getOrganizationTypes, updateOrganizationTypes, deleteOrganizationTypes } from '../../../../lib/requests/organizationsTypesRequests'
+import { getMenuId, deleteMenu, updateMenu } from '../../../../lib/requests/menusRequests'
 import Router from 'next/router'
 import { TitleAndBack } from '../../TitleAndBack'
 
-export default class OrganizationUpdate extends Component {
+const componentName = 'Menu'
+const backURL = '/backoffice/restaurants/menus/list'
+
+export default class MenuUpdate extends Component {
     constructor(props) {
         super(props)
 
         this.state = {
             id: "",
-            name: "",
+            RestaurantId: "",
+            RestaurantName: "",
+            title: "",
             description: "",
+            image: "",
+            active: true,
             isButtonDisabled: true,
-        }
+        }        
     }
 
+    
     componentDidMount() {
-        this.getOrganizationTypes()
+        this.getRecord()
     }
 
 
-    getOrganizationTypes = async () => {
-        const organizations = (await getOrganizationTypes()).data.data
-        const params = this.props.id
-
-        const org = organizations.filter(organization => (organization.id === params))[0]
-
-        if (org) {
+    getRecord = async () => {
+        const menu = (await getMenuId(this.props.id)).data.data
+        if (menu) {
             this.setState({
-                id: params ? org.id : organizations[0].id,
-                name: params ? org.name : organizations[0].name,
-                description: params ? org.description : organizations[0].description,
-                isButtonDisabled: false
+                id: menu.id,
+                RestaurantId: menu.RestaurantId,
+                RestaurantName: menu.Restaurant.name,
+                title: menu.title,
+                description: menu.description,
+                image: menu.image,
+                active: menu.active
             })
         } else {
-            Router.push('/backoffice/organizations/organizationTypes/list', null, { shallow: true })
+            Router.push(backURL, null, { shallow: true })
         }
     }
 
 
-    updateOrganizationTypes = async () => {
-        const { id, name, description } = this.state
+    update = async () => {
+        const { id, RestaurantId, title, description, image, active, isButtonDisabled } = this.state
 
-        const res = await updateOrganizationTypes(id, name, description)
+        const res = await updateMenu(id, RestaurantId, title, description, image, active)
         // alert(res.data.data)
         if (res.data.error) {
             alert(res.data.error)
             console.log(res.data.err)
             return
         }
-        Router.push('/backoffice/organizations/organizationTypes/list', null, { shallow: true })
+        Router.push(backURL, null, { shallow: true })
     };
 
-    deleteOrgType = async () => {
+    delete = async () => {
         const { id } = this.state
 
-        const res = (await deleteOrganizationTypes(id)).data
+        const res = (await deleteMenu(id)).data
         if (res.error) {
             alert(res.error)
         } else {
-            Router.push('/backoffice/organizations/organizationTypes/list', null, { shallow: true })
+            Router.push(backURL, null, { shallow: true })
         }
 
     }
@@ -71,9 +78,9 @@ export default class OrganizationUpdate extends Component {
     };
 
     verifyNulls = () => {
-        const { id, name, description } = this.state
+        const { id, RestaurantId, title, description, image } = this.state
 
-        if (id && name && description) {
+        if (id && RestaurantId && title && description) {
             this.setState({ isButtonDisabled: false })
         } else {
             this.setState({ isButtonDisabled: true })
@@ -81,23 +88,31 @@ export default class OrganizationUpdate extends Component {
     }
 
     render() {
+        const { id, RestaurantId, RestaurantName, title, description, image, active, isButtonDisabled } = this.state
         return (
             <>
-                <TitleAndBack backLink="/backoffice/organizations/organizationTypes/list" title="Alterar Tipo de Organização" />
-
+                <TitleAndBack backLink={backURL} title={`Alterar ${componentName}`} />
                 <Form>
-                    <Form.Group controlId="name" >
+                    <Form.Group controlId="RestaurantName" >
                         <Form.Label >Nome</Form.Label>
-                        <Form.Control name="name" value={this.state.name} onChange={this.saveToState} placeholder="Inserir nome" />
+                        <Form.Control disabled name="RestaurantName" value={RestaurantName} onChange={this.saveToState} placeholder="Inserir Nome Restaurante" />
                     </Form.Group>
-
+                    <Form.Group controlId="title">
+                        <Form.Label>Titulo</Form.Label>
+                        <Form.Control name="title" value={title} onChange={this.saveToState} placeholder="Inserir titulo" />
+                    </Form.Group>
                     <Form.Group controlId="description">
                         <Form.Label>Descrição</Form.Label>
-                        <Form.Control name="description" value={this.state.description} onChange={this.saveToState} placeholder="Descrição" />
+                        <Form.Control name="description" value={description} onChange={this.saveToState} placeholder="Descrição" />
                     </Form.Group>
+                    <Form.Group controlId="image">
+                        <Form.Label>Imagem</Form.Label>
+                        <Form.Control name="image" value={image} onChange={this.saveToState} placeholder="Imagem" />
+                    </Form.Group>
+
                     <div style={{ marginTop: '0.5rem' }}>
-                        <Button variant="outline-success" onClick={this.updateOrganizationTypes} disabled={this.state.isButtonDisabled}>Modificar Tipo Organização</Button>
-                        <Button variant="outline-danger" onClick={this.deleteOrgType} disabled={this.state.isButtonDisabled}>Eliminar Tipo Organização</Button>
+                        <Button variant="outline-success" onClick={this.update} disabled={isButtonDisabled}>Alterar {componentName}</Button>
+                        <Button variant="outline-danger" onClick={this.delete} disabled={isButtonDisabled}>Eliminar {componentName}</Button>
                     </div>
                 </Form >
             </>

@@ -5,6 +5,9 @@ import { getOrganizationTypes, updateOrganizationTypes, deleteOrganizationTypes 
 import Router from 'next/router'
 import { TitleAndBack } from '../../TitleAndBack'
 
+const componentName = 'Tipo de Exploração'
+const backURL = '/backoffice/explorations/explorationTypes/list'
+
 export default class OrganizationUpdate extends Component {
     constructor(props) {
         super(props)
@@ -36,12 +39,12 @@ export default class OrganizationUpdate extends Component {
                 isButtonDisabled: false
             })
         } else {
-            Router.push('/backoffice/organizations/organizationTypes/list', null, { shallow: true })
+            Router.push(backURL, null, { shallow: true })
         }
     }
 
 
-    updateOrganizationTypes = async () => {
+    update = async () => {
         const { id, name, description } = this.state
 
         const res = await updateOrganizationTypes(id, name, description)
@@ -51,17 +54,17 @@ export default class OrganizationUpdate extends Component {
             console.log(res.data.err)
             return
         }
-        Router.push('/backoffice/organizations/organizationTypes/list', null, { shallow: true })
+        Router.push(backURL, null, { shallow: true })
     };
 
-    deleteOrgType = async () => {
+    delete = async () => {
         const { id } = this.state
 
         const res = (await deleteOrganizationTypes(id)).data
         if (res.error) {
             alert(res.error)
         } else {
-            Router.push('/backoffice/organizations/organizationTypes/list', null, { shallow: true })
+            Router.push(backURL, null, { shallow: true })
         }
 
     }
@@ -83,7 +86,7 @@ export default class OrganizationUpdate extends Component {
     render() {
         return (
             <>
-                <TitleAndBack backLink="/backoffice/explorations/explorationTypes/list" title="Alterar Tipo de Exploração" />
+                <TitleAndBack backLink={backURL} title={`Alterar ${componentName}`} />
 
                 <Form>
                     <Form.Group controlId="name" >
@@ -96,8 +99,8 @@ export default class OrganizationUpdate extends Component {
                         <Form.Control name="description" value={this.state.description} onChange={this.saveToState} placeholder="Descrição" />
                     </Form.Group>
                     <div style={{ marginTop: '0.5rem' }}>
-                        <Button variant="outline-success" onClick={this.updateOrganizationTypes} disabled={this.state.isButtonDisabled}>Modificar Tipo Organização</Button>
-                        <Button variant="outline-danger" onClick={this.deleteOrgType} disabled={this.state.isButtonDisabled}>Eliminar Tipo Organização</Button>
+                        <Button variant="outline-success" onClick={this.update} disabled={isButtonDisabled}>Alterar {componentName}</Button>
+                        <Button variant="outline-danger" onClick={this.delete} disabled={isButtonDisabled}>Eliminar {componentName}</Button>
                     </div>
                 </Form >
             </>

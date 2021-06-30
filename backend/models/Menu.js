@@ -28,20 +28,15 @@ const Menu = db.define('Menu', {
         allowNull: false,
         defaultValue: true
     },
-    RestaurantId: {
-        type: DataTypes.UUID,
-        allowNull: false,
-        references: {
-            model: Restaurant,
-            key: 'id'
-        }
-    }
 },
 )
 
-// Menu.belongsTo(Restaurant)
-// Restaurant.hasMany(Menu)
+Menu.belongsTo(Restaurant)
+Restaurant.hasMany(Menu)
 
 // Menu.sync({ force: true })
+// db.query("ALTER TABLE \"Menus\" DROP CONSTRAINT \"Menus_RestaurantId_fkey\", " +
+//     " ADD CONSTRAINT \"Menus_RestaurantId_fkey\" FOREIGN KEY(\"RestaurantId\") REFERENCES \"Restaurants\" " +
+//     "ON UPDATE NO ACTION;")
 
 module.exports = Menu

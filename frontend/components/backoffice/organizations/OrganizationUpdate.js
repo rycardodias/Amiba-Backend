@@ -4,7 +4,9 @@ import Button from 'react-bootstrap/Button'
 import { getOrganizationId, getOrganizationTypes, updateOrganization, deleteOrganization } from '../../../lib/requests/organizationsRequests'
 import Router from 'next/router'
 import { TitleAndBack } from '../TitleAndBack'
-import { error_missing_fields } from '../../../lib/messages'
+
+const componentName = 'Organização'
+const backURL = '/backoffice/organizations/list'
 
 export default class OrganizationUpdate extends Component {
     constructor(props) {
@@ -51,7 +53,7 @@ export default class OrganizationUpdate extends Component {
                 isButtonDisabled: false
             })
         } else {
-            Router.push('/backoffice/organizations/list', null, { shallow: true })
+            Router.push(backURL, null, { shallow: true })
         }
     }
 
@@ -64,7 +66,7 @@ export default class OrganizationUpdate extends Component {
         }
     }
 
-    updateOrganizations = async () => {
+    update = async () => {
         const { id, OrganizationTypeId, UserId, name, address, locale, zipcode, telephone, mobilePhone, fiscalNumber } = this.state
 
         const res = await updateOrganization(id, OrganizationTypeId, UserId, name, address, locale, zipcode, telephone, mobilePhone, fiscalNumber)
@@ -74,17 +76,17 @@ export default class OrganizationUpdate extends Component {
             console.log(res.data.err)
             return
         }
-        Router.push('/backoffice/organizations/list', null, { shallow: true })
+        Router.push(backURL, null, { shallow: true })
 
     };
 
-    deleteOrganizations = async () => {
+    delete = async () => {
         const { id } = this.state
         const res = (await deleteOrganization(id)).data
         if (res.error) {
             alert(res.error)
         } else {
-            Router.push('/backoffice/organizations/list', null, { shallow: true })
+            Router.push(backURL, null, { shallow: true })
         }
 
     }
@@ -107,7 +109,7 @@ export default class OrganizationUpdate extends Component {
         const { id, OrganizationTypeId, UserId, name, address, locale, zipcode, telephone, mobilePhone, fiscalNumber, organizationTypes } = this.state
         return (
             <>
-                <TitleAndBack backLink="/backoffice/organizations/list" title="Alterar Organização" />
+                <TitleAndBack backLink={backURL} title={`Alterar ${componentName}`} />
 
                 <Form>
                     <Form.Group controlId="name" >
@@ -150,8 +152,8 @@ export default class OrganizationUpdate extends Component {
                         <Form.Control name="mobilePhone" value={mobilePhone} onChange={this.saveToState} placeholder="mobilePhone" />
                     </Form.Group>
                     <div style={{ marginTop: '0.5rem' }}>
-                        <Button variant="outline-success" onClick={this.updateOrganizations} disabled={this.state.isButtonDisabled}>Modificar Organização</Button>
-                        <Button variant="outline-danger" onClick={this.deleteOrganizations} disabled={this.state.isButtonDisabled}>Eliminar Organização</Button>
+                        <Button variant="outline-success" onClick={this.update} disabled={isButtonDisabled}>Alterar {componentName}</Button>
+                        <Button variant="outline-danger" onClick={this.delete} disabled={isButtonDisabled}>Eliminar {componentName}</Button>
                     </div>
                 </Form >
             </>

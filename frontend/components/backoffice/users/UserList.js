@@ -3,7 +3,7 @@ import Table from 'react-bootstrap/Table'
 import Link from 'next/link'
 import { getUsers } from '../../../lib/requests/usersRequests'
 import { TitleAndBack } from '../TitleAndBack'
-export default class list extends React.Component {
+export default class UserList extends React.Component {
     constructor(props) {
         super(props)
 

@@ -6,8 +6,10 @@ import Router from 'next/router'
 import { TitleAndBack } from '../TitleAndBack'
 import Cookies from 'js-cookie';
 
+const componentName = 'Utilizador'
+const backURL = '/backoffice/users/list'
 
-export default class OrganizationUpdate extends Component {
+export default class UserUpdate extends Component {
     constructor(props) {
         super(props)
 
@@ -53,13 +55,13 @@ export default class OrganizationUpdate extends Component {
                 isButtonDisabled: false
             })
         } else {
-            Router.push('/backoffice/users/list', null, { shallow: true })
+            Router.push(backURL, null, { shallow: true })
         }
     }
 
 
 
-    updateUser = async () => {
+    update = async () => {
         const { token, id, name, surname, email, address, locale, zipcode, fiscalNumber, telephone, mobilePhone } = this.state
 
         const res = await updateUser(token, id, name, surname, email, address, locale, zipcode, fiscalNumber, telephone, mobilePhone)
@@ -69,7 +71,7 @@ export default class OrganizationUpdate extends Component {
             console.log(res.data.err)
             return
         }
-        Router.push('/backoffice/users/list', null, { shallow: true })
+        Router.push(backURL, null, { shallow: true })
 
     };
 
@@ -91,7 +93,7 @@ export default class OrganizationUpdate extends Component {
         const { token, id, name, surname, email, address, locale, zipcode, fiscalNumber, telephone, mobilePhone } = this.state
         return (
             <>
-                <TitleAndBack backLink="/backoffice/users/list" title="Alterar Utilizador" />
+                <TitleAndBack backLink={backURL} title={`Alterar ${componentName}`} />
                 <Form>
                     <Form.Group controlId="name" >
                         <Form.Label >Nome</Form.Label>
@@ -133,7 +135,7 @@ export default class OrganizationUpdate extends Component {
                         <Form.Control name="mobilePhone" value={mobilePhone} onChange={this.saveToState} placeholder="mobilePhone" />
                     </Form.Group>
                     <div style={{ marginTop: '0.5rem' }}>
-                        <Button variant="outline-success" onClick={this.updateUser} disabled={this.state.isButtonDisabled}>Modificar Utilizador</Button>
+                    <Button variant="outline-success" onClick={this.update} disabled={isButtonDisabled}>Alterar {componentName}</Button>
                     </div>
                 </Form >
             </>
