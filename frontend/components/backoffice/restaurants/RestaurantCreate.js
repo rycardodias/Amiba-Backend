@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
-import { getOrganizationTypes, createOrganization } from '../../../lib/requests/organizationsRequests'
+import { createRestaurant } from '../../../lib/requests/restaurantsRequests'
+import { getUsers } from '../../../lib/requests/usersRequests'
 import Router from 'next/router'
 import { TitleAndBack } from '../TitleAndBack'
 
@@ -10,43 +11,43 @@ export default class Create extends Component {
         super(props)
 
         this.state = {
-            OrganizationTypeId: "",
-            UserId: this.props.UserId, //FIXME buscar os utilizadores por array
+            UserId: "",
             name: "",
+            description: "",
             address: "",
             locale: "",
             zipcode: "",
+            fiscalNumber: "",
             telephone: "",
             mobilePhone: "",
-            fiscalNumber: "",
             isButtonDisabled: true,
-            organizationTypes: []
+            users: []
         }
     }
 
     componentDidMount() {
-        this.getTypes()
+        this.getUsers()
     }
 
-    getTypes = async () => {
-        const organizationTypes = (await getOrganizationTypes()).data.data
-        if (organizationTypes.length > 0) {
+    getUsers = async () => {
+        const users = (await getUsers()).data.data
+        if (users.length > 0) {
             this.setState({
-                organizationTypes: organizationTypes,
-                OrganizationTypeId: organizationTypes[0].id,
+                users: users,
+                UserId: users[0].id,
             })
         }
     }
 
-    createOrganization = async () => {
-        const { OrganizationTypeId, UserId, name, address, locale, zipcode, telephone, mobilePhone, fiscalNumber } = this.state
-        const res = await createOrganization(OrganizationTypeId, UserId, name, address, locale, zipcode, telephone, mobilePhone, fiscalNumber)
+    createRestaurant = async () => {
+        const { UserId, name, description, address, locale, zipcode, fiscalNumber, telephone, mobilePhone } = this.state
+        const res = await createRestaurant(UserId, name, description, address, locale, zipcode, fiscalNumber, telephone, mobilePhone)
 
         if (res.data.error) {
             alert(res.data.error)
             console.log("err:", res.data.err)
         } else {
-            Router.push('/backoffice/organizations/list', null, { shallow: true })
+            Router.push('/backoffice/restaurants/list', null, { shallow: true })
         }
     };
 
@@ -55,9 +56,9 @@ export default class Create extends Component {
     };
 
     verifyNulls = () => {
-        const { OrganizationTypeId, UserId, name, address, locale, zipcode, telephone, mobilePhone, fiscalNumber } = this.state
+        const { UserId, name, description, address, locale, zipcode, fiscalNumber, telephone, mobilePhone } = this.state
 
-        if (OrganizationTypeId && UserId && name && address && locale && zipcode && telephone && mobilePhone && fiscalNumber) {
+        if (UserId && name && description && address && locale && zipcode && fiscalNumber && telephone && mobilePhone) {
             this.setState({ isButtonDisabled: false })
         } else {
             this.setState({ isButtonDisabled: true })
@@ -65,21 +66,26 @@ export default class Create extends Component {
     }
 
     render() {
-        const { name, address, locale, zipcode, telephone, mobilePhone, fiscalNumber, isButtonDisabled, organizationTypes } = this.state
+        const { UserId, name, description, address, locale, zipcode, fiscalNumber, telephone, mobilePhone, isButtonDisabled, users } = this.state
         return (
             <>
-                <TitleAndBack backLink="/backoffice/organizations" title="Criar Organização" />
+                <TitleAndBack backLink="/backoffice/restaurants" title="Criar Restaurante" />
                 <Form >
                     <Form.Group controlId="name" >
                         <Form.Label >Nome</Form.Label>
                         <Form.Control name="name" value={name} onChange={this.saveToState} placeholder="Inserir nome" />
                     </Form.Group>
 
-                    <Form.Group controlId="OrganizationTypeId">
-                        <Form.Label>Tipo Organização</Form.Label>
-                        <Form.Control as="select" name="OrganizationTypeId" onChange={this.saveToState} placeholder="Tipo Organização" >
+                    <Form.Group controlId="description" >
+                        <Form.Label >Descrição</Form.Label>
+                        <Form.Control name="description" value={description} onChange={this.saveToState} placeholder="Inserir Descrição" />
+                    </Form.Group>
+
+                    <Form.Group controlId="UserId">
+                        <Form.Label>Responsável</Form.Label>
+                        <Form.Control as="select" name="UserId" onChange={this.saveToState} placeholder="Inserir Responsável" >
                             {
-                                organizationTypes.map((type) => { return (<option key={type.id} value={type.id}>{type.name}</option>) })
+                                users.map((item) => { return (<option key={item.id} value={item.id}>{item.name}</option>) })
                             }
                         </Form.Control>
                     </Form.Group>
@@ -111,7 +117,7 @@ export default class Create extends Component {
                         <Form.Control name="mobilePhone" value={mobilePhone} onChange={this.saveToState} placeholder="Telemovel" />
                     </Form.Group>
                     <div style={{ marginTop: '0.5rem' }}>
-                        <Button variant="outline-success" onClick={this.createOrganization} disabled={isButtonDisabled}>Adicionar Organização</Button>
+                        <Button variant="outline-success" onClick={this.createRestaurant} disabled={isButtonDisabled}>Adicionar Organização</Button>
                     </div>
                 </Form>
             </>

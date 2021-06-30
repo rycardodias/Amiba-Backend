@@ -15,7 +15,7 @@ const urlPermissions = [
         url: "/backoffice",
         permission: ["ADMIN", "AMIBA"]
     },
-    //organizations/
+    //ORGANIZATIONS/
     {
         url: "/backoffice/organizations",
         permission: ["ADMIN", "AMIBA"]
@@ -32,7 +32,7 @@ const urlPermissions = [
         url: "/backoffice/organizations/update/[id]",
         permission: ["ADMIN", "AMIBA"]
     },
-    //organizations/organizationTypes
+    //ORGANIZATIONS/organizationTypes
     { 
         url: "/backoffice/organizations/organizationTypes",
         permission: ["ADMIN", "AMIBA"]
@@ -86,7 +86,7 @@ const urlPermissions = [
         url: "/backoffice/explorations/explorationTypes/update/[id]",
         permission: ["ADMIN", "AMIBA"]
     },
-     //explorations/certifications
+     //EXPLORATIONS/certifications
      { 
         url: "/backoffice/explorations/certifications",
         permission: ["ADMIN", "AMIBA"]
@@ -116,6 +116,42 @@ const urlPermissions = [
     },
     {
         url: "/backoffice/users/update/[id]",
+        permission: ["ADMIN", "AMIBA"]
+    },
+
+
+    //RESTAURANTS/
+    {
+        url: "/backoffice/restaurants",
+        permission: ["ADMIN", "AMIBA"]
+    },
+    {
+        url: "/backoffice/restaurants/list",
+        permission: ["ADMIN", "AMIBA"]
+    },
+    {
+        url: "/backoffice/restaurants/create",
+        permission: ["ADMIN", "AMIBA"]
+    },
+    {
+        url: "/backoffice/restaurants/update/[id]",
+        permission: ["ADMIN", "AMIBA"]
+    },
+    //RESTAURANTS/MENUS
+    { 
+        url: "/backoffice/restaurants/menus",
+        permission: ["ADMIN", "AMIBA"]
+    },
+    {
+        url: "/backoffice/restaurants/menus/list",
+        permission: ["ADMIN", "AMIBA"]
+    },
+    {
+        url: "/backoffice/restaurants/menus/create",
+        permission: ["ADMIN", "AMIBA"]
+    },
+    {
+        url: "/backoffice/restaurants/menus/update/[id]",
         permission: ["ADMIN", "AMIBA"]
     },
 ]

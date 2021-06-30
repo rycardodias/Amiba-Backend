@@ -53,24 +53,40 @@ const Restaurant = db.define('Restaurant', {
             }
         },
     },
-    fiscalNumber: {
+    telephone: {
         type: DataTypes.INTEGER,
-        allowNull: true,
         unique: true
     },
-    UserId: {
-        type: DataTypes.UUID,
+    mobilePhone: {
+        type: DataTypes.INTEGER,
+        unique: true
+    },
+    fiscalNumber: {
+        type: DataTypes.INTEGER,
         allowNull: false,
-        references: {
-            model: User,
-            key: 'id'
-        }
-    }
+        validate: {
+            notEmpty: {
+                msg: "fiscalNumber field is required",
+            }
+        },
+        unique: true
+    },
+    // UserId: {
+    //     type: DataTypes.UUID,
+    //     allowNull: false,
+    //     references: {
+    //         model: User,
+    //         key: 'id'
+    //     }
+    // }
 },
 )
 
-// Restaurant.belongsTo(User)
-// User.hasMany(Restaurant)
-// Restaurant.sync({ alter: true })
+Restaurant.belongsTo(User)
+User.hasMany(Restaurant)
+// Restaurant.sync({ force: true })
+// db.query("ALTER TABLE \"Restaurants\" DROP CONSTRAINT \"Restaurants_UserId_fkey\", " +
+//     " ADD CONSTRAINT \"Restaurants_UserId_fkey\" FOREIGN KEY(\"UserId\") REFERENCES \"Users\" " +
+//     "ON UPDATE NO ACTION;")
 
 module.exports = Restaurant

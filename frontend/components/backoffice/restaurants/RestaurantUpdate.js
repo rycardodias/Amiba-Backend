@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
-import { getOrganizationId, getOrganizationTypes, updateOrganization, deleteOrganization } from '../../../lib/requests/organizationsRequests'
+import { getRestaurantId, updateRestaurant, deleteRestaurant } from '../../../lib/requests/restaurantsRequests'
+import { getUsers } from '../../../lib/requests/usersRequests'
 import Router from 'next/router'
 import { TitleAndBack } from '../TitleAndBack'
-import { error_missing_fields } from '../../../lib/messages'
 
 export default class OrganizationUpdate extends Component {
     constructor(props) {
@@ -12,79 +12,79 @@ export default class OrganizationUpdate extends Component {
 
         this.state = {
             id: "",
-            OrganizationTypeId: "",
             UserId: "",
             name: "",
+            description: "",
             address: "",
             locale: "",
             zipcode: "",
+            fiscalNumber: "",
             telephone: "",
             mobilePhone: "",
-            fiscalNumber: "",
             isButtonDisabled: true,
-            organizationTypes: [],
+            usersData: []
         }
 
     }
 
     componentDidMount() {
-        this.getTypes()
-        this.getOrganizations()
+        this.getRestaurant()
+        this.getUsers()
+    }
+
+    getUsers = async () => {
+        const users = (await getUsers()).data.data
+        if (users) {
+            this.setState({
+                usersData: users
+            })
+        }
     }
 
 
-    getOrganizations = async () => {
-        const organization = (await getOrganizationId(this.props.id)).data.data
-
-        if (organization) {
+    getRestaurant = async () => {
+        const restaurant = (await getRestaurantId(this.props.id)).data.data
+        if (restaurant) {
             this.setState({
-                id: organization.id,
-                OrganizationTypeId: organization.OrganizationTypeId,
-                UserId: organization.UserId,
-                name: organization.name,
-                address: organization.address,
-                locale: organization.locale,
-                zipcode: organization.zipcode,
-                telephone: organization.telephone,
-                mobilePhone: organization.mobilePhone,
-                fiscalNumber: organization.fiscalNumber,
-                isButtonDisabled: false
+                id: restaurant.id,
+                UserId: restaurant.UserId,
+                name: restaurant.name,
+                description: restaurant.description,
+                address: restaurant.address,
+                locale: restaurant.locale,
+                zipcode: restaurant.zipcode,
+                fiscalNumber: restaurant.fiscalNumber,
+                telephone: restaurant.telephone,
+                mobilePhone: restaurant.mobilePhone
             })
         } else {
-            Router.push('/backoffice/organizations/list', null, { shallow: true })
+            Router.push('/backoffice/restaurants/list', null, { shallow: true })
         }
     }
 
-    getTypes = async () => {
-        const types = (await getOrganizationTypes()).data.data
-        if (types.length > 0) {
-            this.setState({
-                organizationTypes: types,
-            })
-        }
-    }
 
-    updateOrganizations = async () => {
-        const { id, OrganizationTypeId, UserId, name, address, locale, zipcode, telephone, mobilePhone, fiscalNumber } = this.state
 
-        const res = await updateOrganization(id, OrganizationTypeId, UserId, name, address, locale, zipcode, telephone, mobilePhone, fiscalNumber)
+    updateRestaurant = async () => {
+        const { id, UserId, name, description, address, locale, zipcode, fiscalNumber, telephone, mobilePhone } = this.state
+
+        const res = await updateRestaurant(id, UserId, name, description, address, locale, zipcode, fiscalNumber, telephone, mobilePhone)
         // alert(res.data.data)
         if (res.data.error) {
             alert(res.data.error)
             console.log(res.data.err)
             return
         }
-        Router.push('/backoffice/organizations/list', null, { shallow: true })
+        Router.push('/backoffice/restaurants/list', null, { shallow: true })
 
     };
 
-    deleteOrganizations = async () => {
+    deleteRestaurant = async () => {
         const { id } = this.state
-        const res = (await deleteOrganization(id)).data
+        const res = (await deleteRestaurant(id)).data
         if (res.error) {
             alert(res.error)
         } else {
-            Router.push('/backoffice/organizations/list', null, { shallow: true })
+            Router.push('/backoffice/restaurants/list', null, { shallow: true })
         }
 
     }
@@ -94,9 +94,9 @@ export default class OrganizationUpdate extends Component {
     };
 
     verifyNulls = () => {
-        const { id, OrganizationTypeId, UserId, name, address, locale, zipcode, telephone, mobilePhone, fiscalNumber } = this.state
+        const { id, UserId, name, description, address, locale, zipcode, fiscalNumber, telephone, mobilePhone } = this.state
 
-        if (id && OrganizationTypeId && UserId && name && address && locale && zipcode && telephone && mobilePhone && fiscalNumber) {
+        if (id && UserId && name && description && address && locale && zipcode && fiscalNumber && telephone && mobilePhone) {
             this.setState({ isButtonDisabled: false })
         } else {
             this.setState({ isButtonDisabled: true })
@@ -104,25 +104,27 @@ export default class OrganizationUpdate extends Component {
     }
 
     render() {
-        const { id, OrganizationTypeId, UserId, name, address, locale, zipcode, telephone, mobilePhone, fiscalNumber, organizationTypes } = this.state
+        const { id, UserId, name, description, address, locale, zipcode, fiscalNumber, telephone, mobilePhone, isButtonDisabled, usersData } = this.state
         return (
             <>
-                <TitleAndBack backLink="/backoffice/organizations/list" title="Alterar Organização" />
-
+                <TitleAndBack backLink="/backoffice/restaurants/list" title="Alterar Restaurante" />
+                {UserId}
                 <Form>
                     <Form.Group controlId="name" >
                         <Form.Label >Nome</Form.Label>
                         <Form.Control name="name" value={name} onChange={this.saveToState} placeholder="Inserir nome" />
                     </Form.Group>
-                    <Form.Group controlId="OrganizationTypeId">
-                        <Form.Label>Tipo Organização</Form.Label>
-                        <Form.Control as="select" name="OrganizationTypeId" onChange={this.saveToState} placeholder="Tipo Organização" >
+                    <Form.Group controlId="description" >
+                        <Form.Label >Descrição</Form.Label>
+                        <Form.Control name="description" value={description} onChange={this.saveToState} placeholder="Inserir descrição" />
+                    </Form.Group>
+
+                    <Form.Group controlId="UserId">
+                        <Form.Label>Responsável</Form.Label>
+                        <Form.Control as="select" name="UserId" value={UserId} onChange={this.saveToState} placeholder="Responsável" >
                             {
-                                organizationTypes.map((type) => {
-                                    if (type.id === OrganizationTypeId) {
-                                        return (<option key={type.id} value={type.id} selected>{type.name}</option>)
-                                    }
-                                    return (<option key={type.id} value={type.id}>{type.name}</option>)
+                                usersData.map((item) => {
+                                    return (<option key={item.id} value={item.id}>{item.name}</option>)
                                 })
                             }
                         </Form.Control>
@@ -153,8 +155,8 @@ export default class OrganizationUpdate extends Component {
                         <Form.Control name="mobilePhone" value={mobilePhone} onChange={this.saveToState} placeholder="mobilePhone" />
                     </Form.Group>
                     <div style={{ marginTop: '0.5rem' }}>
-                        <Button variant="outline-success" onClick={this.updateOrganizations} disabled={this.state.isButtonDisabled}>Modificar Organização</Button>
-                        <Button variant="outline-danger" onClick={this.deleteOrganizations} disabled={this.state.isButtonDisabled}>Eliminar Organização</Button>
+                        <Button variant="outline-success" onClick={this.updateRestaurant} disabled={isButtonDisabled}>Modificar Restaurante</Button>
+                        <Button variant="outline-danger" onClick={this.deleteRestaurant} disabled={isButtonDisabled}>Eliminar Restaurante</Button>
                     </div>
                 </Form >
             </>

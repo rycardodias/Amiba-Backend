@@ -1,7 +1,6 @@
 const routes = [
     // ORGANIZATIONS
     {
-        title: '',
         route: '/backoffice',
         nextRoute: '/backoffice/organizations',
         permission: ['ADMIN', 'AMIBA'],
@@ -10,7 +9,6 @@ const routes = [
 
     },
     {
-        title: 'Organizações',
         route: '/backoffice/organizations',
         nextRoute: '/backoffice/organizations/list',
         permission: ['ADMIN', 'AMIBA'],
@@ -145,24 +143,55 @@ const routes = [
     
 
     //RESTAURANTS
-    {
+     {
         route: '/backoffice',
         nextRoute: '/backoffice/restaurants',
-        permission: ['ADMIN','AMIBA'],
+        permission: ['ADMIN', 'AMIBA'],
         title: 'Restaurantes',
         description: 'Gestão de Restaurantes',
 
     },
-
-    //RESTAURANTS/MENUS
     {
         route: '/backoffice/restaurants',
-        nextRoute: '/backoffice/restaurants', //TODO
-        permission: ['ADMIN','AMIBA'],
-        title: 'Menus',
-        description: 'Gestão de Menus',
+        nextRoute: '/backoffice/restaurants/list',
+        permission: ['ADMIN', 'AMIBA'],
+        title: 'Listar Restaurantes',
+        description: '',
 
     },
+    {
+        route: '/backoffice/restaurants',
+        nextRoute: '/backoffice/restaurants/create',
+        permission: ['ADMIN', 'AMIBA'],
+        title: 'Criar Restaurante',
+        description: '',
+
+    },
+    {
+        route: '/backoffice/restaurants',
+        nextRoute: '/backoffice/restaurants/menus',
+        permission: ['ADMIN', 'AMIBA'],
+        title: 'Menus',
+        description: '',
+
+    },
+    // RESTAURANTS/MENUS
+    {
+        route: '/backoffice/restaurants/menus',
+        nextRoute: '/backoffice/restaurants/menus/list',
+        permission: ['ADMIN', 'AMIBA'],
+        title: 'Listar Menus',
+        description: '',
+    },
+    {
+        route: '/backoffice/restaurants/menus',
+        nextRoute: '/backoffice/restaurants/menus/create',
+        permission: ['ADMIN', 'AMIBA'],
+        title: 'Criar Menu',
+        description: '',
+    },
+
+
 
     //ORDERS
     {

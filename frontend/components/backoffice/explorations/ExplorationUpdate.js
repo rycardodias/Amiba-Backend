@@ -116,12 +116,9 @@ export default class OrganizationUpdate extends Component {
                     </Form.Group>
                     <Form.Group controlId="ExplorationTypeId">
                         <Form.Label>Tipo Exploração</Form.Label>
-                        <Form.Control as="select" name="ExplorationTypeId" onChange={this.saveToState} placeholder="Tipo Exploração" >
+                        <Form.Control as="select" name="ExplorationTypeId" value={ExplorationTypeId} onChange={this.saveToState} placeholder="Tipo Exploração" >
                             {
                                 explorationTypes.map((type) => {
-                                    if (type.id === ExplorationTypeId) {
-                                        return (<option key={type.id} value={type.id} selected>{type.name}</option>)
-                                    }
                                     return (<option key={type.id} value={type.id}>{type.name}</option>)
                                 })
                             }

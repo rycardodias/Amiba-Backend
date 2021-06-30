@@ -3,21 +3,22 @@ const router = express.Router()
 const db = require('../config/database')
 
 const Model = require('../models/Restaurant')
+const User = require('../models/User')
 
 router.get('/', (req, res) => {
-    Model.findAll()
+    Model.findAll({include: User})
         .then(status => res.json({ data: status }))
         .catch(err => console.log(err))
 })
 
 router.get('/id/:id', (req, res) => {
-    Model.findByPk(req.params.id)
+    Model.findByPk(req.params.id, {include: [User]})
         .then(status => res.json({ data: status }))
         .catch(err => console.log(err))
 })
 
 router.post('/create', (req, res) => {
-    const { UserId, name, description, address, locale, zipcode, fiscalNumber } = req.body
+    const { UserId, name, description, address, locale, zipcode, fiscalNumber, telephone, mobilePhone } = req.body
 
     Model.create({
         UserId: UserId,
@@ -26,7 +27,9 @@ router.post('/create', (req, res) => {
         address: address,
         locale: locale,
         zipcode: zipcode,
-        fiscalNumber: fiscalNumber
+        fiscalNumber: fiscalNumber, 
+        telephone: telephone, 
+        mobilePhone: mobilePhone
 
     })
         .then(status => res.json({ data: status }))
@@ -34,7 +37,7 @@ router.post('/create', (req, res) => {
 })
 
 router.put('/update', (req, res) => {
-    const { id, UserId, name, description, address, locale, zipcode, fiscalNumber } = req.body
+    const { id, UserId, name, description, address, locale, zipcode, fiscalNumber, telephone, mobilePhone } = req.body
 
     if (id == undefined || id == "") {
         res.send("Error! An id must be provided!")
@@ -47,7 +50,9 @@ router.put('/update', (req, res) => {
         address: address,
         locale: locale,
         zipcode: zipcode,
-        fiscalNumber: fiscalNumber
+        fiscalNumber: fiscalNumber, 
+        telephone: telephone, 
+        mobilePhone: mobilePhone
     }
 
     Model.update(data,
