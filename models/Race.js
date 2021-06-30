@@ -20,7 +20,7 @@ const Race = db.define('Race', {
     description: {
         type: DataTypes.STRING,
     },
-})
+}) 
 
 // Race.sync({ alter: true })
 

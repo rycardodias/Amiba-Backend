@@ -5,6 +5,8 @@ const path = require('path')
 const cors = require("cors");
 //Database
 const db = require('./config/database')
+const dotenv = require('dotenv');
+dotenv.config()
 
 //Test DB
 // db.authenticate()
@@ -16,7 +18,8 @@ const app = express();
 app.use(express.json());
 app.use(
     cors({
-      origin: "http://localhost:3000",
+      // origin: "http://localhost:3000",
+      origin: process.env.FRONTEND_URL,
       optionsSuccessStatus: 200,
     })
   );

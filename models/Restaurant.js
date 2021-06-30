@@ -71,14 +71,6 @@ const Restaurant = db.define('Restaurant', {
         },
         unique: true
     },
-    // UserId: {
-    //     type: DataTypes.UUID,
-    //     allowNull: false,
-    //     references: {
-    //         model: User,
-    //         key: 'id'
-    //     }
-    // }
 },
 )
 

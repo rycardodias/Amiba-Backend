@@ -89,7 +89,7 @@ const User = db.define('User', {
     },
     mobilePhone: {
         type: DataTypes.INTEGER,
-        unique: true
+        unique: true 
     },
     
 },
