@@ -97,7 +97,7 @@ const User = db.define('User', {
 )
 
 
-// User.sync({ alter: true })
+// User.sync({ force: true })
 
 
 
