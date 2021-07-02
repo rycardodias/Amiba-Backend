@@ -1,7 +1,6 @@
 const { DataTypes, Sequelize } = require('sequelize');
 const db = require('../config/database');
 const Race = require('./Race');
-const Organization = require('./Organization');
 
 const EggsBatch = db.define('EggsBatch', {
     id: {
@@ -9,12 +8,13 @@ const EggsBatch = db.define('EggsBatch', {
         primaryKey: true,
         defaultValue: DataTypes.UUIDV4
     },
-    calibrator: {
-        type: DataTypes.UUID,
+    name: {
+        type: DataTypes.STRING,
         allowNull: false,
-        references: {
-            model: Organization,
-            key: 'id'
+        validate: {
+            notEmpty: {
+                msg: "name field is required",
+            }
         }
     },
     caliber: {
@@ -23,24 +23,6 @@ const EggsBatch = db.define('EggsBatch', {
         validate: {
             notEmpty: {
                 msg: "caliber field is required",
-            }
-        }
-    },
-    batchNumber: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        validate: {
-            notEmpty: {
-                msg: "batchNumber field is required",
-            }
-        }
-    },
-    name: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        validate: {
-            notEmpty: {
-                msg: "name field is required",
             }
         }
     },
@@ -53,18 +35,14 @@ const EggsBatch = db.define('EggsBatch', {
             }
         }
     },
-    RaceId: {
-        type: DataTypes.UUID,
-        allowNull: false,
-        references: {
-            model: Race,
-            key: 'id'
-        }
-    }
+
 },
 )
-// EggsBatch.belongsTo(Race)
-// Race.hasMany(EggsBatch)
-//    EggsBatch.sync({alter: true})
+EggsBatch.belongsTo(Race)
+Race.hasMany(EggsBatch)
+// EggsBatch.sync({ force: true })
+// db.query("ALTER TABLE \"EggsBatches\" DROP CONSTRAINT \"EggsBatches_RaceId_fkey\", " +
+//     " ADD CONSTRAINT \"EggsBatches_RaceId_fkey\" FOREIGN KEY(\"RaceId\") REFERENCES \"Races\" " +
+//     "ON UPDATE NO ACTION;")
 
 module.exports = EggsBatch

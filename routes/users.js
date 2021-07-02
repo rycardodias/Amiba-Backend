@@ -1,151 +1,222 @@
 const express = require('express')
 const router = express.Router()
-const db = require('../config/database')
 const bcrypt = require("bcrypt")
 const jwt = require("jsonwebtoken");
 const userPermission = require('../verifications/userPermissions')
-
+const ResponseModel = require('../lib/ResponseModel')
 const Model = require('../models/User')
+const { error_missing_fields,
+    error_invalid_token,
+    error_invalid_fields,
+    error_data_not_found,
+    error_admin_permission_required,
+    success_row_delete,
+    error_row_delete,
+    success_row_update,
+    error_row_update,
+    error_row_create,
+    success_row_create
+} = require('../lib/ResponseMessages')
 
-router.get('/', (req, res) => {
-    Model.findAll()
-        .then(status => res.json({data: status}))
-        .catch(err => res.json({error: err}))
+
+
+router.get('/', async (req, res) => {
+    const response = new ResponseModel()
+    try {
+        const request = await Model.findAll()
+        if (request.length > 0) {
+            response.data = request
+            res.status(200).json(response)
+        } else {
+            response.error = error_data_not_found
+            res.status(404).json(response)
+        }
+    } catch (error) {
+        response.message = error_data_not_found
+        response.error = error
+        return res.status(400).json(response)
+    }
 })
 
-router.get('/id/:id', (req, res) => {
-    Model.findByPk(req.params.id)
-        .then(status => res.json({data: status}))
-        .catch(err => res.json({error: err}))
+router.get('/id/:id', async (req, res) => {
+    const response = new ResponseModel()
+    try {
+        if (!req.params.id) {
+            response.error = error_missing_fields
+            res.status(400).json(response)
+        }
+        const request = await Model.findByPk(req.params.id)
+
+        if (request) {
+            response.data = request
+            res.status(200).json(response)
+        } else {
+            response.error = error_data_not_found
+            res.status(404).json(response)
+        }
+    } catch (error) {
+        response.message = error_invalid_fields
+        response.error = error
+        return res.status(400).json(response)
+    }
+
 })
 
 router.post('/create', async (req, res) => {
-    const { name, surname, email, password,  address, locale, zipcode, fiscalNumber, telephone, mobilePhone } = req.body
+    const response = new ResponseModel()
+    try {
+        const { name, surname, email, password, address, locale, zipcode, fiscalNumber, telephone, mobilePhone } = req.body
 
-    Model.create({
-        name: name,
-        surname: surname,
-        email: email,
-        password: bcrypt.hashSync(password, 10),
-        address: address,
-        locale: locale,
-        zipcode: zipcode,
-        fiscalNumber: fiscalNumber,
-        telephone: telephone,
-        mobilePhone: mobilePhone
+        const request = await Model.create({
+            name: name,
+            surname: surname,
+            email: email,
+            password: bcrypt.hashSync(password, 10),
+            address: address,
+            locale: locale,
+            zipcode: zipcode,
+            fiscalNumber: fiscalNumber,
+            telephone: telephone,
+            mobilePhone: mobilePhone
 
-    })
-        .then(status => {
-            const token = jwt.sign({ id: status.id, }, "MySecret")
-            res.json({data: token})
         })
-        .catch(err => res.json({error: "Erro! Não foi possivel criar o utilizador!", err: err}))
+
+        if (request) {
+            response.message = success_row_create
+            response.data = jwt.sign({ id: request.id, }, "MySecret")
+            res.status(200).json(response)
+        } else {
+            response.error = error_row_create
+            res.status(404).json(response)
+        }
+    } catch (error) {
+        response.message = error_invalid_fields
+        response.error = error
+        return res.status(400).json(response)
+    }
+
 })
 
 
 router.put('/update', async (req, res) => {
-    const { token, id, name, surname, email, password, active, permission, address, locale, zipcode, fiscalNumber, telephone, mobilePhone } = req.body
+    const response = new ResponseModel()
+    try {
+        const { token, id, name, surname, email, password, active, permission, address, locale, zipcode, fiscalNumber, telephone, mobilePhone } = req.body
 
-    if (!token) {
-        return res.json({ error: "Token must be provided!" })
+        if (!token) {
+            response.error = error_invalid_token
+            res.status(400).json(response)
+        }
+
+        const tokenData = await userPermission.verifyPermission(token)
+        if (tokenData[1] !== 'ADMIN' && tokenData[0] !== id) {
+            response.error = error_admin_permission_required
+            res.status(403).json(response)
+        }
+
+        tokenData[1] === 'ADMIN' ? userId = id : userId = tokenData[0]
+
+        const data = {
+            name: name,
+            surname: surname,
+            email: email,
+            password: password ? bcrypt.hashSync(password, 10) : undefined,
+            active: tokenData[1] === 'ADMIN' ? active : undefined,
+            permission: tokenData[1] === 'ADMIN' ? permission : undefined,
+            address: address,
+            locale: locale,
+            zipcode: zipcode,
+            fiscalNumber: fiscalNumber,
+            telephone: telephone,
+            mobilePhone: mobilePhone
+        }
+
+        const request = await Model.update(data, { where: { id: userId } })
+
+        if (request == 1) {
+            response.data = success_row_update
+            res.status(200).json(response)
+        } else {
+            response.error = error_row_update
+            res.status(404).json(response)
+        }
+    } catch (error) {
+        response.error = error
+        return res.status(400).json(response)
     }
-
-    const tokenData = await userPermission.verifyPermission(token)
-    if (tokenData[1] !== 'ADMIN' && tokenData[0] !== id) {
-        return res.json({ error: "Administrator permission is required!" })
-    }
-
-    tokenData[1] === 'ADMIN' ? userId = id : userId = tokenData[0]
-
-    const data = {
-        name: name,
-        surname: surname,
-        email: email,
-        password: password ? bcrypt.hashSync(password, 10) : undefined,
-        active: tokenData[1] === 'ADMIN' ? active : undefined,
-        permission: tokenData[1] === 'ADMIN' ? permission : undefined,
-        address: address,
-        locale: locale,
-        zipcode: zipcode,
-        fiscalNumber: fiscalNumber,
-        telephone: telephone,
-        mobilePhone: mobilePhone
-    }
-
-    Model.update(data,
-        {
-            where: {
-                id: userId
-            },
-        })
-        .then(status => {
-            status == 1
-                ? res.json({ data: "Sucesso! Dados de utilizador alterados com sucesso!" })
-                : res.json({ error: "Erro! Ocorreu um erro ao atualizar os dados!" })
-        })
-        .catch(err => res.json({error: "Erro! Ocurreu um erro ao atualizar os dados!", err: err}))
 })
 
 router.delete('/delete', async (req, res) => {
-    const { token, id } = req.body
+    const response = new ResponseModel()
+    try {
+        const { id } = req.body
+        if (!id) {
+            response.error = error_missing_fields
+            return res.status(400).json(response)
+        }
+        const request = await Model.destroy({ where: { id: id } })
 
-    const tokenData = await userPermission.verifyPermission(token)
-    if (tokenData[1] !== 'ADMIN') {
-        return res.json({ error: "Erro! Permissões de administrador necessárias!" })
+        if (request === 1) {
+            response.data = success_row_delete
+            res.status(200).json(response)
+        } else {
+            response.error = error_row_delete
+            res.status(404).json(response)
+        }
+
+    } catch (error) {
+        response.error = error
+        return res.status(400).json(response)
     }
-    Model.destroy({
-        where: {
-            id: id
-        },
-    })
-        .then(status => {
-            status == 1
-                ? res.json({ data: "Utilizador eliminado com sucesso!" })
-                : res.json({ error: "Erro! O utilizador não existe" })
-        })
-        .catch(err => res.json({error: "Erro! Não foi possivel eliminar o registo!", err: err}))
+
 })
 
 
 router.post('/login', async (req, res) => {
-    const { email, password } = req.body
+    const response = new ResponseModel()
+    try {
+        const { email, password } = req.body
 
-    Model.findOne({
-        where: {
-            email: email
+        if (!(email && password)) {
+            response.error = error_missing_fields
+            res.status(400).json(response)
         }
-    })
-        .then(status => {
-            if (!status) {
-                 return res.json({ error: "Erro! Utilizador ou password inválidos!" })
-            }
-        
-            if (bcrypt.compareSync(password, status.password)) {
-                const token = jwt.sign({ id: status.id, }, "MySecret");
-                return res.json({data: token})
-            } else {
-                return res.json({ error: "Erro! Utilizador ou password inválidos!" })
-            }
+        const request = await Model.findOne({ where: { email: email } })
+
+        if (bcrypt.compareSync(password, request.password)) {
+            response.data = jwt.sign({ id: request.id, }, "MySecret")
+            res.status(200).json(response)
+
+        } else {
+            response.error = error_data_not_found
+            res.status(404).json(response)
         }
-        )
-        .catch(err => res.json({error: err}))
+
+    } catch (error) {
+        response.message = error_data_not_found
+        response.error = error
+        return res.status(400).json(response)
+    }
 })
 
 router.post('/me', async (req, res) => {
-if(!req.body.token){
-    return res.json({ error: "Erro! Não tem permissões!" })
-}
-let userID;
-try {
-     userID = jwt.verify(req.body.token, "MySecret");
-  
-} catch (error) {
-    return res.json({ error: error })
-}
+    const response = new ResponseModel()
 
-    Model.findByPk(userID.id)
-        .then(status => res.json({data: status}))
-        .catch(err => res.json({error: err}))
+    try {
+        const userID = jwt.verify(req.body.token, "MySecret");
+        const request = await Model.findByPk(userID.id)
+
+        if (request) {
+            response.data = request
+            res.status(200).json(response)
+        } else {
+            response.error = error_invalid_token
+            res.status(404).json(response)
+        }
+    } catch (error) {
+        response.error = error
+        return res.status(400).json(response)
+    }
 })
 
 module.exports = router

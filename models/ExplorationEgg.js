@@ -4,34 +4,27 @@ const Exploration = require('./Exploration');
 const EggsBatch = require('./EggsBatch');
 
 const ExplorationEgg = db.define('ExplorationEgg', {
-    // exploration: {
-    //     type: DataTypes.UUID,
-    //     primaryKey: true,
-    //     references: {
-    //         model: Exploration,
-    //         key: 'id'
-    //     }
-    // },
-    // eggsBatch: {
-    //     type: DataTypes.UUID,
-    //     primaryKey: true,
-    //     references: {
-    //         model: EggsBatch,
-    //         key: 'id'
-    //     }
-    // },
+    quantity: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        validate: {
+            notEmpty: {
+                msg: "name field is required",
+            }
+        },
+    },
 },
 )
 
-// Exploration.belongsToMany(EggsBatch, { through: ExplorationEgg })
-// EggsBatch.belongsToMany(Exploration, { through: ExplorationEgg })
+Exploration.belongsToMany(EggsBatch, { through: ExplorationEgg })
+EggsBatch.belongsToMany(Exploration, { through: ExplorationEgg })
 
-// ExplorationEgg.belongsTo(Exploration)
-// Exploration.hasMany(ExplorationEgg)
+ExplorationEgg.belongsTo(Exploration)
+Exploration.hasMany(ExplorationEgg)
 
-// ExplorationEgg.belongsTo(EggsBatch)
-// EggsBatch.hasMany(ExplorationEgg)
+ExplorationEgg.belongsTo(EggsBatch)
+EggsBatch.hasMany(ExplorationEgg)
 
-//    ExplorationEgg.sync({alter: true})
+//    ExplorationEgg.sync({force: true})
 
 module.exports = ExplorationEgg
