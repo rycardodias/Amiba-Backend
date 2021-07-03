@@ -149,6 +149,7 @@ router.put('/update', async (req, res) => {
             res.status(404).json(response)
         }
     } catch (error) {
+        response.message = error_invalid_fields
         response.error = error
         return res.status(400).json(response)
     }
@@ -171,13 +172,11 @@ router.delete('/delete', async (req, res) => {
             response.error = error_row_delete
             res.status(404).json(response)
         }
-
     } catch (error) {
         response.message = error_invalid_fields
         response.error = error
         return res.status(400).json(response)
     }
-
 })
 
 
@@ -200,7 +199,6 @@ router.post('/login', async (req, res) => {
             response.error = error_data_not_found
             res.status(404).json(response)
         }
-
     } catch (error) {
         response.error = error
         return res.status(400).json(response)

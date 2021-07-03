@@ -101,54 +101,65 @@ router.post('/create', async (req, res) => {
 
 
 router.put('/update', async (req, res) => {
-    const { id, OrganizationTypeId, UserId, name, address, locale, zipcode, telephone, mobilePhone, fiscalNumber } = req.body
+    const response = new ResponseModel()
+    try {
+        const { id, OrganizationTypeId, UserId, name, address, locale, zipcode, telephone, mobilePhone, fiscalNumber } = req.body
 
-    if (!id) {
-        res.json({ error: "Erro! Nenhum id foi indicado!" })
+        if (!id) {
+            response.error = error_missing_fields
+            res.status(400).json(response)
+        }
+
+        const data = {
+            OrganizationTypeId: OrganizationTypeId,
+            UserId: UserId,
+            name: name,
+            address: address,
+            locale: locale,
+            zipcode: zipcode,
+            telephone: telephone,
+            mobilePhone: mobilePhone,
+            fiscalNumber: fiscalNumber
+        }
+
+        const request = await Model.update(data, { where: { id: id } })
+
+        if (request == 1) {
+            response.data = success_row_update
+            res.status(200).json(response)
+        } else {
+            response.error = error_row_update
+            res.status(404).json(response)
+        }
+    } catch (error) {
+        response.message = error_invalid_fields
+        response.error = error
+        return res.status(400).json(response)
     }
-    if (!OrganizationTypeId) {
-        res.json({ error: "Erro! Nenhum tipo foi indicado!" })
-    }
-
-    const data = {
-        OrganizationTypeId: OrganizationTypeId,
-        UserId: UserId,
-        name: name,
-        address: address,
-        locale: locale,
-        zipcode: zipcode,
-        telephone: telephone,
-        mobilePhone: mobilePhone,
-        fiscalNumber: fiscalNumber
-    }
-
-    Model.update(data,
-        {
-            where: {
-                id: id
-            },
-        })
-        .then(status => {
-            if (status[0] === 1) {
-                res.json({ data: "Dados atualizados com sucesso!" })
-            } else {
-                res.json({ error: "Erro! Não foi possivel atualizar os dados!" })
-            }
-        })
-
-        .catch(err => res.json({ error: "Erro! Não foi possivel atualizar os dados!", err: err }))
 })
 
-router.delete('/delete', (req, res) => {
-    const { id } = req.body
+router.delete('/delete', async (req, res) => {
+    const response = new ResponseModel()
+    try {
+        const { id } = req.body
+        if (!id) {
+            response.error = error_missing_fields
+            return res.status(400).json(response)
+        }
+        const request = await Model.destroy({ where: { id: id } })
 
-    Model.destroy({
-        where: {
-            id: id
-        },
-    })
-        .then(status => res.json({ data: status }))
-        .catch(err => res.json({ error: "Erro! Não foi possivel eliminar o registo!", err: err }))
+        if (request === 1) {
+            response.data = success_row_delete
+            res.status(200).json(response)
+        } else {
+            response.error = error_row_delete
+            res.status(404).json(response)
+        }
+    } catch (error) {
+        response.message = error_invalid_fields
+        response.error = error
+        return res.status(400).json(response)
+    }
 })
 
 module.exports = router
