@@ -59,7 +59,6 @@ router.get('/id/:id', async (req, res) => {
         response.error = error
         return res.status(400).json(response)
     }
-
 })
 
 router.post('/create', async (req, res) => {
@@ -67,7 +66,12 @@ router.post('/create', async (req, res) => {
     try {
         const { name, surname, email, password, address, locale, zipcode, fiscalNumber, telephone, mobilePhone } = req.body
 
-        const request = await Model.create({
+        if (!(name && surname && email && password)) {
+            response.error = error_missing_fields
+            return res.status(400).json(response)
+        }
+
+        const data = {
             name: name,
             surname: surname,
             email: email,
@@ -78,8 +82,9 @@ router.post('/create', async (req, res) => {
             fiscalNumber: fiscalNumber,
             telephone: telephone,
             mobilePhone: mobilePhone
+        }
 
-        })
+        const request = await Model.create(data)
 
         if (request) {
             response.message = success_row_create
@@ -108,21 +113,24 @@ router.put('/update', async (req, res) => {
             res.status(400).json(response)
         }
 
-        const tokenData = await userPermission.verifyPermission(token)
-        if (tokenData[1] !== 'ADMIN' && tokenData[0] !== id) {
+        const isAdmin = await userPermission.verifyPermission(token, ['ADMIN'])
+        const idToken = jwt.verify(token, "MySecret").id
+
+        if (!isAdmin && (idToken != id)) {
             response.error = error_admin_permission_required
             res.status(403).json(response)
+            return
         }
 
-        tokenData[1] === 'ADMIN' ? userId = id : userId = tokenData[0]
+        isAdmin ? userId = id : userId = idToken
 
         const data = {
             name: name,
             surname: surname,
             email: email,
             password: password ? bcrypt.hashSync(password, 10) : undefined,
-            active: tokenData[1] === 'ADMIN' ? active : undefined,
-            permission: tokenData[1] === 'ADMIN' ? permission : undefined,
+            active: isAdmin ? active : undefined,
+            permission: isAdmin ? permission : undefined,
             address: address,
             locale: locale,
             zipcode: zipcode,
@@ -165,6 +173,7 @@ router.delete('/delete', async (req, res) => {
         }
 
     } catch (error) {
+        response.message = error_invalid_fields
         response.error = error
         return res.status(400).json(response)
     }
@@ -193,7 +202,6 @@ router.post('/login', async (req, res) => {
         }
 
     } catch (error) {
-        response.message = error_data_not_found
         response.error = error
         return res.status(400).json(response)
     }

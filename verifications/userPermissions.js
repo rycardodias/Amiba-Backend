@@ -7,27 +7,28 @@ exports.convertToToken = async function (id) {
     return token
 }
 
+const verifyPermissionArray = (perm1, perm2) => {
+    for (let i = 0; i < perm1.length; i++) {
+        for (let j = 0; j < perm2.length; j++) {
+            if (perm1[i] === perm2[j]) {
+                return true
+            }
+        }
+    }
+    return false
+}
 
-exports.verifyPermission = async function (token) {
-    let idToken = ''
+
+exports.verifyPermission = async function (token, requiredPermission) {
     try {
-        idToken = jwt.verify(token, "MySecret").id
+        const idToken = jwt.verify(token, "MySecret").id
+
+        const request = await Users.findByPk(idToken)
+        if (request.dataValues) {
+            return verifyPermissionArray(request.dataValues.permission, requiredPermission)
+        }
     } catch {
-        return ('The token is invalid!')
+        return false
     }
 
-    let result = await Users.findOne({
-        where: {
-            id: idToken
-        }
-    }).then(status => {
-        if (!status) {
-            console.log('The user does not exists!')
-        }
-        return [status.id, status.permission]
-
-    }
-    ).catch(err => { return err })
-
-    return result
 }

@@ -1,41 +1,102 @@
 const express = require('express')
 const router = express.Router()
-const db = require('../config/database')
-
 const Model = require('../models/Organization')
 const OrganizationType = require('../models/OrganizationType')
-router.get('/', (req, res) => {
-    Model.findAll({ include: OrganizationType })
-        .then(status => res.json({ data: status }))
-        .catch(err => res.json({ error: "Erro! Não foi possivel obter os dados!", err: err }))
+
+const ResponseModel = require('../lib/ResponseModel')
+
+const { error_missing_fields,
+    error_invalid_fields,
+    error_data_not_found,
+    success_row_delete,
+    error_row_delete,
+    success_row_update,
+    error_row_update,
+    error_row_create,
+    success_row_create
+} = require('../lib/ResponseMessages')
+
+router.get('/', async (req, res) => {
+    const response = new ResponseModel()
+    try {
+        const request = await Model.findAll({ include: OrganizationType })
+        if (request.length > 0) {
+            response.data = request
+            res.status(200).json(response)
+        } else {
+            response.error = error_data_not_found
+            res.status(404).json(response)
+        }
+    } catch (error) {
+        response.message = error_data_not_found
+        response.error = error
+        return res.status(400).json(response)
+    }
+
 })
 
-router.get('/id/:id', (req, res) => {
-    Model.findByPk(req.params.id)
-        .then(status => res.json({ data: status }))
-        .catch(err => res.json({ error: "Erro! Não foi possivel obter os dados!", err: err }))
+router.get('/id/:id', async (req, res) => {
+    const response = new ResponseModel()
+    try {
+        if (!req.params.id) {
+            response.error = error_missing_fields
+            res.status(400).json(response)
+        }
+        const request = await Model.findByPk(req.params.id)
+
+        if (request) {
+            response.data = request
+            res.status(200).json(response)
+        } else {
+            response.error = error_data_not_found
+            res.status(404).json(response)
+        }
+    } catch (error) {
+        response.message = error_invalid_fields
+        response.error = error
+        return res.status(400).json(response)
+    }
+
 })
 
 router.post('/create', async (req, res) => {
-    const { OrganizationTypeId, UserId, name, address, locale, zipcode, telephone, mobilePhone, fiscalNumber } = req.body
+    const response = new ResponseModel()
+    try {
+        const { OrganizationTypeId, UserId, name, address, locale, zipcode, telephone, mobilePhone, fiscalNumber } = req.body
 
-    if (!OrganizationTypeId) {
-        res.json({ error: "Erro! Nenhum tipo foi indicado!" })
+
+        if (!(OrganizationTypeId && UserId && name && address && locale && zipcode && fiscalNumber)) {
+            response.error = error_missing_fields
+            return res.status(400).json(response)
+        }
+
+        const data = {
+            OrganizationTypeId: OrganizationTypeId,
+            UserId: UserId,
+            name: name,
+            address: address,
+            locale: locale,
+            zipcode: zipcode,
+            telephone: telephone,
+            mobilePhone: mobilePhone,
+            fiscalNumber: fiscalNumber
+        }
+
+        const request = await Model.create(data)
+
+        if (request) {
+            response.message = success_row_create
+            response.data = request
+            res.status(200).json(response)
+        } else {
+            response.error = error_row_create
+            res.status(404).json(response)
+        }
+    } catch (error) {
+        response.message = error_invalid_fields
+        response.error = error
+        return res.status(400).json(response)
     }
-
-    Model.create({
-        OrganizationTypeId: OrganizationTypeId,
-        UserId: UserId,
-        name: name,
-        address: address,
-        locale: locale,
-        zipcode: zipcode,
-        telephone: telephone,
-        mobilePhone: mobilePhone,
-        fiscalNumber: fiscalNumber
-    })
-        .then(status => res.json({ success: "Dados inseridos com sucesso!", data: status }))
-        .catch(err => res.json({ error: "Erro! Não foi possivel criar a Organização!", err: err }))
 })
 
 
