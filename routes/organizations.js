@@ -4,7 +4,6 @@ const Model = require('../models/Organization')
 const OrganizationType = require('../models/OrganizationType')
 
 const ResponseModel = require('../lib/ResponseModel')
-
 const { error_missing_fields,
     error_invalid_fields,
     error_data_not_found,
