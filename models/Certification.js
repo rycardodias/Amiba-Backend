@@ -38,21 +38,13 @@ const Certification = db.define('Certification', {
     description: {
         type: DataTypes.STRING,
     },
-    ExplorationId: {
-        type: DataTypes.UUID,
-        allowNull: false,
-        references: {
-            model: Exploration,
-            key: 'id'
-        }
-    }
 },
 )
 
 Exploration.hasMany(Certification)
 Certification.belongsTo(Exploration)
 
-// Certification.sync({alter: true})
+// Certification.sync({force: true})
 
 // db.query("ALTER TABLE \"Certifications\" DROP CONSTRAINT \"Certifications_ExplorationId_fkey\", " +
 //     " ADD CONSTRAINT \"Certifications_ExplorationId_fkey\" FOREIGN KEY(\"ExplorationId\") REFERENCES \"Explorations\" " +
