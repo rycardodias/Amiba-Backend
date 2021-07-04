@@ -8,6 +8,7 @@ const Animal = db.define('Animal', {
         type: DataTypes.UUID,
         primaryKey: true,
         allowNull: false,
+        defaultValue: DataTypes.UUIDV4,
         validate: {
             notEmpty: {
                 msg: "id field is required",
