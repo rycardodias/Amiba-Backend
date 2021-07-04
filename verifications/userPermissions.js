@@ -1,6 +1,6 @@
 const Users = require('../models/User')
 const jwt = require("jsonwebtoken");
-const { permissions } = require('./permissions')
+
 
 exports.convertToToken = async function (id) {
     const token = jwt.sign({ id: id }, "MySecret")

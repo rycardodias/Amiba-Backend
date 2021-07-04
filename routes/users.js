@@ -221,7 +221,7 @@ router.post('/me', async (req, res) => {
         }
     } catch (error) {
         response.message = error_invalid_token
-        response.error = error
+        response.error = error_invalid_token
         return res.status(400).json(response)
     }
 })
