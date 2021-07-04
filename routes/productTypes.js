@@ -8,7 +8,7 @@ const { error_missing_fields, error_invalid_fields, error_data_not_found, succes
 router.get('/', async (req, res) => {
     const response = new ResponseModel()
     try {
-        const request = await Model.findAll({ include: OrganizationType })
+        const request = await Model.findAll()
         if (request.length > 0) {
             response.data = request
             res.status(200).json(response)
