@@ -27,4 +27,11 @@ EggsBatch.hasMany(ExplorationEgg)
 
 //    ExplorationEgg.sync({force: true})
 
+// db.query("ALTER TABLE \"ExplorationEggs\" DROP CONSTRAINT \"ExplorationEggs_ExplorationId_fkey\", " +
+//     " ADD CONSTRAINT \"ExplorationEggs_ExplorationId_fkey\" FOREIGN KEY(\"ExplorationId\") REFERENCES \"Explorations\" " +
+//     "ON UPDATE NO ACTION;")
+// db.query("ALTER TABLE \"ExplorationEggs\" DROP CONSTRAINT \"ExplorationEggs_EggsBatchId_fkey\", " +
+//     " ADD CONSTRAINT \"ExplorationEggs_EggsBatchId_fkey\" FOREIGN KEY(\"EggsBatchId\") REFERENCES \"EggsBatches\" " +
+//     "ON UPDATE NO ACTION;")
+
 module.exports = ExplorationEgg

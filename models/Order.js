@@ -9,7 +9,7 @@ const Order = db.define('Order', {
         defaultValue: DataTypes.UUIDV4
     },
     total: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.FLOAT,
         allowNull: false,
         validate: {
             notEmpty: {
@@ -18,7 +18,7 @@ const Order = db.define('Order', {
         },
     },
     totalVAT: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.FLOAT,
         allowNull: false,
         validate: {
             notEmpty: {

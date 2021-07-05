@@ -19,7 +19,7 @@ const OrderLine = db.define('OrderLine', {
         },
     },
     total: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.FLOAT,
         allowNull: false,
         validate: {
             notEmpty: {
@@ -28,7 +28,7 @@ const OrderLine = db.define('OrderLine', {
         },
     },
     totalVAT: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.FLOAT,
         allowNull: false,
         validate: {
             notEmpty: {
@@ -61,6 +61,6 @@ const OrderLine = db.define('OrderLine', {
 // OrderLine.belongsTo(Product)
 // Product.hasMany(OrderLine)
 
-//    OrderLine.sync({force: true})
+//    OrderLine.sync({alter: true})
 
 module.exports = OrderLine

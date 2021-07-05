@@ -38,5 +38,7 @@ app.use('/eggsBatchs', require('./routes/eggsBatchs'))
 app.use('/explorationEggs', require('./routes/explorationEggs'))
 app.use('/animals', require('./routes/animals'))
 app.use('/animalProducts', require('./routes/animalProducts'))
+app.use('/EggsBatchProducts', require('./routes/EggsBatchProducts'))
+
 
 module.exports = app

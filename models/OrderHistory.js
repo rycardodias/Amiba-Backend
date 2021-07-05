@@ -9,7 +9,7 @@ const OrderHistory = db.define('OrderHistory', {
         defaultValue: DataTypes.UUIDV4
     },
     state: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.STRING,
         allowNull: false,
         validate: {
             notEmpty: {

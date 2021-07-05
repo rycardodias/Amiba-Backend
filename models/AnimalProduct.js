@@ -4,22 +4,6 @@ const Product = require('./Product');
 const Animal = require('./Animal');
 
 const AnimalProduct = db.define('AnimalProduct', {
-    // ProductId: {
-    //     type: DataTypes.UUID,
-    //     allowNull: false,
-    //     references: {
-    //         model: Product,
-    //         key: 'id'
-    //     }
-    // },
-    // AnimalId: {
-    //     type: DataTypes.UUID,
-    //     allowNull: false,
-    //     references: {
-    //         model: Animal,
-    //         key: 'id'
-    //     }
-    // },
     quantity: {
         type: DataTypes.INTEGER,
         allowNull: false,

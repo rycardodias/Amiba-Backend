@@ -1,8 +1,7 @@
 const express = require('express')
 const router = express.Router()
-const db = require('../config/database')
 
-const Model = require('../models/EggsBatch')
+const Model = require('../models/EggsBatchProduct')
 
 const ResponseModel = require('../lib/ResponseModel')
 const { error_missing_fields, error_invalid_fields, error_data_not_found, success_row_delete, error_row_delete, success_row_update,
@@ -27,14 +26,15 @@ router.get('/', async (req, res) => {
 
 })
 
-router.get('/id/:id', async (req, res) => {
+router.get('/id/:ProductId/:EggsBatchId', async (req, res) => {
     const response = new ResponseModel()
     try {
-        if (!req.params.id) {
+        const { ProductId, EggsBatchId } = req.params
+        if (!(ProductId && EggsBatchId)) {
             response.error = error_missing_fields
             res.status(400).json(response)
         }
-        const request = await Model.findByPk(req.params.id)
+        const request = await Model.findOne({ where: { ProductId: ProductId, EggsBatchId: EggsBatchId } })
 
         if (request) {
             response.data = request
@@ -54,19 +54,17 @@ router.get('/id/:id', async (req, res) => {
 router.post('/create', async (req, res) => {
     const response = new ResponseModel()
     try {
-        const { name, caliber, quantity, RaceId } = req.body
+        const { ProductId, EggsBatchId, quantity } = req.body
 
-
-        if (!(name && caliber && quantity && RaceId)) {
+        if (!(ProductId && EggsBatchId && quantity)) {
             response.error = error_missing_fields
             return res.status(400).json(response)
         }
 
         const data = {
-            name: name,
-            caliber: caliber,
-            quantity: quantity,
-            RaceId: RaceId,
+            ProductId: ProductId,
+            EggsBatchId: EggsBatchId,
+            quantity: quantity
         }
 
         const request = await Model.create(data)
@@ -89,21 +87,19 @@ router.post('/create', async (req, res) => {
 router.put('/update', async (req, res) => {
     const response = new ResponseModel()
     try {
-        const { id, name, caliber, quantity, RaceId } = req.body
+        const { ProductId, EggsBatchId, quantity } = req.body
 
-        if (!id) {
+
+        if (!(ProductId && EggsBatchId)) {
             response.error = error_missing_fields
             res.status(400).json(response)
         }
 
         const data = {
-            name: name,
-            caliber: caliber,
-            quantity: quantity,
-            RaceId: RaceId,
+            quantity: quantity
         }
 
-        const request = await Model.update(data, { where: { id: id } })
+        const request = await Model.update(data, { where: { ProductId: ProductId, EggsBatchId: EggsBatchId } })
 
         if (request == 1) {
             response.data = success_row_update
@@ -119,15 +115,16 @@ router.put('/update', async (req, res) => {
     }
 })
 
+
 router.delete('/delete', async (req, res) => {
     const response = new ResponseModel()
     try {
-        const { id } = req.body
-        if (!id) {
+        const { ProductId, EggsBatchId } = req.body
+        if (!(ProductId, EggsBatchId)) {
             response.error = error_missing_fields
             return res.status(400).json(response)
         }
-        const request = await Model.destroy({ where: { id: id } })
+        const request = await Model.destroy({ where: { ProductId: ProductId, EggsBatchId: EggsBatchId } })
 
         if (request === 1) {
             response.data = success_row_delete

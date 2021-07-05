@@ -21,7 +21,7 @@ const Product = db.define('Product', {
         type: DataTypes.STRING,
     },
     price: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.FLOAT,
         allowNull: false,
         validate: {
             notEmpty: {
@@ -55,6 +55,6 @@ const Product = db.define('Product', {
 //    Product.belongsTo(Taxes)
 //    Taxes.hasMany(Product)
 
-//   Product.sync({force: true})
+//   Product.sync({alter: true})
 
 module.exports = Product
