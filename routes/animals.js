@@ -13,7 +13,7 @@ const { error_missing_fields, error_invalid_fields, error_data_not_found, succes
 router.get('/', async (req, res) => {
     const response = new ResponseModel()
     try {
-        const request = await Model.findAll()
+        const request = await Model.findAll({ include: [Exploration, Race] })
         if (request.length > 0) {
             response.data = request
             res.status(200).json(response)
@@ -36,7 +36,7 @@ router.get('/id/:id', async (req, res) => {
             response.error = error_missing_fields
             res.status(400).json(response)
         }
-        const request = await Model.findByPk(req.params.id)
+        const request = await Model.findByPk(req.params.id, { include: [Exploration, Race] })
 
         if (request) {
             response.data = request
@@ -57,7 +57,7 @@ router.post('/create', async (req, res) => {
     const response = new ResponseModel()
     try {
         const { id, ExplorationId, RaceId, gender, birthDate, weight, slaughterDate, slaughterWeight, slaughterLocal } = req.body
-
+        console.log(ExplorationId, RaceId, gender, birthDate, weight)
 
         if (!(ExplorationId && RaceId && gender && birthDate && weight)) {
             response.error = error_missing_fields

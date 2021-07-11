@@ -45,30 +45,21 @@ const Animal = db.define('Animal', {
     slaughterLocal: {
         type: DataTypes.STRING,
     },
-    RaceId: {
-        type: DataTypes.UUID,
-        allowNull: false,
-        references: {
-            model: Race,
-            key: 'id'
-        }
-    },
-    ExplorationId: {
-        type: DataTypes.UUID,
-        allowNull: false,
-        references: {
-            model: Exploration,
-            key: 'id'
-        }
-    }
 },
 )
-// Animal.belongsTo(Race)
-// Race.hasMany(Animal)
+Animal.belongsTo(Race)
+Race.hasMany(Animal)
 
-// Animal.belongsTo(Exploration)
-// Exploration.hasMany(Animal)
+Animal.belongsTo(Exploration)
+Exploration.hasMany(Animal)
 
-// Animal.sync({alter: true})
+// Animal.sync({force: true})
+
+// db.query("ALTER TABLE \"Animals\" DROP CONSTRAINT \"Animals_RaceId_fkey\", " +
+//     " ADD CONSTRAINT \"Animals_RaceId_fkey\" FOREIGN KEY(\"RaceId\") REFERENCES \"Races\" " +
+//     "ON UPDATE NO ACTION;")
+//     db.query("ALTER TABLE \"Animals\" DROP CONSTRAINT \"Animals_ExplorationId_fkey\", " +
+//     " ADD CONSTRAINT \"Animals_ExplorationId_fkey\" FOREIGN KEY(\"ExplorationId\") REFERENCES \"Explorations\" " +
+//     "ON UPDATE NO ACTION;")
 
 module.exports = Animal

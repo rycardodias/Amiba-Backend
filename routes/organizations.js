@@ -14,11 +14,12 @@ const { error_missing_fields,
     error_row_create,
     success_row_create
 } = require('../lib/ResponseMessages')
+const User = require('../models/User')
 
 router.get('/', async (req, res) => {
     const response = new ResponseModel()
     try {
-        const request = await Model.findAll({ include: OrganizationType })
+        const request = await Model.findAll({ include: [OrganizationType, User] })
         if (request.length > 0) {
             response.data = request
             res.status(200).json(response)
@@ -41,7 +42,7 @@ router.get('/id/:id', async (req, res) => {
             response.error = error_missing_fields
             res.status(400).json(response)
         }
-        const request = await Model.findByPk(req.params.id)
+        const request = await Model.findByPk(req.params.id, { include: [OrganizationType, User] })
 
         if (request) {
             response.data = request

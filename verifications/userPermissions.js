@@ -18,7 +18,6 @@ const verifyPermissionArray = (perm1, perm2) => {
     return false
 }
 
-
 exports.verifyPermission = async function (token, requiredPermission) {
     try {
         const idToken = jwt.verify(token, "MySecret").id

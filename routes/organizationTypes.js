@@ -30,7 +30,6 @@ router.get('/', async (req, res) => {
         response.error = error
         return res.status(400).json(response)
     }
-
 })
 
 router.get('/id/:id', async (req, res) => {

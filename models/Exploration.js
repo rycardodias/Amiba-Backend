@@ -46,10 +46,10 @@ const Exploration = db.define('Exploration', {
         }
     },
     telephone: {
-        type: DataTypes.STRING,
+        type: DataTypes.INTEGER,
     },
     mobilePhone: {
-        type: DataTypes.STRING,
+        type: DataTypes.INTEGER,
     },
     fiscalNumber: {
         type: DataTypes.INTEGER,

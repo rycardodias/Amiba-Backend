@@ -26,12 +26,12 @@ const Order = db.define('Order', {
             }
         },
     },
-    adress: {
+    address: {
         type: DataTypes.STRING,
         allowNull: false,
         validate: {
             notEmpty: {
-                msg: "adress field is required",
+                msg: "address field is required",
             }
         },
     },
@@ -70,9 +70,13 @@ const Order = db.define('Order', {
 },
 )
 
-// Order.belongsTo(User)
-// User.hasMany(Order)
+Order.belongsTo(User)
+User.hasMany(Order)
 
-// Order.sync({ alter: true })
+// Order.sync({ force: true })
+
+// db.query("ALTER TABLE \"Orders\" DROP CONSTRAINT \"Orders_UserId_fkey\", " +
+//     " ADD CONSTRAINT \"Orders_UserId_fkey\" FOREIGN KEY(\"UserId\") REFERENCES \"Users\" " +
+//     "ON UPDATE NO ACTION;")
 
 module.exports = Order
