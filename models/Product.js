@@ -38,23 +38,16 @@ const Product = db.define('Product', {
             }
         },
     },
-    ProductTypeId: {
-        type: DataTypes.UUID,
-        allowNull: false,
-        references: {
-            model: ProductType,
-            key: 'id'
-        }
-    },
-
 },
 )
-//    Product.belongsTo(ProductType)
-//    ProductType.hasMany(Product)
-
-//    Product.belongsTo(Taxes)
-//    Taxes.hasMany(Product)
+Product.belongsTo(ProductType)
+ProductType.hasMany(Product)
 
 //   Product.sync({alter: true})
+
+// Organization.sync({ force: true })
+
+// db.query("ALTER TABLE \"Products\" DROP CONSTRAINT \"Products_ProductTypeId_fkey\", " +
+//     " ADD CONSTRAINT \"Products_ProductTypeId_fkey\" FOREIGN KEY(\"ProductTypeId\") REFERENCES \"ProductTypes\"  ON UPDATE NO ACTION;")
 
 module.exports = Product

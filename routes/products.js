@@ -7,11 +7,12 @@ const Model = require('../models/Product')
 const ResponseModel = require('../lib/ResponseModel')
 const { error_missing_fields, error_invalid_fields, error_data_not_found, success_row_delete, error_row_delete, success_row_update,
     error_row_update, error_row_create, success_row_create } = require('../lib/ResponseMessages')
+const ProductType = require('../models/ProductType')
 
 router.get('/', async (req, res) => {
     const response = new ResponseModel()
     try {
-        const request = await Model.findAll()
+        const request = await Model.findAll({ include: ProductType })
         if (request.length > 0) {
             response.data = request
             res.status(200).json(response)
@@ -34,7 +35,7 @@ router.get('/id/:id', async (req, res) => {
             response.error = error_missing_fields
             res.status(400).json(response)
         }
-        const request = await Model.findByPk(req.params.id)
+        const request = await Model.findByPk(req.params.id, { include: ProductType })
 
         if (request) {
             response.data = request
