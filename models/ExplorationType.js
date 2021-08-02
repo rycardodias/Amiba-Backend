@@ -21,8 +21,17 @@ const ExplorationType = db.define('ExplorationType', {
         type: DataTypes.STRING,
     },
 },
-   )
+)
 
-//    ExplorationType.sync({alter: true})
-   
+// ExplorationType.sync({ force: true })
+//     .then(() => {
+//         const { v4 } = require('uuid');
+//         db.query("INSERT INTO \"ExplorationTypes\" (id, name,  \"createdAt\", \"updatedAt\") VALUES(\'"
+//             + v4() + "\', \'Grande Exploração\', '13/07/2021', '13/07/2021'); ")
+//         db.query("INSERT INTO \"ExplorationTypes\" (id, name,  \"createdAt\", \"updatedAt\") VALUES(\'"
+//             + v4() + "\', \'Média Exploração\', '13/07/2021', '13/07/2021'); ")
+//         db.query("INSERT INTO \"ExplorationTypes\" (id, name,  \"createdAt\", \"updatedAt\") VALUES(\'"
+//             + v4() + "\', \'Pequena Exploração\', '13/07/2021', '13/07/2021'); ")
+//     })
+
 module.exports = ExplorationType

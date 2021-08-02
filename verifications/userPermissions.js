@@ -29,5 +29,4 @@ exports.verifyPermission = async function (token, requiredPermission) {
     } catch {
         return false
     }
-
 }

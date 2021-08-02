@@ -20,8 +20,19 @@ const Race = db.define('Race', {
     description: {
         type: DataTypes.STRING,
     },
-}) 
+})
 
-// Race.sync({ alter: true })
+// Race.sync({ force: true })
+//     .then(() => {
+//         const { v4 } = require('uuid');
+//         db.query("INSERT INTO \"Races\" (id, name,  \"createdAt\", \"updatedAt\") VALUES(\'"
+//             + v4() + "\', \'Galinha - Raça Preta Lusitana\', '13/07/2021', '13/07/2021'); ")
+//         db.query("INSERT INTO \"Races\" (id, name,  \"createdAt\", \"updatedAt\") VALUES(\'"
+//             + v4() + "\', \'Galinha - Raça Amarela\', '13/07/2021', '13/07/2021'); ")
+//         db.query("INSERT INTO \"Races\" (id, name,  \"createdAt\", \"updatedAt\") VALUES(\'"
+//             + v4() + "\', \'Galinha - Raça Pedrês Portuguesa\', '13/07/2021', '13/07/2021'); ")
+//         db.query("INSERT INTO \"Races\" (id, name,  \"createdAt\", \"updatedAt\") VALUES(\'"
+//             + v4() + "\', \'Galinha - Raça Branca\', '13/07/2021', '13/07/2021'); ")
+//     })
 
 module.exports = Race

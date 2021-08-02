@@ -76,9 +76,23 @@ const Restaurant = db.define('Restaurant', {
 
 Restaurant.belongsTo(User)
 User.hasMany(Restaurant)
+
 // Restaurant.sync({ force: true })
-// db.query("ALTER TABLE \"Restaurants\" DROP CONSTRAINT \"Restaurants_UserId_fkey\", " +
-//     " ADD CONSTRAINT \"Restaurants_UserId_fkey\" FOREIGN KEY(\"UserId\") REFERENCES \"Users\" " +
-//     "ON UPDATE NO ACTION;")
+//     .then(() => {
+//         const { v4 } = require('uuid');
+//         db.query("ALTER TABLE \"Restaurants\" DROP CONSTRAINT \"Restaurants_UserId_fkey\", " +
+//             " ADD CONSTRAINT \"Restaurants_UserId_fkey\" FOREIGN KEY(\"UserId\") REFERENCES \"Users\" " +
+//             "ON UPDATE NO ACTION;")
+//         db.query("INSERT INTO \"Users\" (id, \"UserId\", name, description, address, locale, zipcode, fiscalNumber, \"createdAt\", \"updatedAt\") VALUES(\'"
+//             + v4() + "\'," +
+//             " \'e1f238b3-d3fb-4c76-b79e-5d39933811eb\'," +
+//             " \'Restaurante o Braseiro\'," +
+//             " \'Churrasqueira e Take-Away\', " +
+//             " \'$2b$10$wLXRIhLuCkAL1KptowoKu.QZunSpKgfAKos6.BpeyFUk7emiM6aP.\'," +
+//             " \'{ADMIN}\'," +
+//             " '13/07/2021', " +
+//             "'13/07/2021'); ")
+//     })
+
 
 module.exports = Restaurant

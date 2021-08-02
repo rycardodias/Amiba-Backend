@@ -64,16 +64,15 @@ router.get('/id/:id', async (req, res) => {
 router.post('/create', async (req, res) => {
     const response = new ResponseModel()
     try {
-        const { name, surname, email, password, address, locale, zipcode, fiscalNumber, telephone, mobilePhone } = req.body
+        const { name, email, password, address, locale, zipcode, fiscalNumber, telephone, mobilePhone } = req.body
 
-        if (!(name && surname && email && password)) {
+        if (!(name && email && password)) {
             response.error = error_missing_fields
             return res.status(400).json(response)
         }
 
         const data = {
             name: name,
-            surname: surname,
             email: email,
             password: bcrypt.hashSync(password, 10),
             address: address,
@@ -106,7 +105,7 @@ router.post('/create', async (req, res) => {
 router.put('/update', async (req, res) => {
     const response = new ResponseModel()
     try {
-        const { token, id, name, surname, email, password, active, permission, address, locale, zipcode, fiscalNumber, telephone, mobilePhone } = req.body
+        const { token, id, name, email, password, active, permission, address, locale, zipcode, fiscalNumber, telephone, mobilePhone } = req.body
 
         if (!token) {
             response.error = error_invalid_token
@@ -126,7 +125,6 @@ router.put('/update', async (req, res) => {
 
         const data = {
             name: name,
-            surname: surname,
             email: email,
             password: password ? bcrypt.hashSync(password, 10) : undefined,
             active: isAdmin ? active : undefined,

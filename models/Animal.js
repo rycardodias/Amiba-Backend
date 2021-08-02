@@ -47,6 +47,7 @@ const Animal = db.define('Animal', {
     },
 },
 )
+
 Animal.belongsTo(Race)
 Race.hasMany(Animal)
 

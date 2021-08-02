@@ -1,4 +1,4 @@
-const { DataTypes, Sequelize } = require('sequelize');
+const { DataTypes, Sequelize, UUIDV4 } = require('sequelize');
 const db = require('../config/database');
 const ProductType = require('./ProductType');
 
@@ -43,11 +43,11 @@ const Product = db.define('Product', {
 Product.belongsTo(ProductType)
 ProductType.hasMany(Product)
 
-//   Product.sync({alter: true})
+// Product.sync({ force: true })
+//     .then(() => {
+//         db.query("ALTER TABLE \"Products\" DROP CONSTRAINT \"Products_ProductTypeId_fkey\", " +
+//             " ADD CONSTRAINT \"Products_ProductTypeId_fkey\" FOREIGN KEY(\"ProductTypeId\") REFERENCES \"ProductTypes\"  ON UPDATE NO ACTION;")
+//     })
 
-// Organization.sync({ force: true })
-
-// db.query("ALTER TABLE \"Products\" DROP CONSTRAINT \"Products_ProductTypeId_fkey\", " +
-//     " ADD CONSTRAINT \"Products_ProductTypeId_fkey\" FOREIGN KEY(\"ProductTypeId\") REFERENCES \"ProductTypes\"  ON UPDATE NO ACTION;")
 
 module.exports = Product
