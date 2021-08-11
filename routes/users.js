@@ -220,11 +220,11 @@ router.post('/logout', async (req, res) => {
     }
 })
 
-router.post('/me', async (req, res) => {
+router.get('/me/:token', cache(2), async (req, res) => {
     const response = new ResponseModel()
 
     try {
-        const userID = jwt.verify(req.session.token || req.body.token, "MySecret");
+        const userID = jwt.verify(req.session.token || req.params.token, "MySecret");
         const request = await Model.findByPk(userID.id)
 
         if (request) {

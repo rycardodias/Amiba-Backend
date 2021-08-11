@@ -22,7 +22,9 @@ module.exports = duration => (req, res, next) => {
     } else {
         res.sendResponse = res.send
         res.send = (body) => {
-            mcache.put(key, body, (duration || 300) * 1000);
+            mcache.put(key, body, (duration || 3) * 60 * 1000, function (key, value) {
+                // console.log("expirou", key)
+            });
             res.sendResponse(body)
         }
         next()
