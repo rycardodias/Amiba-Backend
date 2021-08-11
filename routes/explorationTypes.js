@@ -1,7 +1,8 @@
 const express = require('express')
 const router = express.Router()
 const Model = require('../models/ExplorationType')
-const cache = require('../routeCache')
+const cache = require('../lib/cache/routeCache')
+const removeCache = require('../lib/cache/removeCache')
 const ResponseModel = require('../lib/ResponseModel')
 const { error_missing_fields, error_invalid_fields, error_data_not_found, success_row_delete, error_row_delete, success_row_update,
     error_row_update, error_row_create, success_row_create } = require('../lib/ResponseMessages')
@@ -49,7 +50,7 @@ router.get('/id/:id', cache(), async (req, res) => {
 
 })
 
-router.post('/create', async (req, res) => {
+router.post('/create', removeCache('/explorationTypes'), async (req, res) => {
     const response = new ResponseModel()
     try {
         const { name, description } = req.body
@@ -82,7 +83,7 @@ router.post('/create', async (req, res) => {
     }
 })
 
-router.put('/update', async (req, res) => {
+router.put('/update', removeCache('/explorationTypes'), async (req, res) => {
     const response = new ResponseModel()
     try {
         const { id, name, description } = req.body
@@ -113,7 +114,7 @@ router.put('/update', async (req, res) => {
     }
 })
 
-router.delete('/delete', async (req, res) => {
+router.delete('/delete', removeCache('/explorationTypes'), async (req, res) => {
     const response = new ResponseModel()
     try {
         const { id } = req.body

@@ -4,7 +4,8 @@ const router = express.Router()
 const Model = require('../models/Exploration')
 const ExplorationType = require('../models/ExplorationType')
 const Organization = require('../models/Organization')
-const cache = require('../routeCache')
+const cache = require('../lib/cache/routeCache')
+const removeCache = require('../lib/cache/removeCache')
 const ResponseModel = require('../lib/ResponseModel')
 const { error_missing_fields, error_invalid_fields, error_data_not_found, success_row_delete, error_row_delete, success_row_update,
     error_row_update, error_row_create, success_row_create } = require('../lib/ResponseMessages')
@@ -50,7 +51,7 @@ router.get('/id/:id', cache(), async (req, res) => {
     }
 })
 
-router.post('/create', async (req, res) => {
+router.post('/create', removeCache('/explorations'), async (req, res) => {
     const response = new ResponseModel()
     try {
         const { OrganizationId, ExplorationTypeId, name, address, locale, zipcode, telephone, mobilePhone, fiscalNumber, gpsLocalization } = req.body
@@ -90,7 +91,7 @@ router.post('/create', async (req, res) => {
     }
 })
 
-router.put('/update', async (req, res) => {
+router.put('/update', removeCache('/explorations'), async (req, res) => {
     const response = new ResponseModel()
     try {
         const { id, OrganizationId, ExplorationTypeId, name, address, locale, zipcode, telephone, mobilePhone, fiscalNumber, gpsLocalization } = req.body
@@ -130,7 +131,7 @@ router.put('/update', async (req, res) => {
     }
 })
 
-router.delete('/delete', async (req, res) => {
+router.delete('/delete', removeCache('/explorations'), async (req, res) => {
     const response = new ResponseModel()
     try {
         const { id } = req.body

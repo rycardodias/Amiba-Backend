@@ -18,7 +18,8 @@ const { error_missing_fields,
     success_row_create
 } = require('../lib/ResponseMessages')
 
-const cache = require('../routeCache')
+const cache = require('../lib/cache/routeCache')
+const removeCache = require('../lib/cache/removeCache')
 
 router.get('/', cache(), async (req, res) => {
     const response = new ResponseModel()
@@ -61,7 +62,7 @@ router.get('/id/:id', cache(), async (req, res) => {
     }
 })
 
-router.post('/create', async (req, res) => {
+router.post('/create', removeCache('/users'), removeCache('/users/me'), async (req, res) => {
     const response = new ResponseModel()
     try {
         const { name, email, password, address, locale, zipcode, fiscalNumber, telephone, mobilePhone } = req.body
@@ -102,7 +103,7 @@ router.post('/create', async (req, res) => {
 })
 
 
-router.put('/update', async (req, res) => {
+router.put('/update', removeCache('/users'), removeCache('/users/me'), async (req, res) => {
     const response = new ResponseModel()
     try {
         const { token, id, name, email, password, active, permission, address, locale, zipcode, fiscalNumber, telephone, mobilePhone } = req.body
@@ -153,7 +154,7 @@ router.put('/update', async (req, res) => {
     }
 })
 
-router.delete('/delete', async (req, res) => {
+router.delete('/delete', removeCache('/users'), removeCache('/users/me'), async (req, res) => {
     const response = new ResponseModel()
     try {
         const { id } = req.body
@@ -220,7 +221,7 @@ router.post('/logout', async (req, res) => {
     }
 })
 
-router.get('/me/:token', cache(2), async (req, res) => {
+router.get('/me/:token', cache(15), async (req, res) => {
     const response = new ResponseModel()
 
     try {

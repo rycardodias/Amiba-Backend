@@ -3,7 +3,8 @@ const router = express.Router()
 const Model = require('../models/Organization')
 const OrganizationType = require('../models/OrganizationType')
 const User = require('../models/User')
-const cache = require('../routeCache')
+const cache = require('../lib/cache/routeCache')
+const removeCache = require('../lib/cache/removeCache')
 const ResponseModel = require('../lib/ResponseModel')
 const { error_missing_fields, error_invalid_fields, error_data_not_found, success_row_delete, error_row_delete, success_row_update,
     error_row_update, error_row_create, success_row_create } = require('../lib/ResponseMessages')
@@ -53,7 +54,7 @@ router.get('/id/:id', cache(), async (req, res) => {
 
 })
 
-router.post('/create', async (req, res) => {
+router.post('/create', removeCache('/organizations'), async (req, res) => {
     const response = new ResponseModel()
     try {
         const { OrganizationTypeId, UserId, name, address, locale, zipcode, telephone, mobilePhone, fiscalNumber } = req.body
@@ -79,6 +80,7 @@ router.post('/create', async (req, res) => {
         const request = await Model.create(data)
 
         if (request) {
+
             response.message = success_row_create
             response.data = request
             res.status(200).json(response)
@@ -94,7 +96,7 @@ router.post('/create', async (req, res) => {
 })
 
 
-router.put('/update', async (req, res) => {
+router.put('/update', removeCache('/organizations'), async (req, res) => {
     const response = new ResponseModel()
     try {
         const { id, OrganizationTypeId, UserId, name, address, locale, zipcode, telephone, mobilePhone, fiscalNumber } = req.body
@@ -132,7 +134,7 @@ router.put('/update', async (req, res) => {
     }
 })
 
-router.delete('/delete', async (req, res) => {
+router.delete('/delete', removeCache('/organizations'), async (req, res) => {
     const response = new ResponseModel()
     try {
         const { id } = req.body
@@ -143,6 +145,7 @@ router.delete('/delete', async (req, res) => {
         const request = await Model.destroy({ where: { id: id } })
 
         if (request === 1) {
+
             response.data = success_row_delete
             res.status(200).json(response)
         } else {
