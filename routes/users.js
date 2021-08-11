@@ -18,9 +18,9 @@ const { error_missing_fields,
     success_row_create
 } = require('../lib/ResponseMessages')
 
+const cache = require('../routeCache')
 
-
-router.get('/', async (req, res) => {
+router.get('/', cache(), async (req, res) => {
     const response = new ResponseModel()
     try {
         const request = await Model.findAll()
@@ -38,7 +38,7 @@ router.get('/', async (req, res) => {
     }
 })
 
-router.get('/id/:id', async (req, res) => {
+router.get('/id/:id', cache(), async (req, res) => {
     const response = new ResponseModel()
     try {
         if (!req.params.id) {
@@ -190,7 +190,11 @@ router.post('/login', async (req, res) => {
         const request = await Model.findOne({ where: { email: email } })
 
         if (bcrypt.compareSync(password, request.password)) {
+
             response.data = jwt.sign({ id: request.id, }, "MySecret")
+
+            req.session = { token: response.data };
+
             res.status(200).json(response)
 
         } else {
@@ -203,11 +207,24 @@ router.post('/login', async (req, res) => {
     }
 })
 
+
+router.post('/logout', async (req, res) => {
+    const response = new ResponseModel()
+    try {
+        response.data = 'Token eliminado com sucesso!'
+        req.session = null;
+        res.status(200).json(response)
+    } catch (error) {
+        response.error = error_invalid_token
+        return res.status(400).json(response)
+    }
+})
+
 router.post('/me', async (req, res) => {
     const response = new ResponseModel()
 
     try {
-        const userID = jwt.verify(req.body.token, "MySecret");
+        const userID = jwt.verify(req.session.token || req.body.token, "MySecret");
         const request = await Model.findByPk(userID.id)
 
         if (request) {

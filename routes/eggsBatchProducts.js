@@ -1,13 +1,11 @@
 const express = require('express')
 const router = express.Router()
-
 const Model = require('../models/EggsBatchProduct')
-
 const ResponseModel = require('../lib/ResponseModel')
 const { error_missing_fields, error_invalid_fields, error_data_not_found, success_row_delete, error_row_delete, success_row_update,
     error_row_update, error_row_create, success_row_create } = require('../lib/ResponseMessages')
-
-router.get('/', async (req, res) => {
+const cache = require('../routeCache')
+router.get('/', cache(), async (req, res) => {
     const response = new ResponseModel()
     try {
         const request = await Model.findAll()
@@ -26,7 +24,7 @@ router.get('/', async (req, res) => {
 
 })
 
-router.get('/id/:ProductId/:EggsBatchId', async (req, res) => {
+router.get('/id/:ProductId/:EggsBatchId', cache(), async (req, res) => {
     const response = new ResponseModel()
     try {
         const { ProductId, EggsBatchId } = req.params

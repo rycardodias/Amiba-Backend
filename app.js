@@ -1,23 +1,29 @@
 const express = require('express')
-// const exphbs = require('express-handlebars')
-// const bodyParser = require('body-parser')
 const cors = require("cors");
+const cookieSession = require('cookie-session')
 
 const dotenv = require('dotenv');
 dotenv.config()
-
 
 const app = express();
 
 app.use(express.json());
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL,
-    optionsSuccessStatus: 200,
+    // origin: 'http://localhost:3000/',
+    // optionsSuccessStatus: 200,
   })
 );
 
-app.get('/', (req, res) => res.send('INDEX'));
+app.use(
+  cookieSession({
+    signed: false,
+    secure: false,
+  }
+  )
+)
+
+app.get('/', (req, res) => res.send('INDEX - AMIBA WEBSERVICES'));
 
 //routes
 app.use('/users', require('./routes/users'))
@@ -39,6 +45,7 @@ app.use('/explorationEggs', require('./routes/explorationEggs'))
 app.use('/animals', require('./routes/animals'))
 app.use('/animalProducts', require('./routes/animalProducts'))
 app.use('/EggsBatchProducts', require('./routes/EggsBatchProducts'))
+
 
 
 module.exports = app

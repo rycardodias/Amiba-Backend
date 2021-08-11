@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const Model = require('../models/OrganizationType')
-
+const cache = require('../routeCache')
 const ResponseModel = require('../lib/ResponseModel')
 const { error_missing_fields,
     error_invalid_fields,
@@ -14,7 +14,7 @@ const { error_missing_fields,
     success_row_create
 } = require('../lib/ResponseMessages')
 
-router.get('/', async (req, res) => {
+router.get('/', cache(),async (req, res) => {
     const response = new ResponseModel()
     try {
         const request = await Model.findAll()
@@ -32,7 +32,7 @@ router.get('/', async (req, res) => {
     }
 })
 
-router.get('/id/:id', async (req, res) => {
+router.get('/id/:id', cache(),async (req, res) => {
     const response = new ResponseModel()
     try {
         if (!req.params.id) {

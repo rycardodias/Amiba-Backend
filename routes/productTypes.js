@@ -4,8 +4,9 @@ const Model = require('../models/ProductType')
 const ResponseModel = require('../lib/ResponseModel')
 const { error_missing_fields, error_invalid_fields, error_data_not_found, success_row_delete, error_row_delete, success_row_update,
     error_row_update, error_row_create, success_row_create } = require('../lib/ResponseMessages')
+const cache = require('../routeCache')
 
-router.get('/', async (req, res) => {
+router.get('/', cache(), async (req, res) => {
     const response = new ResponseModel()
     try {
         const request = await Model.findAll()
@@ -24,7 +25,7 @@ router.get('/', async (req, res) => {
 
 })
 
-router.get('/id/:id', async (req, res) => {
+router.get('/id/:id', cache(), async (req, res) => {
     const response = new ResponseModel()
     try {
         if (!req.params.id) {
