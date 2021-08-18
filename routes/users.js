@@ -115,7 +115,6 @@ router.put('/update', removeCache('/users'), removeCache('/users/me'), async (re
         }
 
         const isAdmin = await userPermission.verifyPermission(token, ['ADMIN'])
-        isAdmin = true //FIXME remove it
         const idToken = jwt.verify(token, "MySecret").id
 
         if (!isAdmin && (idToken != id)) {
@@ -131,7 +130,7 @@ router.put('/update', removeCache('/users'), removeCache('/users/me'), async (re
             email: email,
             password: password ? bcrypt.hashSync(password, 10) : undefined,
             active: isAdmin ? active : undefined,
-            permission: isAdmin ? permission : undefined,
+            permission: permission, //isAdmin ? permission : undefined,
             address: address,
             locale: locale,
             zipcode: zipcode,
