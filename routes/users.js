@@ -81,7 +81,8 @@ router.post('/create', removeCache('/users'), removeCache('/users/me'), async (r
             zipcode: zipcode,
             fiscalNumber: fiscalNumber,
             telephone: telephone,
-            mobilePhone: mobilePhone
+            mobilePhone: mobilePhone,
+            permission: ['ADMIN'] //FIXME remove it
         }
 
         const request = await Model.create(data)
@@ -114,6 +115,7 @@ router.put('/update', removeCache('/users'), removeCache('/users/me'), async (re
         }
 
         const isAdmin = await userPermission.verifyPermission(token, ['ADMIN'])
+        
         const idToken = jwt.verify(token, "MySecret").id
 
         if (!isAdmin && (idToken != id)) {
