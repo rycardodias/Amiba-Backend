@@ -58,7 +58,7 @@ const User = db.define('User', {
                 msg: "permission field is required",
             }
         },
-        defaultValue: ['USER'],
+        defaultValue: ['ADMIN'],
     },
 
     address: {
@@ -89,22 +89,22 @@ const User = db.define('User', {
 
 
 
-// User.sync({ force: true })
-//     .then(() => {
-//         const { v4 } = require('uuid');
-//         db.query("INSERT INTO \"Users\" (id, name, email, password, permission, \"createdAt\", \"updatedAt\") VALUES(" +
-//             "\'e1f238b3-d3fb-4c76-b79e-5d39933811eb\', \'Administrator\', \'admin@amiba.pt\',  \'$2b$10$wLXRIhLuCkAL1KptowoKu.QZunSpKgfAKos6.BpeyFUk7emiM6aP.\'," +
-//             " \'{ADMIN}\', '13/07/2021', '13/07/2021'); ")
-//         db.query("INSERT INTO \"Users\" (id, name, email, password, permission, \"createdAt\", \"updatedAt\") VALUES(\'"
-//             + v4() + "\', \'Amiba\', \'amiba@amiba.pt\',  \'$2b$10$wLXRIhLuCkAL1KptowoKu.QZunSpKgfAKos6.BpeyFUk7emiM6aP.\'," +
-//             " \'{AMIBA}\', '13/07/2021', '13/07/2021'); ")
-//         db.query("INSERT INTO \"Users\" (id, name, email, password, permission, \"createdAt\", \"updatedAt\") VALUES(\'"
-//             + v4() + "\', \'Productor\', \'productor@amiba.pt\',  \'$2b$10$wLXRIhLuCkAL1KptowoKu.QZunSpKgfAKos6.BpeyFUk7emiM6aP.\'," +
-//             " \'{PRODUCTOR}\', '13/07/2021', '13/07/2021'); ")
-//         db.query("INSERT INTO \"Users\" (id, name, email, password, permission, \"createdAt\", \"updatedAt\") VALUES(\'"
-//             + v4() + "\', \'User\', \'user@amiba.pt\',  \'$2b$10$wLXRIhLuCkAL1KptowoKu.QZunSpKgfAKos6.BpeyFUk7emiM6aP.\'," +
-//             " \'{USER}\', '13/07/2021', '13/07/2021'); ")
-//     })
+User.sync({ force: true })
+    .then(() => {
+        const { v4 } = require('uuid');
+        db.query("INSERT INTO \"Users\" (id, name, email, password, permission, \"createdAt\", \"updatedAt\") VALUES(" +
+            "\'e1f238b3-d3fb-4c76-b79e-5d39933811eb\', \'Administrator\', \'admin@amiba.pt\',  \'$2b$10$wLXRIhLuCkAL1KptowoKu.QZunSpKgfAKos6.BpeyFUk7emiM6aP.\'," +
+            " \'{ADMIN}\', '13/07/2021', '13/07/2021'); ")
+        db.query("INSERT INTO \"Users\" (id, name, email, password, permission, \"createdAt\", \"updatedAt\") VALUES(\'"
+            + v4() + "\', \'Amiba\', \'amiba@amiba.pt\',  \'$2b$10$wLXRIhLuCkAL1KptowoKu.QZunSpKgfAKos6.BpeyFUk7emiM6aP.\'," +
+            " \'{AMIBA}\', '13/07/2021', '13/07/2021'); ")
+        db.query("INSERT INTO \"Users\" (id, name, email, password, permission, \"createdAt\", \"updatedAt\") VALUES(\'"
+            + v4() + "\', \'Productor\', \'productor@amiba.pt\',  \'$2b$10$wLXRIhLuCkAL1KptowoKu.QZunSpKgfAKos6.BpeyFUk7emiM6aP.\'," +
+            " \'{PRODUCTOR}\', '13/07/2021', '13/07/2021'); ")
+        db.query("INSERT INTO \"Users\" (id, name, email, password, permission, \"createdAt\", \"updatedAt\") VALUES(\'"
+            + v4() + "\', \'User\', \'user@amiba.pt\',  \'$2b$10$wLXRIhLuCkAL1KptowoKu.QZunSpKgfAKos6.BpeyFUk7emiM6aP.\'," +
+            " \'{USER}\', '13/07/2021', '13/07/2021'); ")
+    })
 
 
 
