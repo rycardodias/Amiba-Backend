@@ -130,7 +130,7 @@ router.put('/update', removeCache('/users'), removeCache('/users/me'), async (re
             email: email,
             password: password ? bcrypt.hashSync(password, 10) : undefined,
             active: isAdmin ? active : undefined,
-            permission: permission, //isAdmin ? permission : undefined,
+            permission: isAdmin ? permission : undefined,
             address: address,
             locale: locale,
             zipcode: zipcode,
