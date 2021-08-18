@@ -1,7 +1,7 @@
 {
   "name": "galinhas",
-  "version": "1.0.0",
-  "description": "Projeto de Investigação ",
+  "version": "1.0.1",
+  "description": "Projeto de Investigação",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
