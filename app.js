@@ -1,7 +1,7 @@
 const express = require('express')
 const cors = require("cors");
 const cookieSession = require('cookie-session')
-
+const { sequelize } = require('sequelize')
 const dotenv = require('dotenv');
 dotenv.config()
 
@@ -23,6 +23,7 @@ app.use(
   )
 )
 
+sequelize.sync({force: true})
 app.get('/', (req, res) => res.send('INDEX - AMIBA WEBSERVICES'));
 
 //routes
