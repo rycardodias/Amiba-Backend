@@ -35,7 +35,7 @@ router.get('/id/:id', cache(), async (req, res) => {
             response.error = error_missing_fields
             res.status(400).json(response)
         }
-        const request = await Model.findByPk(req.params.id)
+        const request = await Model.findByPk(req.params.id, { include: [Organization, ExplorationType] })
 
         if (request) {
             response.data = request
