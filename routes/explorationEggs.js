@@ -36,7 +36,7 @@ router.get('/id/:ExplorationId/:EggsBatchId', cache(), async (req, res) => {
             response.error = error_missing_fields
             res.status(400).json(response)
         }
-        const request = await Model.findOne({ where: { ExplorationId: ExplorationId, EggsBatchId: EggsBatchId } }, { include: Exploration })
+        const request = await Model.findOne({ where: { ExplorationId: ExplorationId, EggsBatchId: EggsBatchId }, include: Exploration })
 
         if (request) {
             response.data = request
