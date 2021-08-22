@@ -6,11 +6,13 @@ const removeCache = require('../lib/cache/removeCache')
 const ResponseModel = require('../lib/ResponseModel')
 const { error_missing_fields, error_invalid_fields, error_data_not_found, success_row_delete, error_row_delete, success_row_update,
     error_row_update, error_row_create, success_row_create } = require('../lib/ResponseMessages')
+const Exploration = require('../models/Exploration')
+
 
 router.get('/', cache(), async (req, res) => {
     const response = new ResponseModel()
     try {
-        const request = await Model.findAll()
+        const request = await Model.findAll({ include: Exploration })
         if (request.length > 0) {
             response.data = request
             res.status(200).json(response)
@@ -34,7 +36,7 @@ router.get('/id/:ExplorationId/:EggsBatchId', cache(), async (req, res) => {
             response.error = error_missing_fields
             res.status(400).json(response)
         }
-        const request = await Model.findOne({ where: { ExplorationId: ExplorationId, EggsBatchId: EggsBatchId } })
+        const request = await Model.findOne({ where: { ExplorationId: ExplorationId, EggsBatchId: EggsBatchId } }, { include: Exploration })
 
         if (request) {
             response.data = request
