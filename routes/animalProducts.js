@@ -1,6 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const Model = require('../models/AnimalProduct')
+const Product = require('../models/Product')
 
 const ResponseModel = require('../lib/ResponseModel')
 const { error_missing_fields, error_invalid_fields, error_data_not_found, success_row_delete, error_row_delete, success_row_update,
@@ -11,7 +12,7 @@ const removeCache = require('../lib/cache/removeCache')
 router.get('/', cache(), async (req, res) => {
     const response = new ResponseModel()
     try {
-        const request = await Model.findAll()
+        const request = await Model.findAll({ include: Product })
         if (request.length > 0) {
             response.data = request
             res.status(200).json(response)
@@ -35,7 +36,7 @@ router.get('/id/:ProductId/:AnimalId', cache(), async (req, res) => {
             response.error = error_missing_fields
             res.status(400).json(response)
         }
-        const request = await Model.findOne({ where: { ProductId: ProductId, AnimalId: AnimalId } })
+        const request = await Model.findOne({ where: { ProductId: ProductId, AnimalId: AnimalId }, include: Product })
 
         if (request) {
             response.data = request
