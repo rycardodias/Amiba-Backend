@@ -8,11 +8,12 @@ const ResponseModel = require('../lib/ResponseModel')
 const { error_missing_fields, error_invalid_fields, error_data_not_found, success_row_delete, error_row_delete, success_row_update,
     error_row_update, error_row_create, success_row_create } = require('../lib/ResponseMessages')
 const ProductType = require('../models/ProductType')
+const Organization = require('../models/Organization')
 
 router.get('/', cache(), async (req, res) => {
     const response = new ResponseModel()
     try {
-        const request = await Model.findAll({ include: ProductType })
+        const request = await Model.findAll({ include: [ProductType, Organization] })
         if (request.length > 0) {
             response.data = request
             res.status(200).json(response)
@@ -35,7 +36,7 @@ router.get('/id/:id', cache(), async (req, res) => {
             response.error = error_missing_fields
             res.status(400).json(response)
         }
-        const request = await Model.findByPk(req.params.id, { include: ProductType })
+        const request = await Model.findByPk(req.params.id, { include: [ProductType, Organization] })
 
         if (request) {
             response.data = request
@@ -55,7 +56,7 @@ router.get('/id/:id', cache(), async (req, res) => {
 router.post('/create', removeCache('/products'), async (req, res) => {
     const response = new ResponseModel()
     try {
-        const { ProductTypeId, tax, name, description, price } = req.body
+        const { ProductTypeId, OrganizationId, tax, name, description, price } = req.body
 
         if (!(ProductTypeId && tax && name && price)) {
             response.error = error_missing_fields
@@ -64,6 +65,7 @@ router.post('/create', removeCache('/products'), async (req, res) => {
 
         const data = {
             ProductTypeId: ProductTypeId,
+            OrganizationId: OrganizationId,
             tax: tax,
             name: name,
             description: description,
@@ -91,7 +93,7 @@ router.post('/create', removeCache('/products'), async (req, res) => {
 router.put('/update', removeCache('/products'), async (req, res) => {
     const response = new ResponseModel()
     try {
-        const { id, ProductTypeId, tax, name, description, price } = req.body
+        const { id, ProductTypeId, OrganizationId, tax, name, description, price } = req.body
 
         if (!id) {
             response.error = error_missing_fields
@@ -100,6 +102,7 @@ router.put('/update', removeCache('/products'), async (req, res) => {
 
         const data = {
             ProductTypeId: ProductTypeId,
+            OrganizationId: OrganizationId,
             tax: tax,
             name: name,
             description: description,
