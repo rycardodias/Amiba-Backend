@@ -73,10 +73,13 @@ const Order = db.define('Order', {
 Order.belongsTo(User)
 User.hasMany(Order)
 
-// Order.sync({ force: true })
+Order.sync({ alter: true })
+    .then(() => {
+        db.query("ALTER TABLE \"Orders\" DROP CONSTRAINT \"Orders_UserId_fkey\", " +
+            " ADD CONSTRAINT \"Orders_UserId_fkey\" FOREIGN KEY(\"UserId\") REFERENCES \"Users\" " +
+            "ON UPDATE NO ACTION;")
+    })
 
-// db.query("ALTER TABLE \"Orders\" DROP CONSTRAINT \"Orders_UserId_fkey\", " +
-//     " ADD CONSTRAINT \"Orders_UserId_fkey\" FOREIGN KEY(\"UserId\") REFERENCES \"Users\" " +
-//     "ON UPDATE NO ACTION;")
+
 
 module.exports = Order

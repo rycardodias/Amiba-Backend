@@ -82,14 +82,10 @@ const User = db.define('User', {
         type: DataTypes.INTEGER,
         unique: true
     },
-
 },
-    // { freezeTableName: true }
 )
 
-
-
-// User.sync({ force: true })
+User.sync({ alter: true })
 //     .then(() => {
 //         const { v4 } = require('uuid');
 //         db.query("INSERT INTO \"Users\" (id, name, email, password, permission, \"createdAt\", \"updatedAt\") VALUES(" +

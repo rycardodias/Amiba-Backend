@@ -23,7 +23,7 @@ const ProductType = db.define('ProductType', {
 },
 )
 
-// ProductType.sync({ force: true })
+ProductType.sync({ alter: true })
 //     .then(() => {
 //         const { v4 } = require('uuid');
 //         db.query("INSERT INTO \"ProductTypes\" (id, name,  \"createdAt\", \"updatedAt\") VALUES(\'"

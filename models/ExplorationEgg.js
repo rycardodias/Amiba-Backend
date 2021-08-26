@@ -1,4 +1,4 @@
-const { DataTypes, Sequelize } = require('sequelize');
+const { DataTypes } = require('sequelize');
 const db = require('../config/database');
 const Exploration = require('./Exploration');
 const EggsBatch = require('./EggsBatch');
@@ -25,13 +25,18 @@ Exploration.hasMany(ExplorationEgg)
 ExplorationEgg.belongsTo(EggsBatch)
 EggsBatch.hasMany(ExplorationEgg)
 
-//    ExplorationEgg.sync({force: true})
 
-// db.query("ALTER TABLE \"ExplorationEggs\" DROP CONSTRAINT \"ExplorationEggs_ExplorationId_fkey\", " +
-//     " ADD CONSTRAINT \"ExplorationEggs_ExplorationId_fkey\" FOREIGN KEY(\"ExplorationId\") REFERENCES \"Explorations\" " +
-//     "ON UPDATE NO ACTION;")
-// db.query("ALTER TABLE \"ExplorationEggs\" DROP CONSTRAINT \"ExplorationEggs_EggsBatchId_fkey\", " +
-//     " ADD CONSTRAINT \"ExplorationEggs_EggsBatchId_fkey\" FOREIGN KEY(\"EggsBatchId\") REFERENCES \"EggsBatches\" " +
-//     "ON UPDATE NO ACTION;")
+ExplorationEgg.sync({ alter: true })
+    .then(() => {
+        db.query("ALTER TABLE \"ExplorationEggs\" DROP CONSTRAINT \"ExplorationEggs_ExplorationId_fkey\", " +
+            " ADD CONSTRAINT \"ExplorationEggs_ExplorationId_fkey\" FOREIGN KEY(\"ExplorationId\") REFERENCES \"Explorations\" " +
+            "ON UPDATE NO ACTION;")
+        db.query("ALTER TABLE \"ExplorationEggs\" DROP CONSTRAINT \"ExplorationEggs_EggsBatchId_fkey\", " +
+            " ADD CONSTRAINT \"ExplorationEggs_EggsBatchId_fkey\" FOREIGN KEY(\"EggsBatchId\") REFERENCES \"EggsBatches\" " +
+            "ON UPDATE NO ACTION;")
+    })
+
+
+
 
 module.exports = ExplorationEgg

@@ -22,7 +22,7 @@ const Race = db.define('Race', {
     },
 })
 
-// Race.sync({ force: true })
+Race.sync({ alter: true })
 //     .then(() => {
 //         const { v4 } = require('uuid');
 //         db.query("INSERT INTO \"Races\" (id, name,  \"createdAt\", \"updatedAt\") VALUES(\'"

@@ -34,9 +34,12 @@ const Menu = db.define('Menu', {
 Menu.belongsTo(Restaurant)
 Restaurant.hasMany(Menu)
 
-// Menu.sync({ force: true })
-// db.query("ALTER TABLE \"Menus\" DROP CONSTRAINT \"Menus_RestaurantId_fkey\", " +
-//     " ADD CONSTRAINT \"Menus_RestaurantId_fkey\" FOREIGN KEY(\"RestaurantId\") REFERENCES \"Restaurants\" " +
-//     "ON UPDATE NO ACTION;")
+Menu.sync({ alter: true })
+    .then(() => {
+        db.query("ALTER TABLE \"Menus\" DROP CONSTRAINT \"Menus_RestaurantId_fkey\", " +
+            " ADD CONSTRAINT \"Menus_RestaurantId_fkey\" FOREIGN KEY(\"RestaurantId\") REFERENCES \"Restaurants\" " +
+            "ON UPDATE NO ACTION;")
+    })
+
 
 module.exports = Menu
