@@ -66,7 +66,7 @@ router.post('/create', removeCache('/animalProducts'), async (req, res) => {
             ProductId: ProductId,
             AnimalId: AnimalId,
             quantity: quantity,
-            quantityAvailable: quantityAvailable
+            quantityAvailable: quantityAvailable || quantity
         }
 
         const request = await AnimalProduct.create(data)
