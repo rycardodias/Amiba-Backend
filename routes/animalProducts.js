@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router()
-const Model = require('../models/AnimalProduct')
+const AnimalProduct = require('../models/AnimalProduct')
 const Product = require('../models/Product')
 
 const ResponseModel = require('../lib/ResponseModel')
@@ -12,7 +12,7 @@ const removeCache = require('../lib/cache/removeCache')
 router.get('/', cache(), async (req, res) => {
     const response = new ResponseModel()
     try {
-        const request = await Model.findAll({ include: Product })
+        const request = await AnimalProduct.findAll({ include: Product })
         if (request.length > 0) {
             response.data = request
             res.status(200).json(response)
@@ -25,7 +25,6 @@ router.get('/', cache(), async (req, res) => {
         response.error = error
         return res.status(400).json(response)
     }
-
 })
 
 router.get('/id/:ProductId/:AnimalId', cache(), async (req, res) => {
@@ -36,7 +35,7 @@ router.get('/id/:ProductId/:AnimalId', cache(), async (req, res) => {
             response.error = error_missing_fields
             res.status(400).json(response)
         }
-        const request = await Model.findOne({ where: { ProductId: ProductId, AnimalId: AnimalId }, include: Product })
+        const request = await AnimalProduct.findOne({ where: { ProductId: ProductId, AnimalId: AnimalId }, include: Product })
 
         if (request) {
             response.data = request
@@ -56,9 +55,9 @@ router.get('/id/:ProductId/:AnimalId', cache(), async (req, res) => {
 router.post('/create', removeCache('/animalProducts'), async (req, res) => {
     const response = new ResponseModel()
     try {
-        const { ProductId, AnimalId, quantity } = req.body
+        const { ProductId, AnimalId, quantity, quantityAvailable } = req.body
 
-        if (!(ProductId && AnimalId && quantity)) {
+        if (!(ProductId && AnimalId && quantity && quantityAvailable)) {
             response.error = error_missing_fields
             return res.status(400).json(response)
         }
@@ -66,10 +65,11 @@ router.post('/create', removeCache('/animalProducts'), async (req, res) => {
         const data = {
             ProductId: ProductId,
             AnimalId: AnimalId,
-            quantity: quantity
+            quantity: quantity,
+            quantityAvailable: quantityAvailable
         }
 
-        const request = await Model.create(data)
+        const request = await AnimalProduct.create(data)
 
         if (request) {
             response.message = success_row_create
@@ -89,7 +89,7 @@ router.post('/create', removeCache('/animalProducts'), async (req, res) => {
 router.put('/update', removeCache('/animalProducts'), async (req, res) => {
     const response = new ResponseModel()
     try {
-        const { ProductId, AnimalId, quantity } = req.body
+        const { ProductId, AnimalId, quantity, quantityAvailable } = req.body
 
 
         if (!(ProductId && AnimalId)) {
@@ -98,10 +98,11 @@ router.put('/update', removeCache('/animalProducts'), async (req, res) => {
         }
 
         const data = {
-            quantity: quantity
+            quantity: quantity,
+            quantityAvailable: quantityAvailable
         }
 
-        const request = await Model.update(data, { where: { ProductId: ProductId, AnimalId: AnimalId } })
+        const request = await AnimalProduct.update(data, { where: { ProductId: ProductId, AnimalId: AnimalId } })
 
         if (request == 1) {
             response.data = success_row_update
@@ -126,7 +127,7 @@ router.delete('/delete', removeCache('/animalProducts'), async (req, res) => {
             response.error = error_missing_fields
             return res.status(400).json(response)
         }
-        const request = await Model.destroy({ where: { ProductId: ProductId, AnimalId: AnimalId } })
+        const request = await AnimalProduct.destroy({ where: { ProductId: ProductId, AnimalId: AnimalId } })
 
         if (request === 1) {
             response.data = success_row_delete

@@ -38,14 +38,17 @@ const EggsBatch = db.define('EggsBatch', {
 
 },
 )
-EggsBatch.belongsTo(Race)
+EggsBatch.belongsTo(Race, {
+    onDelete: 'RESTRICT',
+    onUpdate: 'RESTRICT'
+})
 Race.hasMany(EggsBatch)
 
-EggsBatch.sync({ alter: true })
-    .then(() => {
-        db.query("ALTER TABLE \"EggsBatches\" DROP CONSTRAINT \"EggsBatches_RaceId_fkey\", " +
-            " ADD CONSTRAINT \"EggsBatches_RaceId_fkey\" FOREIGN KEY(\"RaceId\") REFERENCES \"Races\" " +
-            "ON UPDATE NO ACTION;")
-    })
+// EggsBatch.sync({ alter: true })
+//     .then(() => {
+//         db.query("ALTER TABLE \"EggsBatches\" DROP CONSTRAINT \"EggsBatches_RaceId_fkey\", " +
+//             " ADD CONSTRAINT \"EggsBatches_RaceId_fkey\" FOREIGN KEY(\"RaceId\") REFERENCES \"Races\" " +
+//             "ON UPDATE NO ACTION;")
+//     })
 
 module.exports = EggsBatch

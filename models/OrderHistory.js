@@ -21,15 +21,18 @@ const OrderHistory = db.define('OrderHistory', {
 },
     { freezeTableName: true }
 )
-OrderHistory.belongsTo(Order)
+OrderHistory.belongsTo(Order, {
+    onDelete: 'RESTRICT',
+    onUpdate: 'RESTRICT'
+})
 Order.hasMany(OrderHistory)
 
-OrderHistory.sync({ alter: true })
-    .then(() => {
-        db.query("ALTER TABLE \"OrderHistory\" DROP CONSTRAINT \"OrderHistory_OrderId_fkey\", " +
-            " ADD CONSTRAINT \"Orders_UserId_fkey\" FOREIGN KEY(\"OrderId\") REFERENCES \"Orders\" ON UPDATE NO ACTION;")
+// OrderHistory.sync({ alter: true })
+//     .then(() => {
+//         db.query("ALTER TABLE \"OrderHistory\" DROP CONSTRAINT \"OrderHistory_OrderId_fkey\", " +
+//             " ADD CONSTRAINT \"Orders_UserId_fkey\" FOREIGN KEY(\"OrderId\") REFERENCES \"Orders\" ON UPDATE NO ACTION;")
 
-    })
+//     })
 
 
 module.exports = OrderHistory

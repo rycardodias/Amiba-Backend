@@ -23,7 +23,7 @@ const ExplorationType = db.define('ExplorationType', {
 },
 )
 
-ExplorationType.sync({ alter: true })
+// ExplorationType.sync({ alter: true })
 //     .then(() => {
 //         const { v4 } = require('uuid');
 //         db.query("INSERT INTO \"ExplorationTypes\" (id, name,  \"createdAt\", \"updatedAt\") VALUES(\'"

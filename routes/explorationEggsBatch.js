@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router()
-const Model = require('../models/ExplorationEgg')
+const Model = require('../models/ExplorationEggsBatch')
 const cache = require('../lib/cache/routeCache')
 const removeCache = require('../lib/cache/removeCache')
 const ResponseModel = require('../lib/ResponseModel')

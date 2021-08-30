@@ -25,24 +25,30 @@ const EggsBatchProduct = db.define('EggsBatchProduct', {
 },
 )
 
-Product.belongsToMany(EggsBatch, { through: EggsBatchProduct })
-EggsBatch.belongsToMany(Product, { through: EggsBatchProduct })
+Product.belongsToMany(EggsBatch, { through: EggsBatchProduct, onDelete: 'RESTRICT', onUpdate: 'RESTRICT' })
+EggsBatch.belongsToMany(Product, { through: EggsBatchProduct, onDelete: 'RESTRICT', onUpdate: 'RESTRICT' })
 
-EggsBatchProduct.belongsTo(Product)
+EggsBatchProduct.belongsTo(Product, {
+    onDelete: 'RESTRICT',
+    onUpdate: 'RESTRICT'
+})
 Product.hasMany(EggsBatchProduct)
 
-EggsBatchProduct.belongsTo(EggsBatch)
+EggsBatchProduct.belongsTo(EggsBatch, {
+    onDelete: 'RESTRICT',
+    onUpdate: 'RESTRICT'
+})
 EggsBatch.hasMany(EggsBatchProduct)
 
-EggsBatchProduct.sync({ alter: true })
-    .then(() => {
-        db.query("ALTER TABLE \"EggsBatchProducts\" DROP CONSTRAINT \"EggsBatchProducts_ProductId_fkey\", " +
-            " ADD CONSTRAINT \"EggsBatchProducts_ProductId_fkey\" FOREIGN KEY(\"ProductId\") REFERENCES \"Products\" " +
-            "ON UPDATE NO ACTION;")
-        db.query("ALTER TABLE \"EggsBatchProducts\" DROP CONSTRAINT \"EggsBatchProducts_EggsBatchId_fkey\", " +
-            " ADD CONSTRAINT \"EggsBatchProducts_EggsBatchId_fkey\" FOREIGN KEY(\"EggsBatchId\") REFERENCES \"EggsBatches\" " +
-            "ON UPDATE NO ACTION;")
-    })
+// EggsBatchProduct.sync({ alter: true })
+//     .then(() => {
+//         db.query("ALTER TABLE \"EggsBatchProducts\" DROP CONSTRAINT \"EggsBatchProducts_ProductId_fkey\", " +
+//             " ADD CONSTRAINT \"EggsBatchProducts_ProductId_fkey\" FOREIGN KEY(\"ProductId\") REFERENCES \"Products\" " +
+//             "ON UPDATE NO ACTION;")
+//         db.query("ALTER TABLE \"EggsBatchProducts\" DROP CONSTRAINT \"EggsBatchProducts_EggsBatchId_fkey\", " +
+//             " ADD CONSTRAINT \"EggsBatchProducts_EggsBatchId_fkey\" FOREIGN KEY(\"EggsBatchId\") REFERENCES \"EggsBatches\" " +
+//             "ON UPDATE NO ACTION;")
+//     })
 
 
 

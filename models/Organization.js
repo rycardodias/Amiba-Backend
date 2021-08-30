@@ -66,19 +66,25 @@ const Organization = db.define('Organization', {
     },
 },
 )
-Organization.belongsTo(OrganizationType)
+Organization.belongsTo(OrganizationType, {
+    onDelete: 'RESTRICT',
+    onUpdate: 'RESTRICT'
+})
 OrganizationType.hasMany(Organization)
 
-Organization.belongsTo(User)
+Organization.belongsTo(User, {
+    onDelete: 'RESTRICT',
+    onUpdate: 'RESTRICT'
+})
 User.hasMany(Organization)
 
-Organization.sync({ alter: true })
-    .then(() => {
-        db.query("ALTER TABLE \"Organizations\" DROP CONSTRAINT \"Organizations_OrganizationTypeId_fkey\", " +
-            " ADD CONSTRAINT \"Organizations_OrganizationTypeId_fkey\" FOREIGN KEY(\"OrganizationTypeId\") REFERENCES \"OrganizationTypes\" ON UPDATE NO ACTION;")
-        db.query("ALTER TABLE \"Organizations\" DROP CONSTRAINT \"Organizations_UserId_fkey\", " +
-            " ADD CONSTRAINT \"Organizations_UserId_fkey\" FOREIGN KEY(\"UserId\") REFERENCES \"Users\" ON UPDATE NO ACTION;")
+// Organization.sync({ alter: true })
+//     .then(() => {
+//         db.query("ALTER TABLE \"Organizations\" DROP CONSTRAINT \"Organizations_OrganizationTypeId_fkey\", " +
+//             " ADD CONSTRAINT \"Organizations_OrganizationTypeId_fkey\" FOREIGN KEY(\"OrganizationTypeId\") REFERENCES \"OrganizationTypes\" ON UPDATE NO ACTION;")
+//         db.query("ALTER TABLE \"Organizations\" DROP CONSTRAINT \"Organizations_UserId_fkey\", " +
+//             " ADD CONSTRAINT \"Organizations_UserId_fkey\" FOREIGN KEY(\"UserId\") REFERENCES \"Users\" ON UPDATE NO ACTION;")
 
-    })
+//     })
 
 module.exports = Organization

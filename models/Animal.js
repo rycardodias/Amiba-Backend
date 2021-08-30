@@ -50,20 +50,20 @@ const Animal = db.define('Animal', {
 },
 )
 
-Animal.belongsTo(Race)
+Animal.belongsTo(Race, {
+    onDelete: 'RESTRICT',
+    onUpdate: 'RESTRICT'
+})
 Race.hasMany(Animal)
 
-Animal.belongsTo(Exploration)
+Animal.belongsTo(Exploration, {
+    onDelete: 'RESTRICT',
+    onUpdate: 'RESTRICT'
+})
 Exploration.hasMany(Animal)
 
-Animal.sync({ alter: true })
-    .then(() => {
-        db.query("ALTER TABLE \"Animals\" DROP CONSTRAINT \"Animals_RaceId_fkey\", " +
-            " ADD CONSTRAINT \"Animals_RaceId_fkey\" FOREIGN KEY(\"RaceId\") REFERENCES \"Races\" " +
-            "ON UPDATE NO ACTION;")
-        db.query("ALTER TABLE \"Animals\" DROP CONSTRAINT \"Animals_ExplorationId_fkey\", " +
-            " ADD CONSTRAINT \"Animals_ExplorationId_fkey\" FOREIGN KEY(\"ExplorationId\") REFERENCES \"Explorations\" " +
-            "ON UPDATE NO ACTION;")
-    })
+// Animal.sync({ force: true })
+
+// db.sync({force: true})
 
 module.exports = Animal

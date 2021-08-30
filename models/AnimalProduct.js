@@ -25,26 +25,23 @@ const AnimalProduct = db.define('AnimalProduct', {
 },
 )
 
-Product.belongsToMany(Animal, { through: AnimalProduct })
-Animal.belongsToMany(Product, { through: AnimalProduct })
+Product.belongsToMany(Animal, { through: AnimalProduct, onDelete: 'RESTRICT', onUpdate: 'RESTRICT' })
+Animal.belongsToMany(Product, { through: AnimalProduct, onDelete: 'RESTRICT', onUpdate: 'RESTRICT' })
 
-AnimalProduct.belongsTo(Product)
+AnimalProduct.belongsTo(Product, {
+    onDelete: 'RESTRICT',
+    onUpdate: 'RESTRICT'
+})
 Product.hasMany(AnimalProduct)
 
-AnimalProduct.belongsTo(Animal)
+AnimalProduct.belongsTo(Animal, {
+    onDelete: 'RESTRICT',
+    onUpdate: 'RESTRICT'
+})
 Animal.hasMany(AnimalProduct)
 
-AnimalProduct.sync({ alter: true })
-    .then(() => {
-        db.query("ALTER TABLE \"AnimalProducts\" DROP CONSTRAINT \"AnimalProducts_ProductId_fkey\", " +
-            " ADD CONSTRAINT \"AnimalProducts_ProductId_fkey\" FOREIGN KEY(\"ProductId\") REFERENCES \"Products\" " +
-            "ON UPDATE NO ACTION;")
-        db.query("ALTER TABLE \"AnimalProducts\" DROP CONSTRAINT \"AnimalProducts_AnimalId_fkey\", " +
-            " ADD CONSTRAINT \"AnimalProducts_AnimalId_fkey\" FOREIGN KEY(\"AnimalId\") REFERENCES \"Animals\" " +
-            "ON UPDATE NO ACTION;")
-    })
 
-// AnimalProduct.sync({ force: true })
+
 
 
 

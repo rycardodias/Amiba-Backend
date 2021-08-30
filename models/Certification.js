@@ -41,15 +41,19 @@ const Certification = db.define('Certification', {
 },
 )
 
-Exploration.hasMany(Certification)
-Certification.belongsTo(Exploration)
 
-Certification.sync({ alter: true })
-    .then(() => {
-        db.query("ALTER TABLE \"Certifications\" DROP CONSTRAINT \"Certifications_ExplorationId_fkey\", " +
-            " ADD CONSTRAINT \"Certifications_ExplorationId_fkey\" FOREIGN KEY(\"ExplorationId\") REFERENCES \"Explorations\" " +
-            "ON UPDATE NO ACTION;")
-    })
+Certification.belongsTo(Exploration, {
+    onDelete: 'RESTRICT',
+    onUpdate: 'RESTRICT'
+})
+Exploration.hasMany(Certification)
+
+// Certification.sync({ alter: true })
+//     .then(() => {
+//         db.query("ALTER TABLE \"Certifications\" DROP CONSTRAINT \"Certifications_ExplorationId_fkey\", " +
+//             " ADD CONSTRAINT \"Certifications_ExplorationId_fkey\" FOREIGN KEY(\"ExplorationId\") REFERENCES \"Explorations\" " +
+//             "ON UPDATE NO ACTION;")
+//     })
 
 
 module.exports = Certification

@@ -67,20 +67,26 @@ const Exploration = db.define('Exploration', {
 },
 )
 
-Exploration.belongsTo(Organization)
+Exploration.belongsTo(Organization, {
+    onDelete: 'RESTRICT',
+    onUpdate: 'RESTRICT'
+})
 Organization.hasMany(Exploration)
 
-Exploration.belongsTo(ExplorationType)
+Exploration.belongsTo(ExplorationType, {
+    onDelete: 'RESTRICT',
+    onUpdate: 'RESTRICT'
+})
 ExplorationType.hasMany(Exploration)
 
-Exploration.sync({ alter: true })
-    .then(() => {
-        db.query("ALTER TABLE \"Explorations\" DROP CONSTRAINT \"Explorations_ExplorationTypeId_fkey\", " +
-            " ADD CONSTRAINT \"Explorations_ExplorationTypeId_fkey\" FOREIGN KEY(\"ExplorationTypeId\") REFERENCES \"ExplorationTypes\" " +
-            "ON UPDATE NO ACTION;")
-        db.query("ALTER TABLE \"Explorations\" DROP CONSTRAINT \"Explorations_OrganizationId_fkey\", " +
-            " ADD CONSTRAINT \"Explorations_OrganizationId_fkey\" FOREIGN KEY(\"OrganizationId\") REFERENCES \"Organizations\" " +
-            "ON UPDATE NO ACTION;")
-    })
+// Exploration.sync({ alter: true })
+//     .then(() => {
+//         db.query("ALTER TABLE \"Explorations\" DROP CONSTRAINT \"Explorations_ExplorationTypeId_fkey\", " +
+//             " ADD CONSTRAINT \"Explorations_ExplorationTypeId_fkey\" FOREIGN KEY(\"ExplorationTypeId\") REFERENCES \"ExplorationTypes\" " +
+//             "ON UPDATE NO ACTION;")
+//         db.query("ALTER TABLE \"Explorations\" DROP CONSTRAINT \"Explorations_OrganizationId_fkey\", " +
+//             " ADD CONSTRAINT \"Explorations_OrganizationId_fkey\" FOREIGN KEY(\"OrganizationId\") REFERENCES \"Organizations\" " +
+//             "ON UPDATE NO ACTION;")
+//     })
 
 module.exports = Exploration

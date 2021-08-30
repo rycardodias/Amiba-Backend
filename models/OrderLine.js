@@ -55,19 +55,16 @@ const OrderLine = db.define('OrderLine', {
 },
 )
 
-OrderLine.belongsTo(Order)
+OrderLine.belongsTo(Order, {
+    onDelete: 'RESTRICT',
+    onUpdate: 'RESTRICT'
+})
 Order.hasMany(OrderLine)
 
-OrderLine.belongsTo(Product)
+OrderLine.belongsTo(Product, {
+    onDelete: 'RESTRICT',
+    onUpdate: 'RESTRICT'
+})
 Product.hasMany(OrderLine)
-
-OrderLine.sync({ alter: true })
-    .then(() => {
-        db.query("ALTER TABLE \"OrderLines\" DROP CONSTRAINT \"OrderLines_ProductId_fkey\", " +
-            " ADD CONSTRAINT \"Orders_UserId_fkey\" FOREIGN KEY(\"ProductId\") REFERENCES \"Products\" " +
-            "ON UPDATE NO ACTION;")
-    })
-
-
 
 module.exports = OrderLine

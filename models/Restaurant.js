@@ -74,16 +74,10 @@ const Restaurant = db.define('Restaurant', {
 },
 )
 
-Restaurant.belongsTo(User)
+Restaurant.belongsTo(User, {
+    onDelete: 'RESTRICT',
+    onUpdate: 'RESTRICT'
+})
 User.hasMany(Restaurant)
-
-Restaurant.sync({ alter: true })
-    .then(() => {
-        db.query("ALTER TABLE \"Restaurants\" DROP CONSTRAINT \"Restaurants_UserId_fkey\", " +
-            " ADD CONSTRAINT \"Restaurants_UserId_fkey\" FOREIGN KEY(\"UserId\") REFERENCES \"Users\" " +
-            "ON UPDATE NO ACTION;")
-      
-    })
-
 
 module.exports = Restaurant

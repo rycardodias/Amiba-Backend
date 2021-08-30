@@ -42,19 +42,18 @@ const Product = db.define('Product', {
     },
 },
 )
-Product.belongsTo(ProductType)
+Product.belongsTo(ProductType, {
+    onDelete: 'RESTRICT',
+    onUpdate: 'RESTRICT'
+})
 ProductType.hasMany(Product)
 
-Product.belongsTo(Organization)
+Product.belongsTo(Organization, {
+    onDelete: 'RESTRICT',
+    onUpdate: 'RESTRICT'
+})
 Organization.hasMany(Product)
 
-Product.sync({ alter: true })
-    .then(() => {
-        db.query("ALTER TABLE \"Products\" DROP CONSTRAINT \"Products_ProductTypeId_fkey\", " +
-            " ADD CONSTRAINT \"Products_ProductTypeId_fkey\" FOREIGN KEY(\"ProductTypeId\") REFERENCES \"ProductTypes\"  ON UPDATE NO ACTION;")
-        db.query("ALTER TABLE \"Products\" DROP CONSTRAINT \"Products_OrganizationId_fkey\", " +
-            " ADD CONSTRAINT \"Products_OrganizationId_fkey\" FOREIGN KEY(\"OrganizationId\") REFERENCES \"Organizations\"  ON UPDATE NO ACTION;")
-    })
 
 
 module.exports = Product

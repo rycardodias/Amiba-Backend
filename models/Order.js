@@ -70,16 +70,10 @@ const Order = db.define('Order', {
 },
 )
 
-Order.belongsTo(User)
+Order.belongsTo(User, {
+    onDelete: 'RESTRICT',
+    onUpdate: 'RESTRICT'
+})
 User.hasMany(Order)
-
-Order.sync({ alter: true })
-    .then(() => {
-        db.query("ALTER TABLE \"Orders\" DROP CONSTRAINT \"Orders_UserId_fkey\", " +
-            " ADD CONSTRAINT \"Orders_UserId_fkey\" FOREIGN KEY(\"UserId\") REFERENCES \"Users\" " +
-            "ON UPDATE NO ACTION;")
-    })
-
-
 
 module.exports = Order
