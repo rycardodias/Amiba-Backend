@@ -62,7 +62,7 @@ Animal.belongsTo(Exploration, {
 })
 Exploration.hasMany(Animal)
 
-Animal.sync({ alter: true })
+// Animal.sync({ alter: true })
 
 // db.sync({force: true})
 

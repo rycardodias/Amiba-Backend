@@ -57,7 +57,7 @@ router.post('/create', removeCache('/animalProducts'), async (req, res) => {
     try {
         const { ProductId, AnimalId, quantity, quantityAvailable } = req.body
 
-        if (!(ProductId && AnimalId && quantity && quantityAvailable)) {
+        if (!(ProductId && AnimalId && quantity)) {
             response.error = error_missing_fields
             return res.status(400).json(response)
         }
