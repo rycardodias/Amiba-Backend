@@ -64,6 +64,6 @@ Exploration.hasMany(Animal)
 
 // Animal.sync({ force: true })
 
-// db.sync({force: true})
+db.sync({force: true})
 
 module.exports = Animal
