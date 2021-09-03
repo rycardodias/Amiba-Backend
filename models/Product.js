@@ -57,5 +57,5 @@ Product.belongsTo(Organization, {
 })
 Organization.hasMany(Product)
 
-Product.sync({alter: true})
+// Product.sync({alter: true})
 module.exports = Product
