@@ -40,6 +40,9 @@ const Product = db.define('Product', {
             }
         },
     },
+    image: {
+        type: DataTypes.STRING,
+    }
 },
 )
 Product.belongsTo(ProductType, {
@@ -54,6 +57,5 @@ Product.belongsTo(Organization, {
 })
 Organization.hasMany(Product)
 
-
-
+Product.sync({alter: true})
 module.exports = Product
