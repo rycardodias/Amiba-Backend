@@ -95,7 +95,7 @@ router.get('/allAvailable/id/:id', cache(), async (req, res) => {
                 {
                     model: AnimalProduct,
                     where: { quantityAvailable: { [Op.gt]: 0 } },
-                    group: 'ProductId',
+                    group: ['ProductId'],
                     //attributes: ['quantityAvailable'],
                     // include: {
                     //     model: Animal, attributes: ['id'],
