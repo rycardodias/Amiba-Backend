@@ -8,6 +8,9 @@ const { error_missing_fields, error_invalid_fields, error_data_not_found, succes
     error_row_update, error_row_create, success_row_create } = require('../lib/ResponseMessages')
 const cache = require('../lib/cache/routeCache')
 const removeCache = require('../lib/cache/removeCache')
+const db = require('../config/database')
+
+// db.sync({alter: true})
 
 router.get('/', cache(), async (req, res) => {
     const response = new ResponseModel()

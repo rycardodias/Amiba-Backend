@@ -13,6 +13,8 @@ const AnimalProduct = require('../models/AnimalProduct')
 const { Op } = require("sequelize");
 const Animal = require('../models/Animal')
 const Exploration = require('../models/Exploration')
+const db = require('../config/database');
+const { Sequelize } = require('../config/database')
 
 router.get('/', cache(), async (req, res) => {
     const response = new ResponseModel()
@@ -87,6 +89,16 @@ router.get('/allAvailable/id/:id', cache(), async (req, res) => {
             res.status(400).json(response)
         }
         const request = await Model.findByPk(req.params.id, {
+            attributes: {
+                include: [
+                    [Sequelize.literal(`(
+                        SELECT SUM("quantityAvailable")
+                        FROM "AnimalProducts"
+                        WHERE "AnimalProducts"."ProductId" = "Product"."id")
+                        `), "quantityAvailable"
+                    ],
+                ]
+            },
             include: [
                 {
                     model: ProductType,
@@ -95,7 +107,7 @@ router.get('/allAvailable/id/:id', cache(), async (req, res) => {
                 {
                     model: AnimalProduct,
                     where: { quantityAvailable: { [Op.gt]: 0 } },
-                    group: ['ProductId'],
+
                     //attributes: ['quantityAvailable'],
                     // include: {
                     //     model: Animal, attributes: ['id'],
@@ -106,11 +118,10 @@ router.get('/allAvailable/id/:id', cache(), async (req, res) => {
                     //         }
                     //     }
                     // }
-
                 }
-
             ],
         })
+        
         if (request) {
             response.data = request
             res.status(200).json(response)
