@@ -1,6 +1,5 @@
 const express = require('express')
 const router = express.Router()
-const db = require('../config/database')
 
 const Model = require('../models/Animal')
 const Race = require('../models/Race')

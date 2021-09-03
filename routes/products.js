@@ -94,16 +94,16 @@ router.get('/allAvailable/id/:id', cache(), async (req, res) => {
                 },
                 {
                     model: AnimalProduct,
-                    where: { quantityAvailable: { [Op.gt]: 0 } }, attributes: ['quantityAvailable'],
-                    include: {
-                        model: Animal, attributes: ['id'],
-                        include: {
-                            model: Exploration, attributes: ['id'],
-                            include: {
-                                model: Organization, attributes: ['id', 'name'],
-                            }
-                        }
-                    }
+                    where: { quantityAvailable: { [Op.gt]: 0 } }, //attributes: ['quantityAvailable'],
+                    // include: {
+                    //     model: Animal, attributes: ['id'],
+                    //     include: {
+                    //         model: Exploration, attributes: ['id'],
+                    //         include: {
+                    //             model: Organization, attributes: ['id', 'name'],
+                    //         }
+                    //     }
+                    // }
 
                 }
             ]
@@ -130,7 +130,8 @@ router.get('/allAvailable/ProductTypeId/:ProductTypeId', cache(), async (req, re
             res.status(400).json(response)
         }
         const request = await Model.findAll
-            (   { where: { ProductTypeId: req.params.ProductTypeId },
+            ({
+                where: { ProductTypeId: req.params.ProductTypeId },
                 include: [
                     {
                         model: ProductType,
