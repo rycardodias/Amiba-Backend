@@ -19,14 +19,14 @@ const Cart = db.define('Cart', {
             }
         }
     },
-    AnimalProductId: {
-        type: DataTypes.UUID,
-        allowNull: true,
-        references: {
-            model: AnimalProduct,
-            key: 'id'
-        }
-    },
+    // AnimalProductId: {
+    //     type: DataTypes.UUID,
+    //     allowNull: true,
+    //     references: {
+    //         model: AnimalProduct,
+    //         key: 'id'
+    //     }
+    // },
     EggsBatchProductId: {
         type: DataTypes.UUID,
         allowNull: true,
@@ -38,11 +38,16 @@ const Cart = db.define('Cart', {
 },
 )
 
+Cart.belongsTo(AnimalProduct, {
+    onDelete: 'RESTRICT',
+    onUpdate: 'RESTRICT',
+})
+
 Cart.belongsTo(User, {
     onDelete: 'RESTRICT',
     onUpdate: 'RESTRICT',
 })
 
-db.sync({ force: true })
+Cart.sync({ force: true })
 
 module.exports = Cart
