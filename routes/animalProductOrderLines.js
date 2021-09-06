@@ -34,7 +34,7 @@ router.get('/', cache(), async (req, res) => {
 //             response.error = error_missing_fields
 //             res.status(400).json(response)
 //         }
-//         const request = await AnimalProduct.findOne({ where: { ProductId: ProductId, AnimalId: AnimalId }, include: Product })
+//         const request = await AnimalProductOrderLine.findOne({ where: { ProductId: ProductId, AnimalId: AnimalId }, include: Product })
 
 //         if (request) {
 //             response.data = request
@@ -67,7 +67,7 @@ router.post('/create', removeCache('/animalProducts'), async (req, res) => { //T
             quantity: quantity
         }
 
-        const request = await AnimalProduct.create(data)
+        const request = await AnimalProductOrderLine.create(data)
 
         if (request) {
             response.message = success_row_create
@@ -99,7 +99,7 @@ router.put('/update', removeCache('/animalProducts'), async (req, res) => {
             quantity: quantity
         }
 
-        const request = await AnimalProduct.update(data, { where: { OrderLineId: OrderLineId, AnimalProductId: AnimalProductId } })
+        const request = await AnimalProductOrderLine.update(data, { where: { OrderLineId: OrderLineId, AnimalProductId: AnimalProductId } })
 
         if (request == 1) {
             response.data = success_row_update
@@ -124,7 +124,7 @@ router.delete('/delete', removeCache('/animalProducts'), async (req, res) => {
             response.error = error_missing_fields
             return res.status(400).json(response)
         }
-        const request = await AnimalProduct.destroy({ where: { OrderLineId: OrderLineId, AnimalProductId: AnimalProductId } })
+        const request = await AnimalProductOrderLine.destroy({ where: { OrderLineId: OrderLineId, AnimalProductId: AnimalProductId } })
 
         if (request === 1) {
             response.data = success_row_delete
