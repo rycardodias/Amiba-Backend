@@ -25,25 +25,25 @@ const Cart = db.define('Cart', {
 Cart.belongsTo(AnimalProduct, {
     onDelete: 'RESTRICT',
     onUpdate: 'RESTRICT',
-    foreignKey: {
-        allowNull: true
-    }
+    constraints: false
 })
 AnimalProduct.hasMany(Cart, {
+
 })
 
 Cart.belongsTo(EggsBatchProduct, {
     onDelete: 'RESTRICT',
-    onUpdate: 'RESTRICT'
+    onUpdate: 'RESTRICT',
+    constraints: false
 })
 EggsBatchProduct.hasMany(Cart)
 
 Cart.belongsTo(User, {
     onDelete: 'RESTRICT',
-    onUpdate: 'RESTRICT'
+    onUpdate: 'RESTRICT',
 })
 User.hasMany(Cart)
 
-
+Cart.sync({ force: true })
 
 module.exports = Cart
