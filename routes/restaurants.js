@@ -52,7 +52,7 @@ router.get('/id/:id', cache(), async (req, res) => {
 
 })
 
-router.post('/create', removeCache('/restaurants'), async (req, res) => {
+router.post('/create', removeCache(['/restaurants']), async (req, res) => {
     const response = new ResponseModel()
     try {
         const { UserId, name, description, address, locale, zipcode, fiscalNumber, telephone, mobilePhone } = req.body
@@ -93,7 +93,7 @@ router.post('/create', removeCache('/restaurants'), async (req, res) => {
 })
 
 
-router.put('/update', removeCache('/restaurants'), async (req, res) => {
+router.put('/update', removeCache(['/restaurants']), async (req, res) => {
     const response = new ResponseModel()
     try {
         const { id, UserId, name, description, address, locale, zipcode, fiscalNumber, telephone, mobilePhone } = req.body
@@ -132,7 +132,7 @@ router.put('/update', removeCache('/restaurants'), async (req, res) => {
 })
 
 
-router.delete('/delete', removeCache('/restaurants'), async (req, res) => {
+router.delete('/delete', removeCache(['/restaurants']), async (req, res) => {
     const response = new ResponseModel()
     try {
         const { id } = req.body

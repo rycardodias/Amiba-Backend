@@ -26,32 +26,32 @@ router.get('/', cache(), async (req, res) => {
     }
 })
 
-// router.get('/id/:OrderLineId/:AnimalProductId', cache(), async (req, res) => {
-//     const response = new ResponseModel()
-//     try {
-//         const { ProductId, AnimalId } = req.params
-//         if (!(ProductId && AnimalId)) {
-//             response.error = error_missing_fields
-//             res.status(400).json(response)
-//         }
-//         const request = await Model.findOne({ where: { ProductId: ProductId, AnimalId: AnimalId }, include: Product })
+router.get('/id/:OrderLineId/:AnimalProductId', cache(), async (req, res) => {
+    const response = new ResponseModel()
+    try {
+        const { OrderLineId, AnimalProductId } = req.params
+        if (!(OrderLineId && AnimalProductId)) {
+            response.error = error_missing_fields
+            res.status(400).json(response)
+        }
+        const request = await Model.findOne({ where: { OrderLineId: OrderLineId, AnimalProductId: AnimalProductId }, })
 
-//         if (request) {
-//             response.data = request
-//             res.status(200).json(response)
-//         } else {
-//             response.error = error_data_not_found
-//             res.status(404).json(response)
-//         }
-//     } catch (error) {
-//         response.message = error_invalid_fields
-//         response.error = error
-//         return res.status(400).json(response)
-//     }
+        if (request) {
+            response.data = request
+            res.status(200).json(response)
+        } else {
+            response.error = error_data_not_found
+            res.status(404).json(response)
+        }
+    } catch (error) {
+        response.message = error_invalid_fields
+        response.error = error
+        return res.status(400).json(response)
+    }
 
-// })
+})
 
-router.post('/create', removeCache('/animalProducts'), async (req, res) => { //TODO alteral removeCache
+router.post('/create', removeCache(['/animalProductOrderLines', '/animalProducts']), async (req, res) => {
     const response = new ResponseModel()
     try {
         const { OrderLineId, AnimalProductId, quantity } = req.body
@@ -84,7 +84,7 @@ router.post('/create', removeCache('/animalProducts'), async (req, res) => { //T
     }
 })
 
-router.put('/update', removeCache('/animalProducts'), async (req, res) => {
+router.put('/update', removeCache(['/animalProductOrderLines', '/animalProducts']), async (req, res) => {
     const response = new ResponseModel()
     try {
         const { OrderLineId, AnimalProductId, quantity } = req.body
@@ -116,7 +116,7 @@ router.put('/update', removeCache('/animalProducts'), async (req, res) => {
 })
 
 
-router.delete('/delete', removeCache('/animalProducts'), async (req, res) => {
+router.delete('/delete', removeCache(['/animalProductOrderLines', '/animalProducts']), async (req, res) => {
     const response = new ResponseModel()
     try {
         const { OrderLineId, AnimalProductId, } = req.body

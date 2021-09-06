@@ -50,7 +50,7 @@ router.get('/id/:id', cache(), async (req, res) => {
 
 })
 
-router.post('/create', removeCache('/productTypes'), async (req, res) => {
+router.post('/create', removeCache(['/productTypes']), async (req, res) => {
     const response = new ResponseModel()
     try {
         const { name, description } = req.body
@@ -82,7 +82,7 @@ router.post('/create', removeCache('/productTypes'), async (req, res) => {
     }
 })
 
-router.put('/update', removeCache('/productTypes'), async (req, res) => {
+router.put('/update', removeCache(['/productTypes']), async (req, res) => {
     const response = new ResponseModel()
     try {
         const { id, name, description } = req.body
@@ -112,7 +112,7 @@ router.put('/update', removeCache('/productTypes'), async (req, res) => {
     }
 })
 
-router.delete('/delete', removeCache('/productTypes'), async (req, res) => {
+router.delete('/delete', removeCache(['/productTypes']), async (req, res) => {
     const response = new ResponseModel()
     try {
         const { id } = req.body

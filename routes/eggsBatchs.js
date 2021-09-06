@@ -50,7 +50,7 @@ router.get('/id/:id', cache(), async (req, res) => {
 
 })
 
-router.post('/create', removeCache('/eggsBatchs'), async (req, res) => {
+router.post('/create', removeCache(['/eggsBatchs']), async (req, res) => {
     const response = new ResponseModel()
     try {
         const { name, caliber, quantity, RaceId } = req.body
@@ -85,7 +85,7 @@ router.post('/create', removeCache('/eggsBatchs'), async (req, res) => {
     }
 })
 
-router.put('/update', removeCache('/eggsBatchs'), async (req, res) => {
+router.put('/update', removeCache(['/eggsBatchs']), async (req, res) => {
     const response = new ResponseModel()
     try {
         const { id, name, caliber, quantity, RaceId } = req.body
@@ -118,7 +118,7 @@ router.put('/update', removeCache('/eggsBatchs'), async (req, res) => {
     }
 })
 
-router.delete('/delete', removeCache('/eggsBatchs'), async (req, res) => {
+router.delete('/delete', removeCache(['/eggsBatchs']), async (req, res) => {
     const response = new ResponseModel()
     try {
         const { id } = req.body

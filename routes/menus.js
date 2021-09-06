@@ -51,7 +51,7 @@ router.get('/id/:id', cache(), async (req, res) => {
 
 })
 
-router.post('/create', removeCache('/menus'), async (req, res) => {
+router.post('/create', removeCache(['/menus']), async (req, res) => {
     const response = new ResponseModel()
     try {
         const { RestaurantId, title, description, image } = req.body
@@ -86,7 +86,7 @@ router.post('/create', removeCache('/menus'), async (req, res) => {
     }
 })
 
-router.put('/update', removeCache('/menus'), async (req, res) => {
+router.put('/update', removeCache(['/menus']), async (req, res) => {
     const response = new ResponseModel()
     try {
         const { id, RestaurantId, title, description, image } = req.body
@@ -119,7 +119,7 @@ router.put('/update', removeCache('/menus'), async (req, res) => {
     }
 })
 
-router.delete('/delete', removeCache('/menus'), async (req, res) => {
+router.delete('/delete', removeCache(['/menus']), async (req, res) => {
     const response = new ResponseModel()
     try {
         const { id } = req.body
