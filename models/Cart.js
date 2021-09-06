@@ -42,16 +42,19 @@ Cart.belongsTo(AnimalProduct, {
     onDelete: 'RESTRICT',
     onUpdate: 'RESTRICT',
 })
+AnimalProduct.hasMany(Cart)
 
 Cart.belongsTo(EggsBatchProduct, {
     onDelete: 'RESTRICT',
     onUpdate: 'RESTRICT',
 })
+EggsBatchProduct.hasMany(Cart)
 
 Cart.belongsTo(User, {
     onDelete: 'RESTRICT',
     onUpdate: 'RESTRICT',
 })
+User.hasMany(Cart)
 
 Cart.sync({ force: true })
 
