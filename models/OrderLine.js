@@ -1,7 +1,6 @@
 const { DataTypes, Sequelize, DATE } = require('sequelize');
 const db = require('../config/database');
 const Order = require('./Order');
-const Product = require('./Product')
 
 const OrderLine = db.define('OrderLine', {
     id: {
@@ -36,22 +35,6 @@ const OrderLine = db.define('OrderLine', {
             }
         },
     },
-    OrderId: {
-        type: DataTypes.UUID,
-        allowNull: false,
-        references: {
-            model: Order,
-            key: 'id'
-        }
-    },
-    ProductId: {
-        type: DataTypes.UUID,
-        allowNull: false,
-        references: {
-            model: Product,
-            key: 'id'
-        }
-    }
 },
 )
 
@@ -61,10 +44,5 @@ OrderLine.belongsTo(Order, {
 })
 Order.hasMany(OrderLine)
 
-// OrderLine.belongsTo(Product, {
-//     onDelete: 'RESTRICT',
-//     onUpdate: 'RESTRICT'
-// })
-// Product.hasMany(OrderLine)
 
 module.exports = OrderLine

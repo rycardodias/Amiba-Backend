@@ -30,15 +30,15 @@ router.get('/', cache(), async (req, res) => {
     }
 })
 
-router.get('/id/:ProductId/:AnimalId', cache(), async (req, res) => {
+router.get('/id/:id', cache(), async (req, res) => {
     const response = new ResponseModel()
     try {
-        const { ProductId, AnimalId } = req.params
-        if (!(ProductId && AnimalId)) {
+        const { id } = req.params
+        if (!id) {
             response.error = error_missing_fields
             res.status(400).json(response)
         }
-        const request = await AnimalProduct.findOne({ where: { ProductId: ProductId, AnimalId: AnimalId }, include: Product })
+        const request = await AnimalProduct.findByPk(id, { include: Product })
 
         if (request) {
             response.data = request
@@ -92,20 +92,22 @@ router.post('/create', removeCache('/animalProducts'), async (req, res) => {
 router.put('/update', removeCache('/animalProducts'), async (req, res) => {
     const response = new ResponseModel()
     try {
-        const { ProductId, AnimalId, quantity, quantityAvailable } = req.body
+        const { id, ProductId, AnimalId, quantity, quantityAvailable } = req.body
 
 
-        if (!(ProductId && AnimalId)) {
+        if (!id) {
             response.error = error_missing_fields
             res.status(400).json(response)
         }
 
         const data = {
+            ProductId: ProductId,
+            AnimalId: AnimalId,
             quantity: quantity,
             quantityAvailable: quantityAvailable
         }
 
-        const request = await AnimalProduct.update(data, { where: { ProductId: ProductId, AnimalId: AnimalId } })
+        const request = await AnimalProduct.update(data, { where: { id: id } })
 
         if (request == 1) {
             response.data = success_row_update
@@ -125,12 +127,12 @@ router.put('/update', removeCache('/animalProducts'), async (req, res) => {
 router.delete('/delete', removeCache('/animalProducts'), async (req, res) => {
     const response = new ResponseModel()
     try {
-        const { ProductId, AnimalId } = req.body
-        if (!(ProductId, AnimalId)) {
+        const { id } = req.body
+        if (!id) {
             response.error = error_missing_fields
             return res.status(400).json(response)
         }
-        const request = await AnimalProduct.destroy({ where: { ProductId: ProductId, AnimalId: AnimalId } })
+        const request = await AnimalProduct.destroy({ where: { id: id } })
 
         if (request === 1) {
             response.data = success_row_delete

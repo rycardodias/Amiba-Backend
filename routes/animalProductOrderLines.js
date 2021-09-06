@@ -26,7 +26,7 @@ router.get('/', cache(), async (req, res) => {
     }
 })
 
-// router.get('/id/:ProductId/:AnimalId', cache(), async (req, res) => {
+// router.get('/id/:OrderLineId/:AnimalProductId', cache(), async (req, res) => {
 //     const response = new ResponseModel()
 //     try {
 //         const { ProductId, AnimalId } = req.params
@@ -51,95 +51,93 @@ router.get('/', cache(), async (req, res) => {
 
 // })
 
-// router.post('/create', removeCache('/animalProducts'), async (req, res) => {
-//     const response = new ResponseModel()
-//     try {
-//         const { ProductId, AnimalId, quantity, quantityAvailable } = req.body
+router.post('/create', removeCache('/animalProducts'), async (req, res) => { //TODO alteral removeCache
+    const response = new ResponseModel()
+    try {
+        const { OrderLineId, AnimalProductId, quantity } = req.body
 
-//         if (!(ProductId && AnimalId && quantity)) {
-//             response.error = error_missing_fields
-//             return res.status(400).json(response)
-//         }
+        if (!(OrderLineId && AnimalProductId && quantity)) {
+            response.error = error_missing_fields
+            return res.status(400).json(response)
+        }
 
-//         const data = {
-//             ProductId: ProductId,
-//             AnimalId: AnimalId,
-//             quantity: quantity,
-//             quantityAvailable: quantityAvailable || quantity
-//         }
+        const data = {
+            OrderLineId: OrderLineId,
+            AnimalProductId: AnimalProductId,
+            quantity: quantity
+        }
 
-//         const request = await AnimalProduct.create(data)
+        const request = await AnimalProduct.create(data)
 
-//         if (request) {
-//             response.message = success_row_create
-//             response.data = request
-//             res.status(200).json(response)
-//         } else {
-//             response.error = error_row_create
-//             res.status(404).json(response)
-//         }
-//     } catch (error) {
-//         response.message = error_invalid_fields
-//         response.error = error
-//         return res.status(400).json(response)
-//     }
-// })
+        if (request) {
+            response.message = success_row_create
+            response.data = request
+            res.status(200).json(response)
+        } else {
+            response.error = error_row_create
+            res.status(404).json(response)
+        }
+    } catch (error) {
+        response.message = error_invalid_fields
+        response.error = error
+        return res.status(400).json(response)
+    }
+})
 
-// router.put('/update', removeCache('/animalProducts'), async (req, res) => {
-//     const response = new ResponseModel()
-//     try {
-//         const { ProductId, AnimalId, quantity, quantityAvailable } = req.body
-
-
-//         if (!(ProductId && AnimalId)) {
-//             response.error = error_missing_fields
-//             res.status(400).json(response)
-//         }
-
-//         const data = {
-//             quantity: quantity,
-//             quantityAvailable: quantityAvailable
-//         }
-
-//         const request = await AnimalProduct.update(data, { where: { ProductId: ProductId, AnimalId: AnimalId } })
-
-//         if (request == 1) {
-//             response.data = success_row_update
-//             res.status(200).json(response)
-//         } else {
-//             response.error = error_row_update
-//             res.status(404).json(response)
-//         }
-//     } catch (error) {
-//         response.message = error_invalid_fields
-//         response.error = error
-//         return res.status(400).json(response)
-//     }
-// })
+router.put('/update', removeCache('/animalProducts'), async (req, res) => {
+    const response = new ResponseModel()
+    try {
+        const { OrderLineId, AnimalProductId, quantity } = req.body
 
 
-// router.delete('/delete', removeCache('/animalProducts'), async (req, res) => {
-//     const response = new ResponseModel()
-//     try {
-//         const { ProductId, AnimalId } = req.body
-//         if (!(ProductId, AnimalId)) {
-//             response.error = error_missing_fields
-//             return res.status(400).json(response)
-//         }
-//         const request = await AnimalProduct.destroy({ where: { ProductId: ProductId, AnimalId: AnimalId } })
+        if (!(OrderLineId && AnimalProductId)) {
+            response.error = error_missing_fields
+            res.status(400).json(response)
+        }
 
-//         if (request === 1) {
-//             response.data = success_row_delete
-//             res.status(200).json(response)
-//         } else {
-//             response.error = error_row_delete
-//             res.status(404).json(response)
-//         }
-//     } catch (error) {
-//         response.message = error_invalid_fields
-//         response.error = error
-//         return res.status(400).json(response)
-//     }
-// })
+        const data = {
+            quantity: quantity
+        }
+
+        const request = await AnimalProduct.update(data, { where: { OrderLineId: OrderLineId, AnimalProductId: AnimalProductId } })
+
+        if (request == 1) {
+            response.data = success_row_update
+            res.status(200).json(response)
+        } else {
+            response.error = error_row_update
+            res.status(404).json(response)
+        }
+    } catch (error) {
+        response.message = error_invalid_fields
+        response.error = error
+        return res.status(400).json(response)
+    }
+})
+
+
+router.delete('/delete', removeCache('/animalProducts'), async (req, res) => {
+    const response = new ResponseModel()
+    try {
+        const { OrderLineId, AnimalProductId, } = req.body
+        if (!(OrderLineId && AnimalProductId)) {
+            response.error = error_missing_fields
+            return res.status(400).json(response)
+        }
+        const request = await AnimalProduct.destroy({ where: { OrderLineId: OrderLineId, AnimalProductId: AnimalProductId } })
+
+        if (request === 1) {
+            response.data = success_row_delete
+            res.status(200).json(response)
+        } else {
+            response.error = error_row_delete
+            res.status(404).json(response)
+        }
+    } catch (error) {
+        response.message = error_invalid_fields
+        response.error = error
+        return res.status(400).json(response)
+    }
+})
 
 module.exports = router
