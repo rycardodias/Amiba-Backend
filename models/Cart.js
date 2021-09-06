@@ -27,18 +27,23 @@ const Cart = db.define('Cart', {
     //         key: 'id'
     //     }
     // },
-    EggsBatchProductId: {
-        type: DataTypes.UUID,
-        allowNull: true,
-        references: {
-            model: EggsBatchProduct,
-            key: 'id'
-        }
-    }
+    // EggsBatchProductId: {
+    //     type: DataTypes.UUID,
+    //     allowNull: true,
+    //     references: {
+    //         model: EggsBatchProduct,
+    //         key: 'id'
+    //     }
+    // }
 },
 )
 
 Cart.belongsTo(AnimalProduct, {
+    onDelete: 'RESTRICT',
+    onUpdate: 'RESTRICT',
+})
+
+Cart.belongsTo(EggsBatchProduct, {
     onDelete: 'RESTRICT',
     onUpdate: 'RESTRICT',
 })
