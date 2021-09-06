@@ -4,6 +4,11 @@ const Product = require('./Product');
 const EggsBatch = require('./EggsBatch');
 
 const EggsBatchProduct = db.define('EggsBatchProduct', {
+    id: {
+        type: DataTypes.UUID,
+        primaryKey: true,
+        defaultValue: DataTypes.UUIDV4
+    },
     quantity: {
         type: DataTypes.INTEGER,
         allowNull: false,

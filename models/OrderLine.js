@@ -61,10 +61,10 @@ OrderLine.belongsTo(Order, {
 })
 Order.hasMany(OrderLine)
 
-OrderLine.belongsTo(Product, {
-    onDelete: 'RESTRICT',
-    onUpdate: 'RESTRICT'
-})
-Product.hasMany(OrderLine)
+// OrderLine.belongsTo(Product, {
+//     onDelete: 'RESTRICT',
+//     onUpdate: 'RESTRICT'
+// })
+// Product.hasMany(OrderLine)
 
 module.exports = OrderLine

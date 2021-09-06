@@ -10,7 +10,7 @@ const cache = require('../lib/cache/routeCache')
 const removeCache = require('../lib/cache/removeCache')
 const db = require('../config/database')
 
-// db.sync({alter: true})
+// db.sync({force: true})
 
 router.get('/', cache(), async (req, res) => {
     const response = new ResponseModel()
