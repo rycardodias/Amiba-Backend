@@ -79,7 +79,7 @@ router.get('/available/ProductId/:ProductId',  async (req, res) => {
 router.post('/create', removeCache(['/animalProducts']), async (req, res) => {
     const response = new ResponseModel()
     try {
-        const { ProductId, AnimalId, quantity, quantityAvailable } = req.body
+        const { ProductId, AnimalId, quantity } = req.body
 
         if (!(ProductId && AnimalId && quantity)) {
             response.error = error_missing_fields
@@ -90,10 +90,10 @@ router.post('/create', removeCache(['/animalProducts']), async (req, res) => {
             ProductId: ProductId,
             AnimalId: AnimalId,
             quantity: quantity,
-            quantityAvailable: quantityAvailable || quantity
+            quantityAvailable: quantity
         }
 
-        const request = await AnimalProduct.create(data)
+        const request = await Model.create(data)
 
         if (request) {
             response.message = success_row_create
