@@ -28,7 +28,7 @@ router.get('/', cache(), async (req, res) => {
     }
 })
 
-router.get('/id/:id', cache(), async (req, res) => {
+router.get('/id/:id', async (req, res) => {
     const response = new ResponseModel()
     try {
         const { id } = req.params
@@ -52,7 +52,7 @@ router.get('/id/:id', cache(), async (req, res) => {
     }
 })
 
-router.get('/available/ProductId/:ProductId', cache(), async (req, res) => {
+router.get('/available/ProductId/:ProductId',  async (req, res) => {
     const response = new ResponseModel()
     try {
         const { ProductId } = req.params
