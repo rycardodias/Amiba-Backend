@@ -56,6 +56,5 @@ Cart.belongsTo(User, {
 })
 User.hasMany(Cart)
 
-Cart.sync({ force: true })
 
 module.exports = Cart

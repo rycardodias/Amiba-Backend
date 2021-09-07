@@ -1,7 +1,7 @@
 const { DataTypes, Sequelize } = require('sequelize');
 const db = require('../config/database');
 
-// db.sync({alter: true})
+db.sync({alter: true})
 const Exploration = require('./Exploration');
 const Race = require('./Race');
 

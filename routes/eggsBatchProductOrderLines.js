@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router()
-const EggsBatchProductOrderLine = require('../models/EggsBatchProductOrderLine')
+const Model = require('../models/EggsBatchProductOrderLine')
 
 const ResponseModel = require('../lib/ResponseModel')
 const { error_missing_fields, error_invalid_fields, error_data_not_found, success_row_delete, error_row_delete, success_row_update,
@@ -11,7 +11,7 @@ const removeCache = require('../lib/cache/removeCache')
 router.get('/', cache(), async (req, res) => {
     const response = new ResponseModel()
     try {
-        const request = await EggsBatchProductOrderLine.findAll()
+        const request = await Model.findAll()
         if (request.length > 0) {
             response.data = request
             res.status(200).json(response)
@@ -26,120 +26,117 @@ router.get('/', cache(), async (req, res) => {
     }
 })
 
-// router.get('/id/:ProductId/:AnimalId', cache(), async (req, res) => {
-//     const response = new ResponseModel()
-//     try {
-//         const { ProductId, AnimalId } = req.params
-//         if (!(ProductId && AnimalId)) {
-//             response.error = error_missing_fields
-//             res.status(400).json(response)
-//         }
-//         const request = await AnimalProduct.findOne({ where: { ProductId: ProductId, AnimalId: AnimalId }, include: Product })
+router.get('/id/:OrderLineId/:EggsBatchProductId', cache(), async (req, res) => {
+    const response = new ResponseModel()
+    try {
+        const { OrderLineId, EggsBatchProductId } = req.params
+        if (!(OrderLineId && EggsBatchProductId)) {
+            response.error = error_missing_fields
+            res.status(400).json(response)
+        }
+        const request = await Model.findOne({ where: { OrderLineId: OrderLineId, EggsBatchProductId: EggsBatchProductId }, })
 
-//         if (request) {
-//             response.data = request
-//             res.status(200).json(response)
-//         } else {
-//             response.error = error_data_not_found
-//             res.status(404).json(response)
-//         }
-//     } catch (error) {
-//         response.message = error_invalid_fields
-//         response.error = error
-//         return res.status(400).json(response)
-//     }
+        if (request) {
+            response.data = request
+            res.status(200).json(response)
+        } else {
+            response.error = error_data_not_found
+            res.status(404).json(response)
+        }
+    } catch (error) {
+        response.message = error_invalid_fields
+        response.error = error
+        return res.status(400).json(response)
+    }
 
-// })
+})
 
-// router.post('/create', removeCache('/animalProducts'), async (req, res) => {
-//     const response = new ResponseModel()
-//     try {
-//         const { ProductId, AnimalId, quantity, quantityAvailable } = req.body
+router.post('/create', removeCache(['/eggsBatchProductOrderLines', '/eggsBatchProducts', '/carts']), async (req, res) => {
+    const response = new ResponseModel()
+    try {
+        const { OrderLineId, EggsBatchProductId, quantity } = req.body
 
-//         if (!(ProductId && AnimalId && quantity)) {
-//             response.error = error_missing_fields
-//             return res.status(400).json(response)
-//         }
+        if (!(OrderLineId && EggsBatchProductId && quantity)) {
+            response.error = error_missing_fields
+            return res.status(400).json(response)
+        }
 
-//         const data = {
-//             ProductId: ProductId,
-//             AnimalId: AnimalId,
-//             quantity: quantity,
-//             quantityAvailable: quantityAvailable || quantity
-//         }
+        const data = {
+            OrderLineId: OrderLineId,
+            EggsBatchProductId: EggsBatchProductId,
+            quantity: quantity
+        }
 
-//         const request = await AnimalProduct.create(data)
+        const request = await Model.create(data)
 
-//         if (request) {
-//             response.message = success_row_create
-//             response.data = request
-//             res.status(200).json(response)
-//         } else {
-//             response.error = error_row_create
-//             res.status(404).json(response)
-//         }
-//     } catch (error) {
-//         response.message = error_invalid_fields
-//         response.error = error
-//         return res.status(400).json(response)
-//     }
-// })
+        if (request) {
+            response.message = success_row_create
+            response.data = request
+            res.status(200).json(response)
+        } else {
+            response.error = error_row_create
+            res.status(404).json(response)
+        }
+    } catch (error) {
+        response.message = error_invalid_fields
+        response.error = error
+        return res.status(400).json(response)
+    }
+})
 
-// router.put('/update', removeCache('/animalProducts'), async (req, res) => {
-//     const response = new ResponseModel()
-//     try {
-//         const { ProductId, AnimalId, quantity, quantityAvailable } = req.body
+router.put('/update', removeCache(['/eggsBatchProductOrderLines', '/eggsBatchProducts', '/carts']), async (req, res) => {
+    const response = new ResponseModel()
+    try {
+        const { OrderLineId, EggsBatchProductId, quantity } = req.body
 
+        if (!(OrderLineId && EggsBatchProductId)) {
+            response.error = error_missing_fields
+            res.status(400).json(response)
+        }
 
-//         if (!(ProductId && AnimalId)) {
-//             response.error = error_missing_fields
-//             res.status(400).json(response)
-//         }
+        const data = {
+            quantity: quantity
+        }
 
-//         const data = {
-//             quantity: quantity,
-//             quantityAvailable: quantityAvailable
-//         }
+        const request = await Model.update(data, { where: { OrderLineId: OrderLineId, EggsBatchProductId: EggsBatchProductId } })
 
-//         const request = await AnimalProduct.update(data, { where: { ProductId: ProductId, AnimalId: AnimalId } })
-
-//         if (request == 1) {
-//             response.data = success_row_update
-//             res.status(200).json(response)
-//         } else {
-//             response.error = error_row_update
-//             res.status(404).json(response)
-//         }
-//     } catch (error) {
-//         response.message = error_invalid_fields
-//         response.error = error
-//         return res.status(400).json(response)
-//     }
-// })
+        if (request == 1) {
+            response.data = success_row_update
+            res.status(200).json(response)
+        } else {
+            response.error = error_row_update
+            res.status(404).json(response)
+        }
+    } catch (error) {
+        response.message = error_invalid_fields
+        response.error = error
+        return res.status(400).json(response)
+    }
+})
 
 
-// router.delete('/delete', removeCache('/animalProducts'), async (req, res) => {
-//     const response = new ResponseModel()
-//     try {
-//         const { ProductId, AnimalId } = req.body
-//         if (!(ProductId, AnimalId)) {
-//             response.error = error_missing_fields
-//             return res.status(400).json(response)
-//         }
-//         const request = await AnimalProduct.destroy({ where: { ProductId: ProductId, AnimalId: AnimalId } })
+router.delete('/delete', removeCache(['/eggsBatchProductOrderLines', '/eggsBatchProducts']), async (req, res) => {
+    const response = new ResponseModel()
+    try {
+        const { OrderLineId, EggsBatchProductId, } = req.body
+        if (!(OrderLineId && EggsBatchProductId)) {
+            response.error = error_missing_fields
+            return res.status(400).json(response)
+        }
+        const request = await Model.destroy({ where: { OrderLineId: OrderLineId, EggsBatchProductId: EggsBatchProductId } })
 
-//         if (request === 1) {
-//             response.data = success_row_delete
-//             res.status(200).json(response)
-//         } else {
-//             response.error = error_row_delete
-//             res.status(404).json(response)
-//         }
-//     } catch (error) {
-//         response.message = error_invalid_fields
-//         response.error = error
-//         return res.status(400).json(response)
-//     }
-// })
+        if (request === 1) {
+            response.data = success_row_delete
+            res.status(200).json(response)
+        } else {
+            response.error = error_row_delete
+            res.status(404).json(response)
+        }
+    } catch (error) {
+        response.message = error_invalid_fields
+        response.error = error
+        return res.status(400).json(response)
+    }
+})
 
 module.exports = router

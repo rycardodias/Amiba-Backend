@@ -51,7 +51,7 @@ router.get('/id/:OrderLineId/:AnimalProductId', cache(), async (req, res) => {
 
 })
 
-router.post('/create', removeCache(['/animalProductOrderLines', '/animalProducts']), async (req, res) => {
+router.post('/create', removeCache(['/animalProductOrderLines', '/animalProducts', '/carts']), async (req, res) => {
     const response = new ResponseModel()
     try {
         const { OrderLineId, AnimalProductId, quantity } = req.body
@@ -84,11 +84,10 @@ router.post('/create', removeCache(['/animalProductOrderLines', '/animalProducts
     }
 })
 
-router.put('/update', removeCache(['/animalProductOrderLines', '/animalProducts']), async (req, res) => {
+router.put('/update', removeCache(['/animalProductOrderLines', '/animalProducts', '/carts']), async (req, res) => {
     const response = new ResponseModel()
     try {
         const { OrderLineId, AnimalProductId, quantity } = req.body
-
 
         if (!(OrderLineId && AnimalProductId)) {
             response.error = error_missing_fields
@@ -116,7 +115,7 @@ router.put('/update', removeCache(['/animalProductOrderLines', '/animalProducts'
 })
 
 
-router.delete('/delete', removeCache(['/animalProductOrderLines', '/animalProducts']), async (req, res) => {
+router.delete('/delete', removeCache(['/animalProductOrderLines', '/animalProducts', '/carts']), async (req, res) => {
     const response = new ResponseModel()
     try {
         const { OrderLineId, AnimalProductId, } = req.body

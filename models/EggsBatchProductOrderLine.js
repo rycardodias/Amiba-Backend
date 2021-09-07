@@ -1,6 +1,6 @@
 const { DataTypes, Sequelize } = require('sequelize');
 const db = require('../config/database');
-const AnimalProduct = require('./AnimalProduct');
+const EggsBatchProduct = require('./EggsBatchProduct');
 const OrderLine = require('./OrderLine');
 
 const EggsBatchProductOrderLine = db.define('EggsBatchProductOrderLine', {
@@ -16,8 +16,8 @@ const EggsBatchProductOrderLine = db.define('EggsBatchProductOrderLine', {
 },
 )
 
-AnimalProduct.belongsToMany(OrderLine, { through: EggsBatchProductOrderLine, onDelete: 'RESTRICT', onUpdate: 'RESTRICT' })
-OrderLine.belongsToMany(AnimalProduct, { through: EggsBatchProductOrderLine, onDelete: 'RESTRICT', onUpdate: 'RESTRICT' })
+EggsBatchProduct.belongsToMany(OrderLine, { through: EggsBatchProductOrderLine, onDelete: 'RESTRICT', onUpdate: 'RESTRICT' })
+OrderLine.belongsToMany(EggsBatchProduct, { through: EggsBatchProductOrderLine, onDelete: 'RESTRICT', onUpdate: 'RESTRICT' })
 
 EggsBatchProductOrderLine.belongsTo(OrderLine, {
     onDelete: 'RESTRICT',
@@ -25,10 +25,10 @@ EggsBatchProductOrderLine.belongsTo(OrderLine, {
 })
 OrderLine.hasMany(EggsBatchProductOrderLine)
 
-EggsBatchProductOrderLine.belongsTo(AnimalProduct, {
+EggsBatchProductOrderLine.belongsTo(EggsBatchProduct, {
     onDelete: 'RESTRICT',
     onUpdate: 'RESTRICT'
 })
-AnimalProduct.hasMany(EggsBatchProductOrderLine)
+EggsBatchProduct.hasMany(EggsBatchProductOrderLine)
 
 module.exports = EggsBatchProductOrderLine
