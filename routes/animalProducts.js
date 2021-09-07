@@ -2,13 +2,12 @@ const express = require('express')
 const router = express.Router()
 const Model = require('../models/AnimalProduct')
 const Product = require('../models/Product')
-
+const { Op } = require("sequelize");
 const ResponseModel = require('../lib/ResponseModel')
 const { error_missing_fields, error_invalid_fields, error_data_not_found, success_row_delete, error_row_delete, success_row_update,
     error_row_update, error_row_create, success_row_create } = require('../lib/ResponseMessages')
 const cache = require('../lib/cache/routeCache')
 const removeCache = require('../lib/cache/removeCache')
-const db = require('../config/database')
 
 
 router.get('/', cache(), async (req, res) => {
