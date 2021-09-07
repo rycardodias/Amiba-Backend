@@ -66,7 +66,8 @@ router.post('/create', removeCache(['/eggsBatchProducts']), async (req, res) => 
         const data = {
             ProductId: ProductId,
             EggsBatchId: EggsBatchId,
-            quantity: quantity
+            quantity: quantity,
+            quantityAvailable: quantity
         }
 
         const request = await Model.create(data)
@@ -89,7 +90,7 @@ router.post('/create', removeCache(['/eggsBatchProducts']), async (req, res) => 
 router.put('/update', removeCache(['/eggsBatchProducts']), async (req, res) => {
     const response = new ResponseModel()
     try {
-        const { id, ProductId, EggsBatchId, quantity } = req.body
+        const { id, ProductId, EggsBatchId, quantity, quantityAvailable } = req.body
 
 
         if (!id) {
@@ -98,7 +99,8 @@ router.put('/update', removeCache(['/eggsBatchProducts']), async (req, res) => {
         }
 
         const data = {
-            quantity: quantity
+            quantity: quantity,
+            quantityAvailable: quantityAvailable
         }
 
         const request = await Model.update(data, { where: { id: id } })

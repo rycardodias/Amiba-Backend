@@ -10,6 +10,8 @@ const { error_missing_fields, error_invalid_fields, error_data_not_found, succes
 const ProductType = require('../models/ProductType')
 const Organization = require('../models/Organization')
 const AnimalProduct = require('../models/AnimalProduct')
+const EggsBatchProduct = require('../models/EggsBatchProduct')
+
 const { Op } = require("sequelize");
 const Animal = require('../models/Animal')
 const Exploration = require('../models/Exploration')
@@ -65,7 +67,12 @@ router.get('/allAvailable', cache(), async (req, res) => {
             include: {
                 model: AnimalProduct,
                 where: { quantityAvailable: { [Op.gt]: 0 } },
-            }
+            },
+            include: {
+                model: EggsBatchProduct,
+                where: { quantityAvailable: { [Op.gt]: 0 } },
+            },
+
         })
         if (request.length > 0) {
             response.data = request
@@ -121,7 +128,7 @@ router.get('/allAvailable/id/:id', cache(), async (req, res) => {
                 }
             ],
         })
-        
+
         if (request) {
             response.data = request
             res.status(200).json(response)
