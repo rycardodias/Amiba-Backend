@@ -51,6 +51,30 @@ router.get('/id/:id', cache(), async (req, res) => {
 
 })
 
+router.get('/user/:UserId', cache(), async (req, res) => {
+    const response = new ResponseModel()
+    try {
+        if (!req.params.UserId) {
+            response.error = error_missing_fields
+            res.status(400).json(response)
+        }
+        const request = await Model.findAll({ where: { UserId: UserId }, include: [] })
+
+        if (request) {
+            response.data = request
+            res.status(200).json(response)
+        } else {
+            response.error = error_data_not_found
+            res.status(404).json(response)
+        }
+    } catch (error) {
+        response.message = error_invalid_fields
+        response.error = error
+        return res.status(400).json(response)
+    }
+
+})
+
 router.post('/create', removeCache(['/carts']), async (req, res) => {
     const response = new ResponseModel()
     try {

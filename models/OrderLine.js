@@ -38,6 +38,11 @@ const OrderLine = db.define('OrderLine', {
 },
 )
 
+// OrderLine.beforeCreate(orderLine => {
+//     Order.create(UserId, total, totalVAT, address, locale, zipcode, observation, fiscalNumber)
+//     console.log("teste create", user)
+// })
+
 OrderLine.belongsTo(Order, {
     onDelete: 'RESTRICT',
     onUpdate: 'RESTRICT'

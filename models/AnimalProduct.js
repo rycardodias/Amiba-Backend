@@ -45,9 +45,4 @@ AnimalProduct.belongsTo(Animal, {
 })
 Animal.hasMany(AnimalProduct)
 
-
-
-
-
-
 module.exports = AnimalProduct

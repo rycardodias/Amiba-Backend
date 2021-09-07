@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router()
-const AnimalProduct = require('../models/AnimalProduct')
+const Model = require('../models/AnimalProduct')
 const Product = require('../models/Product')
 
 const ResponseModel = require('../lib/ResponseModel')
@@ -10,12 +10,11 @@ const cache = require('../lib/cache/routeCache')
 const removeCache = require('../lib/cache/removeCache')
 const db = require('../config/database')
 
-// db.sync({force: true})
 
 router.get('/', cache(), async (req, res) => {
     const response = new ResponseModel()
     try {
-        const request = await AnimalProduct.findAll({ include: Product })
+        const request = await Model.findAll({ include: Product })
         if (request.length > 0) {
             response.data = request
             res.status(200).json(response)
@@ -38,7 +37,7 @@ router.get('/id/:id', cache(), async (req, res) => {
             response.error = error_missing_fields
             res.status(400).json(response)
         }
-        const request = await AnimalProduct.findByPk(id, { include: Product })
+        const request = await Model.findByPk(id, { include: Product })
 
         if (request) {
             response.data = request
@@ -52,7 +51,30 @@ router.get('/id/:id', cache(), async (req, res) => {
         response.error = error
         return res.status(400).json(response)
     }
+})
 
+router.get('/ProductId/:ProductId', cache(), async (req, res) => {
+    const response = new ResponseModel()
+    try {
+        const { ProductId } = req.params
+        if (!ProductId) {
+            response.error = error_missing_fields
+            res.status(400).json(response)
+        }
+        const request = await Model.findAll({ where: { ProductId: ProductId } })
+
+        if (request) {
+            response.data = request
+            res.status(200).json(response)
+        } else {
+            response.error = error_data_not_found
+            res.status(404).json(response)
+        }
+    } catch (error) {
+        response.message = error_invalid_fields
+        response.error = error
+        return res.status(400).json(response)
+    }
 })
 
 router.post('/create', removeCache(['/animalProducts']), async (req, res) => {
@@ -107,7 +129,7 @@ router.put('/update', removeCache(['/animalProducts']), async (req, res) => {
             quantityAvailable: quantityAvailable
         }
 
-        const request = await AnimalProduct.update(data, { where: { id: id } })
+        const request = await Model.update(data, { where: { id: id } })
 
         if (request == 1) {
             response.data = success_row_update
@@ -132,7 +154,7 @@ router.delete('/delete', removeCache(['/animalProducts']), async (req, res) => {
             response.error = error_missing_fields
             return res.status(400).json(response)
         }
-        const request = await AnimalProduct.destroy({ where: { id: id } })
+        const request = await Model.destroy({ where: { id: id } })
 
         if (request === 1) {
             response.data = success_row_delete
