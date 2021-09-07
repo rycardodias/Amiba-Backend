@@ -53,7 +53,7 @@ router.get('/id/:id', cache(), async (req, res) => {
     }
 })
 
-router.get('/ProductId/:ProductId', cache(), async (req, res) => {
+router.get('/available/ProductId/:ProductId', cache(), async (req, res) => {
     const response = new ResponseModel()
     try {
         const { ProductId } = req.params
@@ -61,7 +61,7 @@ router.get('/ProductId/:ProductId', cache(), async (req, res) => {
             response.error = error_missing_fields
             res.status(400).json(response)
         }
-        const request = await Model.findAll({ where: { ProductId: ProductId } })
+        const request = await Model.findAll({ where: { ProductId: ProductId, quantityAvailable: { [Op.gt]: 0 } } })
 
         if (request) {
             response.data = request
