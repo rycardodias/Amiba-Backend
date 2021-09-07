@@ -44,9 +44,9 @@ app.use('/eggsBatchs', require('./routes/eggsBatchs'))
 app.use('/explorationEggsBatch', require('./routes/explorationEggsBatch'))
 app.use('/animals', require('./routes/animals'))
 app.use('/animalProducts', require('./routes/animalProducts'))
-app.use('/animalProductOrderLines', require('./routes/animalProductOrderLines'))
+// app.use('/animalProductOrderLines', require('./routes/animalProductOrderLines'))
 app.use('/eggsBatchProducts', require('./routes/eggsBatchProducts'))
-app.use('/eggsBatchProductOrderLines', require('./routes/eggsBatchProductOrderLines'))
+// app.use('/eggsBatchProductOrderLines', require('./routes/eggsBatchProductOrderLines'))
 app.use('/carts', require('./routes/carts'))
 
 module.exports = app

@@ -1,5 +1,7 @@
 const { DataTypes, Sequelize, DATE } = require('sequelize');
 const db = require('../config/database');
+const AnimalProduct = require('./AnimalProduct');
+const EggsBatchProduct = require('./EggsBatchProduct');
 const Order = require('./Order');
 
 const OrderLine = db.define('OrderLine', {
@@ -48,6 +50,18 @@ OrderLine.belongsTo(Order, {
     onUpdate: 'RESTRICT'
 })
 Order.hasMany(OrderLine)
+
+OrderLine.belongsTo(AnimalProduct, {
+    onDelete: 'RESTRICT',
+    onUpdate: 'RESTRICT'
+})
+AnimalProduct.hasMany(OrderLine)
+
+OrderLine.belongsTo(EggsBatchProduct, {
+    onDelete: 'RESTRICT',
+    onUpdate: 'RESTRICT'
+})
+EggsBatchProduct.hasMany(OrderLine)
 
 
 module.exports = OrderLine
