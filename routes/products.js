@@ -64,7 +64,7 @@ router.get('/allAvailable', cache(), async (req, res) => {
     const response = new ResponseModel()
     try {
         const request = await Model.findAll({
-            include: [AnimalProduct, EggsBatchProduct]
+            include: [{ model: AnimalProduct }, { model: EggsBatchProduct }]
             //     {
             //         model: AnimalProduct,
             //         where: { quantityAvailable: { [Op.gt]: 0 } },
