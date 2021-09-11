@@ -1,0 +1,62 @@
+-- FUNCTION: public.tr_fc_carts_create_update()
+
+-- DROP FUNCTION public.tr_fc_carts_create_update();
+
+CREATE FUNCTION public.tr_fc_carts_create_update()
+    RETURNS trigger
+    LANGUAGE 'plpgsql'
+    COST 100
+    VOLATILE NOT LEAKPROOF
+AS $BODY$
+DECLARE
+	lastQuantityAvailable integer default 0;
+	newQuantityAvailable integer default 0;
+	quantity integer default 0;
+BEGIN
+	IF (NEW."AnimalProductId" IS NOT NULL AND NEW."EggsBatchProductId" IS NOT NULL) THEN
+		RAISE EXCEPTION 'Record cannot have AnimalProductId and EggsBatchProductId fields';
+	END IF;
+	
+	IF(NEW."AnimalProductId" IS NOT NULL) THEN
+		SELECT "quantity", "quantityAvailable"
+		  INTO quantity, lastQuantityAvailable
+		  FROM public."AnimalProducts"
+		 WHERE "id" = NEW."AnimalProductId";
+		 newQuantityAvailable = (lastQuantityAvailable - NEW."quantity");
+
+		 IF(newQuantityAvailable<0) THEN
+			RAISE EXCEPTION 'AnimalProducts.quantityAvailable cannot be lower than 0';
+		 END IF;
+		 IF (quantity<newQuantityAvailable)THEN
+			RAISE EXCEPTION 'AnimalProducts.quantity cannot be lower than AnimalProducts.quantityAvailable';
+		 END IF;
+
+	   UPDATE public."AnimalProducts"
+		  SET  "quantityAvailable"= newQuantityAvailable
+		WHERE "id" = NEW."AnimalProductId";
+	 ELSE
+		SELECT "quantity", "quantityAvailable"
+		  INTO quantity, lastQuantityAvailable
+		  FROM public."EggsBatchProducts"
+		 WHERE "id" = NEW."EggsBatchProductId";
+		 newQuantityAvailable = (lastQuantityAvailable - NEW."quantity");
+
+		 IF(newQuantityAvailable<0) THEN
+			RAISE EXCEPTION 'EggsBatchProduct.quantityAvailable cannot be lower than 0';
+		 END IF;
+		 
+		 IF (quantity<newQuantityAvailable)THEN
+			RAISE EXCEPTION 'EggsBatchProduct.quantity cannot be lower than EggsBatchProduct.quantityAvailable';
+		 END IF;
+
+		UPDATE public."EggsBatchProducts"
+		SET  "quantityAvailable"= newQuantityAvailable
+		WHERE "id" = NEW."EggsBatchProductId";
+	 END IF;
+	 
+	return NEW;
+END;
+$BODY$;
+
+ALTER FUNCTION public.tr_fc_carts_create_update()
+    OWNER TO postgres;

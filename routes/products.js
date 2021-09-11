@@ -60,20 +60,16 @@ router.get('/id/:id', cache(), async (req, res) => {
     }
 })
 
-router.get('/allAvailable', cache(), async (req, res) => {
+router.get('/allAvailable', async (req, res) => {
     const response = new ResponseModel()
     try {
         const request = await Model.findAll({
-            include: [{ model: AnimalProduct }, { model: EggsBatchProduct }]
-            //     {
-            //         model: AnimalProduct,
-            //         where: { quantityAvailable: { [Op.gt]: 0 } },
-            //     },
-            //     {
-            //         model: EggsBatchProduct,
-            //         where: { quantityAvailable: { [Op.gt]: 0 } },
-            //     }
-            // ]
+            include: [AnimalProduct, EggsBatchProduct],
+            where: {
+                [Op.or]: [
+                    { '$AnimalProducts.quantityAvailable$': { [Op.gt]: 0 } }
+                    , { '$EggsBatchProducts.quantityAvailable$': { [Op.gt]: 0 } }],
+            }
         })
         if (request.length > 0) {
             response.data = request
@@ -100,9 +96,17 @@ router.get('/allAvailable/id/:id', cache(), async (req, res) => {
             attributes: {
                 include: [
                     [Sequelize.literal(`(
-                        SELECT SUM("quantityAvailable")
-                        FROM "AnimalProducts"
-                        WHERE "AnimalProducts"."ProductId" = "Product"."id")
+                        SELECT *
+                        FROM (
+                            SELECT SUM("quantityAvailable")
+                            FROM "AnimalProducts"
+                            WHERE "AnimalProducts"."ProductId" = "Product"."id"
+                            UNION ALL
+                            SELECT SUM("quantityAvailable")
+                            FROM "EggsBatchProducts"
+                            WHERE "EggsBatchProducts"."ProductId" = "Product"."id"
+                            ) v
+                        WHERE sum IS NOT NULL)
                         `), "quantityAvailable"
                     ],
                 ]
@@ -114,18 +118,14 @@ router.get('/allAvailable/id/:id', cache(), async (req, res) => {
                 },
                 {
                     model: AnimalProduct,
-                    where: { quantityAvailable: { [Op.gt]: 0 } },
+                    required: false,
+                    where: { quantityAvailable: { [Op.gt]: 0 } }
 
-                    //attributes: ['quantityAvailable'],
-                    // include: {
-                    //     model: Animal, attributes: ['id'],
-                    //     include: {
-                    //         model: Exploration, attributes: ['id'],
-                    //         include: {
-                    //             model: Organization, attributes: ['id', 'name'],
-                    //         }
-                    //     }
-                    // }
+                },
+                {
+                    model: EggsBatchProduct,
+                    required: false,
+                    where: { quantityAvailable: { [Op.gt]: 0 } }
                 }
             ],
         })

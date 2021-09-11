@@ -1,0 +1,53 @@
+-- FUNCTION: public.tr_fc_carts_delete()
+
+-- DROP FUNCTION public.tr_fc_carts_delete();
+
+CREATE FUNCTION public.tr_fc_carts_delete()
+    RETURNS trigger
+    LANGUAGE 'plpgsql'
+    COST 100
+    VOLATILE NOT LEAKPROOF
+AS $BODY$
+DECLARE
+	lastQuantityAvailable integer default 0;
+	newQuantityAvailable integer default 0;
+	quantity integer default 0;
+BEGIN
+	IF(OLD."AnimalProductId") THEN
+		SELECT "quantity","quantityAvailable"
+		  INTO quantity, lastQuantityAvailable
+	 	 FROM public."AnimalProducts"
+		 WHERE "id" = NEW."AnimalProductId";
+	
+		newQuantityAvailable = (lastQuantityAvailable + OLD."quantity");
+		
+		IF (quantity<newQuantityAvailable)THEN
+			RAISE EXCEPTION 'AnimalProducts.quantity cannot be lower than AnimalProducts.quantityAvailable';
+		END IF;
+
+	   UPDATE public."AnimalProducts"
+		  SET  "quantityAvailable"= newQuantityAvailable
+		WHERE "id" = OLD."AnimalProductId";
+	ELSE
+		SELECT "quantity","quantityAvailable"
+		  INTO quantity, lastQuantityAvailable
+	 	 FROM public."EggsBatchProducts"
+		 WHERE "id" = NEW."EggsBatchProductId";
+	
+		newQuantityAvailable = (lastQuantityAvailable + OLD."quantity");
+
+		IF (quantity<newQuantityAvailable)THEN
+			RAISE EXCEPTION 'EggsBatchProducts.quantity cannot be lower than EggsBatchProducts.quantityAvailable';
+		END IF;
+
+	   UPDATE public."EggsBatchProducts"
+		  SET  "quantityAvailable"= newQuantityAvailable
+		WHERE "id" = OLD."EggsBatchProductId";
+	END IF;
+	
+	RETURN OLD;
+END;
+$BODY$;
+
+ALTER FUNCTION public.tr_fc_carts_delete()
+    OWNER TO postgres;
