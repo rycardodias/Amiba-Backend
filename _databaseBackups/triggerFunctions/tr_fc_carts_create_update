@@ -2,16 +2,16 @@
 
 -- DROP FUNCTION public.tr_fc_carts_create_update();
 
-CREATE FUNCTION public.tr_fc_carts_create_update()
+CREATE OR REPLACE FUNCTION public.tr_fc_carts_create_update()
     RETURNS trigger
     LANGUAGE 'plpgsql'
     COST 100
     VOLATILE NOT LEAKPROOF
 AS $BODY$
 DECLARE
-	lastQuantityAvailable integer default 0;
-	newQuantityAvailable integer default 0;
-	quantity integer default 0;
+	v_lastQuantityAvailable integer default 0;
+	v_newQuantityAvailable integer default 0;
+	v_quantity integer default 0;
 BEGIN
 	IF (NEW."AnimalProductId" IS NOT NULL AND NEW."EggsBatchProductId" IS NOT NULL) THEN
 		RAISE EXCEPTION 'Record cannot have AnimalProductId and EggsBatchProductId fields';
@@ -19,38 +19,38 @@ BEGIN
 	
 	IF(NEW."AnimalProductId" IS NOT NULL) THEN
 		SELECT "quantity", "quantityAvailable"
-		  INTO quantity, lastQuantityAvailable
+		  INTO v_quantity, v_lastQuantityAvailable
 		  FROM public."AnimalProducts"
 		 WHERE "id" = NEW."AnimalProductId";
-		 newQuantityAvailable = (lastQuantityAvailable - NEW."quantity");
+		 v_newQuantityAvailable = (v_lastQuantityAvailable - NEW."quantity");
 
-		 IF(newQuantityAvailable<0) THEN
+		 IF(v_newQuantityAvailable<0) THEN
 			RAISE EXCEPTION 'AnimalProducts.quantityAvailable cannot be lower than 0';
 		 END IF;
-		 IF (quantity<newQuantityAvailable)THEN
+		 IF (v_quantity<v_newQuantityAvailable)THEN
 			RAISE EXCEPTION 'AnimalProducts.quantity cannot be lower than AnimalProducts.quantityAvailable';
 		 END IF;
 
 	   UPDATE public."AnimalProducts"
-		  SET  "quantityAvailable"= newQuantityAvailable
+		  SET  "quantityAvailable"= v_newQuantityAvailable
 		WHERE "id" = NEW."AnimalProductId";
 	 ELSE
 		SELECT "quantity", "quantityAvailable"
-		  INTO quantity, lastQuantityAvailable
+		  INTO v_quantity, v_lastQuantityAvailable
 		  FROM public."EggsBatchProducts"
 		 WHERE "id" = NEW."EggsBatchProductId";
-		 newQuantityAvailable = (lastQuantityAvailable - NEW."quantity");
+		 v_newQuantityAvailable = (v_lastQuantityAvailable - NEW."quantity");
 
-		 IF(newQuantityAvailable<0) THEN
+		 IF(v_newQuantityAvailable<0) THEN
 			RAISE EXCEPTION 'EggsBatchProduct.quantityAvailable cannot be lower than 0';
 		 END IF;
 		 
-		 IF (quantity<newQuantityAvailable)THEN
+		 IF (v_quantity<v_newQuantityAvailable)THEN
 			RAISE EXCEPTION 'EggsBatchProduct.quantity cannot be lower than EggsBatchProduct.quantityAvailable';
 		 END IF;
 
 		UPDATE public."EggsBatchProducts"
-		SET  "quantityAvailable"= newQuantityAvailable
+		SET  "quantityAvailable"= v_newQuantityAvailable
 		WHERE "id" = NEW."EggsBatchProductId";
 	 END IF;
 	 

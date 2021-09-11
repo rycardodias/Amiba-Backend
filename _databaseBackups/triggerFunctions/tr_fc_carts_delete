@@ -2,46 +2,45 @@
 
 -- DROP FUNCTION public.tr_fc_carts_delete();
 
-CREATE FUNCTION public.tr_fc_carts_delete()
+CREATE OR REPLACE FUNCTION public.tr_fc_carts_delete()
     RETURNS trigger
     LANGUAGE 'plpgsql'
     COST 100
     VOLATILE NOT LEAKPROOF
 AS $BODY$
 DECLARE
-	lastQuantityAvailable integer default 0;
-	newQuantityAvailable integer default 0;
-	quantity integer default 0;
+	v_lastQuantityAvailable integer default 0;
+	v_newQuantityAvailable integer default 0;
+	v_quantity integer default 0;
 BEGIN
-	IF(OLD."AnimalProductId") THEN
-		SELECT "quantity","quantityAvailable"
-		  INTO quantity, lastQuantityAvailable
-	 	 FROM public."AnimalProducts"
-		 WHERE "id" = NEW."AnimalProductId";
-	
-		newQuantityAvailable = (lastQuantityAvailable + OLD."quantity");
+	IF(OLD."AnimalProductId" IS NOT NULL) THEN
+		SELECT "quantity", "quantityAvailable"
+		  INTO v_quantity, v_lastQuantityAvailable
+		  FROM public."AnimalProducts"
+		 WHERE "id" = OLD."AnimalProductId";
+		 v_newQuantityAvailable = (v_lastQuantityAvailable - OLD."quantity");
 		
-		IF (quantity<newQuantityAvailable)THEN
+		IF (v_quantity<v_newQuantityAvailable)THEN
 			RAISE EXCEPTION 'AnimalProducts.quantity cannot be lower than AnimalProducts.quantityAvailable';
 		END IF;
 
 	   UPDATE public."AnimalProducts"
-		  SET  "quantityAvailable"= newQuantityAvailable
+		  SET  "quantityAvailable"= v_newQuantityAvailable
 		WHERE "id" = OLD."AnimalProductId";
 	ELSE
 		SELECT "quantity","quantityAvailable"
-		  INTO quantity, lastQuantityAvailable
+		  INTO v_quantity, v_lastQuantityAvailable
 	 	 FROM public."EggsBatchProducts"
-		 WHERE "id" = NEW."EggsBatchProductId";
+		 WHERE "id" = OLD."EggsBatchProductId";
 	
-		newQuantityAvailable = (lastQuantityAvailable + OLD."quantity");
+		v_newQuantityAvailable = (v_lastQuantityAvailable + OLD."quantity");
 
-		IF (quantity<newQuantityAvailable)THEN
+		IF (v_quantity<v_newQuantityAvailable)THEN
 			RAISE EXCEPTION 'EggsBatchProducts.quantity cannot be lower than EggsBatchProducts.quantityAvailable';
 		END IF;
 
 	   UPDATE public."EggsBatchProducts"
-		  SET  "quantityAvailable"= newQuantityAvailable
+		  SET  "quantityAvailable"= v_newQuantityAvailable
 		WHERE "id" = OLD."EggsBatchProductId";
 	END IF;
 	
