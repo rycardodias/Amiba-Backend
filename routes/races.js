@@ -26,7 +26,7 @@ router.get('/', cache(), async (req, res) => {
 
 })
 
-router.get('/id/:id', cache(), async (req, res) => {
+router.get('/id/:id',  async (req, res) => {
     const response = new ResponseModel()
     try {
         if (!req.params.id) {

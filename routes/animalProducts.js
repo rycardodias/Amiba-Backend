@@ -52,7 +52,7 @@ router.get('/id/:id', async (req, res) => {
     }
 })
 
-router.get('/available/ProductId/:ProductId',  async (req, res) => {
+router.get('/available/ProductId/:ProductId', async (req, res) => {
     const response = new ResponseModel()
     try {
         const { ProductId } = req.params

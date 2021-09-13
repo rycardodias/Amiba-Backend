@@ -37,7 +37,7 @@ router.get('/', cache(), async (req, res) => {
 
 })
 
-router.get('/id/:id', cache(), async (req, res) => {
+router.get('/id/:id',  async (req, res) => {
     const response = new ResponseModel()
     try {
         if (!req.params.id) {
@@ -85,7 +85,7 @@ router.get('/allAvailable', async (req, res) => {
     }
 })
 
-router.get('/allAvailable/id/:id', cache(), async (req, res) => {
+router.get('/allAvailable/id/:id', async (req, res) => {
     const response = new ResponseModel()
     try {
         if (!req.params.id) {
@@ -144,7 +144,7 @@ router.get('/allAvailable/id/:id', cache(), async (req, res) => {
     }
 })
 
-router.get('/allAvailable/ProductTypeId/:ProductTypeId', cache(), async (req, res) => {
+router.get('/allAvailable/ProductTypeId/:ProductTypeId',  async (req, res) => {
     const response = new ResponseModel()
     try {
         if (!req.params.ProductTypeId) {

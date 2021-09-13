@@ -7,6 +7,7 @@ const { error_missing_fields, error_invalid_fields, error_data_not_found, succes
 const Race = require('../models/Race')
 const cache = require('../lib/cache/routeCache')
 const removeCache = require('../lib/cache/removeCache')
+
 router.get('/', cache(), async (req, res) => {
     const response = new ResponseModel()
     try {
@@ -26,7 +27,7 @@ router.get('/', cache(), async (req, res) => {
 
 })
 
-router.get('/id/:id', cache(), async (req, res) => {
+router.get('/id/:id',  async (req, res) => {
     const response = new ResponseModel()
     try {
         if (!req.params.id) {
