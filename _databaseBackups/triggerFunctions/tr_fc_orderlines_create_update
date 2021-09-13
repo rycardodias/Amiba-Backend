@@ -1,0 +1,78 @@
+-- FUNCTION: public.tr_fc_orderlines_create_update()
+
+-- DROP FUNCTION public.tr_fc_orderlines_create_update();
+
+CREATE FUNCTION public.tr_fc_orderlines_create_update()
+    RETURNS trigger
+    LANGUAGE 'plpgsql'
+    COST 100
+    VOLATILE NOT LEAKPROOF
+AS $BODY$
+DECLARE
+	v_quantityAvailable integer default 0;
+	v_newQuantityAvailable integer default 0;
+	v_quantity integer default 0;
+BEGIN
+	IF (NEW."AnimalProductId" IS NOT NULL AND NEW."EggsBatchProductId" IS NOT NULL) THEN
+		RAISE EXCEPTION 'Record cannot have AnimalProductId and EggsBatchProductId fields';
+	END IF;
+	IF (NEW."quantity" <1) THEN
+		RAISE EXCEPTION 'Quantity cannot be lower than 1';
+	END IF;
+	
+	IF(NEW."AnimalProductId" IS NOT NULL) THEN
+		SELECT "quantity", "quantityAvailable"
+		  INTO v_quantity, v_quantityAvailable
+		  FROM public."AnimalProducts"
+		 WHERE "id" = NEW."AnimalProductId";
+		 
+		 IF(v_quantityAvailable<NEW."quantity") THEN
+		 	RAISE EXCEPTION 'OrderLines.quantity cannot be greater than AnimalProducts.quantityAvailable';
+		 END IF;
+		 
+		 v_newQuantityAvailable = (v_quantityAvailable - NEW."quantity");
+
+		 IF(v_newQuantityAvailable<0) THEN
+			RAISE EXCEPTION 'AnimalProducts.quantityAvailable cannot be lower than 0';
+		 END IF;
+		 
+		 IF (v_quantity<v_newQuantityAvailable)THEN
+			RAISE EXCEPTION 'AnimalProducts.quantity cannot be lower than AnimalProducts.quantityAvailable';
+		 END IF;
+
+	   UPDATE public."AnimalProducts"
+		  SET  "quantityAvailable"= v_newQuantityAvailable
+		WHERE "id" = NEW."AnimalProductId";
+		
+	 ELSE
+	 
+		SELECT "quantity", "quantityAvailable"
+		  INTO v_quantity, v_quantityAvailable
+		  FROM public."EggsBatchProducts"
+		 WHERE "id" = NEW."EggsBatchProductId";
+		 
+		 IF(v_quantityAvailable<NEW."quantity") THEN
+		 	RAISE EXCEPTION 'OrderLines.quantity cannot be greater than EggsBatchProducts.quantityAvailable';
+		 END IF;
+		 
+		 v_newQuantityAvailable = (v_quantityAvailable - NEW."quantity");
+
+		 IF(v_newQuantityAvailable<0) THEN
+			RAISE EXCEPTION 'EggsBatchProducts.quantityAvailable cannot be lower than 0';
+		 END IF;
+		 
+		 IF (v_quantity<v_newQuantityAvailable)THEN
+			RAISE EXCEPTION 'EggsBatchProducts.quantity cannot be lower than EggsBatchProducts.quantityAvailable';
+		 END IF;
+		
+		UPDATE public."EggsBatchProducts"
+		SET  "quantityAvailable"= v_newQuantityAvailable
+		WHERE "id" = NEW."EggsBatchProductId";
+	 END IF;
+	 
+	return NEW;
+END;
+$BODY$;
+
+ALTER FUNCTION public.tr_fc_orderlines_create_update()
+    OWNER TO postgres;

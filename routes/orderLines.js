@@ -54,10 +54,10 @@ router.get('/id/:id', cache(), async (req, res) => {
 router.post('/create', removeCache('/orderLines'), async (req, res) => {
     const response = new ResponseModel()
     try {
-        const { OrderId,  quantity, total, totalVAT } = req.body
+        const { OrderId, quantity, total, totalVAT, AnimalProductId, EggsBatchProductId } = req.body
 
 
-        if (!(OrderId  && quantity && total && totalVAT)) {
+        if (!(OrderId && quantity && total && totalVAT && (AnimalProductId || EggsBatchProductId))) {
             response.error = error_missing_fields
             return res.status(400).json(response)
         }
@@ -66,7 +66,9 @@ router.post('/create', removeCache('/orderLines'), async (req, res) => {
             OrderId: OrderId,
             quantity: quantity,
             total: total,
-            totalVAT: totalVAT
+            totalVAT: totalVAT, 
+            AnimalProductId: AnimalProductId, 
+            EggsBatchProductId: EggsBatchProductId,
         }
 
         const request = await Model.create(data)
@@ -90,7 +92,7 @@ router.post('/create', removeCache('/orderLines'), async (req, res) => {
 router.put('/update', removeCache('/orderLines'), async (req, res) => {
     const response = new ResponseModel()
     try {
-        const { id, OrderId,  quantity, total, totalVAT } = req.body
+        const { id, OrderId, quantity, total, totalVAT, AnimalProductId, EggsBatchProductId } = req.body
 
         if (!id) {
             response.error = error_missing_fields
@@ -101,7 +103,9 @@ router.put('/update', removeCache('/orderLines'), async (req, res) => {
             OrderId: OrderId,
             quantity: quantity,
             total: total,
-            totalVAT: totalVAT
+            totalVAT: totalVAT,
+            AnimalProductId: AnimalProductId, 
+            EggsBatchProductId: EggsBatchProductId,
         }
 
         const request = await Model.update(data, { where: { id: id } })
