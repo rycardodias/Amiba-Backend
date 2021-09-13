@@ -93,7 +93,7 @@ router.post('/create', removeCache(['/restaurants']), async (req, res) => {
 })
 
 
-router.put('/update', removeCache(['/restaurants']), async (req, res) => {
+router.put('/update', removeCache(['/restaurants', '/menus']), async (req, res) => {
     const response = new ResponseModel()
     try {
         const { id, UserId, name, description, address, locale, zipcode, fiscalNumber, telephone, mobilePhone } = req.body

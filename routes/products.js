@@ -60,7 +60,7 @@ router.get('/id/:id',  async (req, res) => {
     }
 })
 
-router.get('/allAvailable', async (req, res) => {
+router.get('/allAvailable', cache(), async (req, res) => {
     const response = new ResponseModel()
     try {
         const request = await Model.findAll({

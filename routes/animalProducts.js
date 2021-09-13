@@ -76,7 +76,7 @@ router.get('/available/ProductId/:ProductId', async (req, res) => {
     }
 })
 
-router.post('/create', removeCache(['/animalProducts']), async (req, res) => {
+router.post('/create', removeCache(['/animalProducts', '/products/allAvailable']), async (req, res) => {
     const response = new ResponseModel()
     try {
         const { ProductId, AnimalId, quantity } = req.body
@@ -110,7 +110,7 @@ router.post('/create', removeCache(['/animalProducts']), async (req, res) => {
     }
 })
 
-router.put('/update', removeCache(['/animalProducts', '/allAvailable/id/:id']), async (req, res) => {
+router.put('/update', removeCache(['/animalProducts', '/products/allAvailable']), async (req, res) => {
     const response = new ResponseModel()
     try {
         const { id, ProductId, AnimalId, quantity, quantityAvailable } = req.body
@@ -145,7 +145,7 @@ router.put('/update', removeCache(['/animalProducts', '/allAvailable/id/:id']), 
 })
 
 
-router.delete('/delete', removeCache(['/animalProducts']), async (req, res) => {
+router.delete('/delete', removeCache(['/animalProducts', '/products/allAvailable']), async (req, res) => {
     const response = new ResponseModel()
     try {
         const { id } = req.body

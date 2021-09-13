@@ -85,7 +85,7 @@ router.post('/create', removeCache(['/races']), async (req, res) => {
     }
 })
 
-router.put('/update', removeCache(['/races']), async (req, res) => {
+router.put('/update', removeCache(['/races', '/animals']), async (req, res) => {
     const response = new ResponseModel()
     try {
         const { id, name, description } = req.body

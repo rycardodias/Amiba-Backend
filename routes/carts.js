@@ -75,7 +75,7 @@ router.get('/user/:UserId', async (req, res) => {
 
 })
 
-router.post('/create', removeCache(['/carts']), async (req, res) => {
+router.post('/create', removeCache(['/carts', '/animalProducts', '/eggsBatchProducts', '/products/allAvailable']), async (req, res) => {
     const response = new ResponseModel()
     try {
         const { UserId, AnimalProductId, EggsBatchProductId, quantity } = req.body
@@ -109,7 +109,7 @@ router.post('/create', removeCache(['/carts']), async (req, res) => {
     }
 })
 
-router.put('/update', removeCache(['/carts']), async (req, res) => {
+router.put('/update', removeCache(['/carts', '/animalProducts', '/eggsBatchProducts', '/products/allAvailable']), async (req, res) => {
     const response = new ResponseModel()
     try {
         const { id, quantity } = req.body
@@ -139,7 +139,7 @@ router.put('/update', removeCache(['/carts']), async (req, res) => {
     }
 })
 
-router.delete('/delete', removeCache(['/carts']), async (req, res) => {
+router.delete('/delete', removeCache(['/carts', '/animalProducts', '/eggsBatchProducts', '/products/allAvailable']), async (req, res) => {
     const response = new ResponseModel()
     try {
         const { id } = req.body

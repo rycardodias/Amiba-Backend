@@ -90,7 +90,7 @@ router.post('/create', removeCache(['/organizationTypes']), async (req, res) => 
     }
 })
 
-router.put('/update', removeCache(['/organizationTypes']), async (req, res) => {
+router.put('/update', removeCache(['/organizationTypes', '/organizations']), async (req, res) => {
     const response = new ResponseModel()
     try {
         const { id, name, description } = req.body

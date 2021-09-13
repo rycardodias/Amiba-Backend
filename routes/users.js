@@ -62,7 +62,7 @@ router.get('/id/:id', async (req, res) => {
     }
 })
 
-router.post('/create', removeCache(['/users/me', '/users']), async (req, res) => {
+router.post('/create', removeCache(['/users']), async (req, res) => {
     const response = new ResponseModel()
     try {
         const { name, email, password, address, locale, zipcode, fiscalNumber, telephone, mobilePhone } = req.body
