@@ -117,3 +117,7 @@ dist
 
 .env
 .env-online
+
+# files
+
+public/uploads

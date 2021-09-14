@@ -1,10 +1,13 @@
 const express = require('express')
 const cors = require("cors");
 const cookieSession = require('cookie-session')
+const fileUpload = require('express-fileupload')
 const dotenv = require('dotenv');
 dotenv.config()
 
 const app = express();
+
+
 
 app.use(express.json());
 app.use(
@@ -21,6 +24,11 @@ app.use(
   }
   )
 )
+
+app.use(fileUpload({
+  limits: { fileSize: 1024 * 1024 * 5 },
+  abortOnLimit: true,
+}))
 
 
 app.get('/', (req, res) => res.send('INDEX - AMIBA WEBSERVICES'));
@@ -48,5 +56,7 @@ app.use('/animalProducts', require('./routes/animalProducts'))
 app.use('/eggsBatchProducts', require('./routes/eggsBatchProducts'))
 // app.use('/eggsBatchProductOrderLines', require('./routes/eggsBatchProductOrderLines'))
 app.use('/carts', require('./routes/carts'))
+
+app.use('/uploadFiles', require('./routes/uploadFiles'))
 
 module.exports = app
