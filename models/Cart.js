@@ -19,22 +19,6 @@ const Cart = db.define('Cart', {
             }
         }
     },
-    // AnimalProductId: {
-    //     type: DataTypes.UUID,
-    //     allowNull: true,
-    //     references: {
-    //         model: AnimalProduct,
-    //         key: 'id'
-    //     }
-    // },
-    // EggsBatchProductId: {
-    //     type: DataTypes.UUID,
-    //     allowNull: true,
-    //     references: {
-    //         model: EggsBatchProduct,
-    //         key: 'id'
-    //     }
-    // }
 },
 )
 

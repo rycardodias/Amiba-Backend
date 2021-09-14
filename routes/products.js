@@ -37,7 +37,7 @@ router.get('/', cache(), async (req, res) => {
 
 })
 
-router.get('/id/:id',  async (req, res) => {
+router.get('/id/:id', async (req, res) => {
     const response = new ResponseModel()
     try {
         if (!req.params.id) {
@@ -96,7 +96,7 @@ router.get('/allAvailable/id/:id', async (req, res) => {
             attributes: {
                 include: [
                     [Sequelize.literal(`(
-                        SELECT *
+                        SELECT CAST(sum AS INTEGER)
                         FROM (
                             SELECT SUM("quantityAvailable")
                             FROM "AnimalProducts"
@@ -109,8 +109,10 @@ router.get('/allAvailable/id/:id', async (req, res) => {
                         WHERE sum IS NOT NULL)
                         `), "quantityAvailable"
                     ],
-                ]
+
+                ],
             },
+
             include: [
                 {
                     model: ProductType,
@@ -144,7 +146,7 @@ router.get('/allAvailable/id/:id', async (req, res) => {
     }
 })
 
-router.get('/allAvailable/ProductTypeId/:ProductTypeId',  async (req, res) => {
+router.get('/allAvailable/ProductTypeId/:ProductTypeId', async (req, res) => {
     const response = new ResponseModel()
     try {
         if (!req.params.ProductTypeId) {
@@ -226,7 +228,7 @@ router.post('/create', removeCache(['/products']), async (req, res) => {
 })
 
 
-router.put('/update', removeCache(['/products']), async (req, res) => {
+router.put('/update', removeCache(['/products', '/products/allAvailable']), async (req, res) => {
     const response = new ResponseModel()
     try {
         const { id, ProductTypeId, OrganizationId, tax, name, description, price } = req.body
@@ -261,7 +263,7 @@ router.put('/update', removeCache(['/products']), async (req, res) => {
     }
 })
 
-router.delete('/delete', removeCache(['/products']), async (req, res) => {
+router.delete('/delete', removeCache(['/products', '/products/allAvailable']), async (req, res) => {
     const response = new ResponseModel()
     try {
         const { id } = req.body

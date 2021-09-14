@@ -7,6 +7,11 @@ const removeCache = require('../lib/cache/removeCache')
 const ResponseModel = require('../lib/ResponseModel')
 const { error_missing_fields, error_invalid_fields, error_data_not_found, success_row_delete, error_row_delete, success_row_update,
     error_row_update, error_row_create, success_row_create } = require('../lib/ResponseMessages')
+const Product = require('../models/Product')
+const AnimalProduct = require('../models/AnimalProduct')
+const EggsBatchProduct = require('../models/EggsBatchProduct')
+const { Op } = require("sequelize");
+
 
 router.get('/', cache(), async (req, res) => {
     const response = new ResponseModel()
@@ -51,14 +56,15 @@ router.get('/id/:id', async (req, res) => {
 
 })
 
-router.get('/user/:UserId', async (req, res) => {
+router.get('/UserId/:UserId', async (req, res) => {
     const response = new ResponseModel()
+    const { UserId } = req.params
     try {
-        if (!req.params.UserId) {
+        if (!UserId) {
             response.error = error_missing_fields
             res.status(400).json(response)
         }
-        const request = await Model.findAll({ where: { UserId: UserId }, include: [] })
+        const request = await Model.findAll({ where: { UserId: UserId } })
 
         if (request) {
             response.data = request
@@ -72,7 +78,36 @@ router.get('/user/:UserId', async (req, res) => {
         response.error = error
         return res.status(400).json(response)
     }
+})
 
+router.get('/UserId/Product/:UserId', async (req, res) => {
+    const response = new ResponseModel()
+    const { UserId } = req.params
+    try {
+        if (!UserId) {
+            response.error = error_missing_fields
+            res.status(400).json(response)
+        }
+        const request = await Model.findAll({
+            where: { UserId: UserId },
+            include: [
+                { model: AnimalProduct, attributes: ['ProductId'], include: Product },
+                { model: EggsBatchProduct, attributes: ['ProductId'], include: Product }
+            ]
+        })
+
+        if (request) {
+            response.data = request
+            res.status(200).json(response)
+        } else {
+            response.error = error_data_not_found
+            res.status(404).json(response)
+        }
+    } catch (error) {
+        response.message = error_invalid_fields
+        response.error = error
+        return res.status(400).json(response)
+    }
 })
 
 router.post('/create', removeCache(['/carts', '/animalProducts', '/eggsBatchProducts', '/products/allAvailable']), async (req, res) => {
