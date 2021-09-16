@@ -10,14 +10,16 @@ const { uuid } = require('uuidv4')
 router.get("/:file", async (req, res) => {
     try {
         let img = "../Projeto-Investigacao/public/uploads/" + req.params.file
+
         fs.access(img, fs.constants.F_OK, err => {
-            console.log("does not exists")
+            return err
         })
 
         fs.readFile(img, function (err, content) {
             if (err) {
-                res.writeHead(200, { "Content-type": "text/html" })
-                res.end("No such image")
+                // res.writeHead(200, { "Content-type": "text/html" })
+                // res.end("No such image")
+                res.status(404).json({ error: err })
             } else {
                 res.writeHead(200, { "Content-type": "image/jpg" })
                 res.end(content)
