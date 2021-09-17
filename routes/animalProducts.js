@@ -79,7 +79,7 @@ router.get('/available/ProductId/:ProductId', async (req, res) => {
 router.post('/create', removeCache(['/animalProducts', '/products/allAvailable']), async (req, res) => {
     const response = new ResponseModel()
     try {
-        const { ProductId, AnimalId, quantity } = req.body
+        const { ProductId, AnimalId, quantity, weight } = req.body
 
         if (!(ProductId && AnimalId && quantity)) {
             response.error = error_missing_fields
@@ -90,7 +90,8 @@ router.post('/create', removeCache(['/animalProducts', '/products/allAvailable']
             ProductId: ProductId,
             AnimalId: AnimalId,
             quantity: quantity,
-            quantityAvailable: quantity
+            quantityAvailable: quantity,
+            weight: weight,
         }
 
         const request = await Model.create(data)
@@ -113,7 +114,7 @@ router.post('/create', removeCache(['/animalProducts', '/products/allAvailable']
 router.put('/update', removeCache(['/animalProducts', '/products/allAvailable']), async (req, res) => {
     const response = new ResponseModel()
     try {
-        const { id, ProductId, AnimalId, quantity, quantityAvailable } = req.body
+        const { id, ProductId, AnimalId, quantity, quantityAvailable, weight } = req.body
 
 
         if (!id) {
@@ -125,7 +126,8 @@ router.put('/update', removeCache(['/animalProducts', '/products/allAvailable'])
             ProductId: ProductId,
             AnimalId: AnimalId,
             quantity: quantity,
-            quantityAvailable: quantityAvailable
+            quantityAvailable: quantityAvailable,
+            weight: weight,
         }
 
         const request = await Model.update(data, { where: { id: id } })

@@ -194,9 +194,9 @@ router.get('/allAvailable/ProductTypeId/:ProductTypeId', async (req, res) => {
 router.post('/create', removeCache(['/products']), async (req, res) => {
     const response = new ResponseModel()
     try {
-        const { ProductTypeId, OrganizationId, tax, name, description, price } = req.body
+        const { ProductTypeId, OrganizationId, tax, name, description, price, unit } = req.body
 
-        if (!(ProductTypeId && tax && name && price)) {
+        if (!(ProductTypeId && tax && name && price && unit)) {
             response.error = error_missing_fields
             return res.status(400).json(response)
         }
@@ -208,6 +208,7 @@ router.post('/create', removeCache(['/products']), async (req, res) => {
             name: name,
             description: description,
             price: price,
+            unit: unit,
         }
 
         const request = await Model.create(data)
@@ -231,7 +232,7 @@ router.post('/create', removeCache(['/products']), async (req, res) => {
 router.put('/update', removeCache(['/products', '/products/allAvailable']), async (req, res) => {
     const response = new ResponseModel()
     try {
-        const { id, ProductTypeId, OrganizationId, tax, name, description, price } = req.body
+        const { id, ProductTypeId, OrganizationId, tax, name, description, price, unit } = req.body
 
         if (!id) {
             response.error = error_missing_fields
@@ -245,6 +246,7 @@ router.put('/update', removeCache(['/products', '/products/allAvailable']), asyn
             name: name,
             description: description,
             price: price,
+            unit: unit
         }
 
         const request = await Model.update(data, { where: { id: id } })
