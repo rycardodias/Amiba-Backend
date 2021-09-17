@@ -31,12 +31,21 @@ const Product = db.define('Product', {
             }
         },
     },
+    unit: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+            notEmpty: {
+                msg: "unit field is required"
+            }
+        }
+    },
     tax: {
         type: DataTypes.INTEGER,
         allowNull: false,
         validate: {
             notEmpty: {
-                msg: "price field is required",
+                msg: "tax field is required",
             }
         },
     },
@@ -57,5 +66,5 @@ Product.belongsTo(Organization, {
 })
 Organization.hasMany(Product)
 
-// Product.sync({alter: true})
+// Product.sync({force: true})
 module.exports = Product

@@ -2,7 +2,7 @@
 
 -- DROP FUNCTION public.tr_fc_carts_create_update();
 
-CREATE OR REPLACE FUNCTION public.tr_fc_carts_create_update()
+CREATE FUNCTION public.tr_fc_carts_create_update()
     RETURNS trigger
     LANGUAGE 'plpgsql'
     COST 100
@@ -15,6 +15,28 @@ DECLARE
 BEGIN
 	IF (NEW."AnimalProductId" IS NOT NULL AND NEW."EggsBatchProductId" IS NOT NULL) THEN
 		RAISE EXCEPTION 'Record cannot have AnimalProductId and EggsBatchProductId fields';
+	END IF;
+	
+	IF (NEW."quantity" <1) THEN
+		RAISE EXCEPTION 'Quantity cannot be lower than 1';
+	END IF;
+	
+	IF(TG_OP = 'UPDATE') THEN
+		IF(OLD."id"<>NEW."id") THEN
+			RAISE EXCEPTION 'Carts.id cannot be changed';
+		END IF;
+		IF(OLD."createdAt"<>NEW."createdAt") THEN
+			RAISE EXCEPTION 'Carts.createdAt cannot be changed';
+		END IF;
+		IF(OLD."AnimalProductId"<>NEW."AnimalProductId") THEN
+			RAISE EXCEPTION 'Carts.AnimalProductId cannot be changed';
+		END IF;
+		IF(OLD."EggsBatchProductId"<>NEW."EggsBatchProductId") THEN
+			RAISE EXCEPTION 'Carts.EggsBatchProductId cannot be changed';
+		END IF;
+		IF(OLD."UserId"<>NEW."UserId") THEN
+			RAISE EXCEPTION 'Carts.UserId cannot be changed';
+		END IF;
 	END IF;
 
 	IF(TG_OP = 'INSERT' AND NEW."AnimalProductId" IS NOT NULL) THEN
@@ -63,7 +85,6 @@ BEGIN
 	   UPDATE public."AnimalProducts"
 		  SET  "quantityAvailable"= v_newQuantityAvailable
 		WHERE "id" = NEW."AnimalProductId";
-		
 	 ELSE
 		SELECT "quantity"
 		  INTO v_quantity
@@ -80,7 +101,7 @@ BEGIN
 		SET  "quantityAvailable"= v_newQuantityAvailable
 		WHERE "id" = NEW."EggsBatchProductId";
 	 END IF;
-	 
+	
 	RETURN NEW;
 END;
 $BODY$;

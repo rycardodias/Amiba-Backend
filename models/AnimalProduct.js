@@ -1,4 +1,4 @@
-const { DataTypes, Sequelize } = require('sequelize');
+const { DataTypes } = require('sequelize');
 const db = require('../config/database');
 const Product = require('./Product');
 const Animal = require('./Animal');
@@ -27,6 +27,9 @@ const AnimalProduct = db.define('AnimalProduct', {
             }
         }
     },
+    weight: {
+        type: DataTypes.INTEGER,
+    },
 },
 )
 
@@ -45,5 +48,6 @@ AnimalProduct.belongsTo(Animal, {
 })
 Animal.hasMany(AnimalProduct)
 
+// AnimalProduct.sync({force: true})
 
 module.exports = AnimalProduct
