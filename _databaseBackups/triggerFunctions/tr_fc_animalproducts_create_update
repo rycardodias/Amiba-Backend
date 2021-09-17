@@ -25,9 +25,8 @@ BEGIN
 		IF (NEW."quantity" <1) THEN
 			RAISE EXCEPTION 'Quantity cannot be lower than 1';
 		END IF;
-		IF (NEW."quantity" <> NEW."quantityAvailable") THEN
-			RAISE EXCEPTION 'quantity and quantityAvailable must be equals';
-		END IF;
+		
+		NEW."quantityAvailable" = NEW."quantity";
 		
 	ELSIF (TG_OP = 'UPDATE') THEN
 		IF(OLD."id"<>NEW."id") THEN
@@ -42,9 +41,11 @@ BEGIN
 		IF(OLD."AnimalId"<>NEW."AnimalId") THEN
 			RAISE EXCEPTION 'AnimalProducts.AnimalId cannot be changed';
 		END IF;
-		
-		IF(OLD."unit"<>NEW."unit") THEN
-			RAISE EXCEPTION 'AnimalProducts.unit cannot be changed';
+		IF(OLD."weight"<>NEW."weight") THEN
+			RAISE EXCEPTION 'AnimalProducts.weight cannot be changed';
+		END IF;
+		IF(OLD."quantityAvailable"<>NEW."quantityAvailable") THEN
+			RAISE EXCEPTION 'AnimalProducts.quantityAvailable cannot be changed';
 		END IF;
 		
 		IF(NEW."quantity" > OLD."quantity") THEN

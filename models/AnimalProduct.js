@@ -20,12 +20,6 @@ const AnimalProduct = db.define('AnimalProduct', {
     },
     quantityAvailable: {
         type: DataTypes.INTEGER,
-        allowNull: false,
-        validate: {
-            notEmpty: {
-                msg: "quantityAvailable field is required",
-            }
-        }
     },
     weight: {
         type: DataTypes.INTEGER,
@@ -48,6 +42,6 @@ AnimalProduct.belongsTo(Animal, {
 })
 Animal.hasMany(AnimalProduct)
 
-// AnimalProduct.sync({force: true})
+// AnimalProduct.sync({alter: true})
 
 module.exports = AnimalProduct
