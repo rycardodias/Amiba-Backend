@@ -56,8 +56,7 @@ router.get('/id/:id', async (req, res) => {
 router.post('/create', removeCache(['/animals']), async (req, res) => {
     const response = new ResponseModel()
     try {
-        const { id, ExplorationId, RaceId, gender, birthDate, weight, slaughterDate, slaughterWeight, slaughterLocal } = req.body
-        console.log(ExplorationId, RaceId, gender, birthDate, weight)
+        const { ExplorationId, RaceId, gender, birthDate, weight, slaughterDate, slaughterWeight, slaughterLocal } = req.body
 
         if (!(ExplorationId && RaceId && gender && birthDate && weight)) {
             response.error = error_missing_fields
@@ -95,7 +94,7 @@ router.post('/create', removeCache(['/animals']), async (req, res) => {
 router.put('/update', removeCache(['/animals']), async (req, res) => {
     const response = new ResponseModel()
     try {
-        const { id, ExplorationId, RaceId, gender, birthDate, weight, slaughterDate, slaughterWeight, slaughterLocal } = req.body
+        const { id, slaughterDate, slaughterWeight, slaughterLocal } = req.body
 
         if (!id) {
             response.error = error_missing_fields
@@ -103,11 +102,6 @@ router.put('/update', removeCache(['/animals']), async (req, res) => {
         }
 
         const data = {
-            ExplorationId: ExplorationId,
-            RaceId: RaceId,
-            gender: gender,
-            birthDate: birthDate,
-            weight: weight,
             slaughterDate: slaughterDate,
             slaughterWeight: slaughterWeight,
             slaughterLocal: slaughterLocal
