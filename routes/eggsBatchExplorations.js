@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router()
-const Model = require('../models/ExplorationEggsBatch')
+const Model = require('../models/eggsBatchExploration')
 const cache = require('../lib/cache/routeCache')
 const removeCache = require('../lib/cache/removeCache')
 const ResponseModel = require('../lib/ResponseModel')
@@ -28,7 +28,7 @@ router.get('/', cache(), async (req, res) => {
 
 })
 
-router.get('/id/:ExplorationId/:EggsBatchId',  async (req, res) => {
+router.get('/id/:ExplorationId/:EggsBatchId', async (req, res) => {
     const response = new ResponseModel()
     try {
         const { ExplorationId, EggsBatchId } = req.params
@@ -53,10 +53,10 @@ router.get('/id/:ExplorationId/:EggsBatchId',  async (req, res) => {
 
 })
 
-router.post('/create', removeCache(['/explorationEggsBatch']), async (req, res) => {
+router.post('/create', removeCache(['/eggsBatchExplorations']), async (req, res) => {
     const response = new ResponseModel()
     try {
-        const { ExplorationId, EggsBatchId, quantity } = req.body
+        const { ExplorationId, EggsBatchId } = req.body
 
 
         if (!(ExplorationId && EggsBatchId && quantity)) {
@@ -87,10 +87,10 @@ router.post('/create', removeCache(['/explorationEggsBatch']), async (req, res) 
     }
 })
 
-router.put('/update', removeCache(['/explorationEggsBatch']), async (req, res) => {
+router.put('/update', removeCache(['/eggsBatchExplorations']), async (req, res) => {
     const response = new ResponseModel()
     try {
-        const { ExplorationId, EggsBatchId, quantity } = req.body
+        const { ExplorationId, EggsBatchId } = req.body
 
         if (!(ExplorationId && EggsBatchId)) {
             response.error = error_missing_fields
@@ -99,8 +99,7 @@ router.put('/update', removeCache(['/explorationEggsBatch']), async (req, res) =
 
         const data = {
             ExplorationId: ExplorationId,
-            EggsBatchId: EggsBatchId,
-            quantity: quantity
+            EggsBatchId: EggsBatchId
         }
 
         const request = await Model.update(data, { where: { ExplorationId: ExplorationId, EggsBatchId: EggsBatchId } })
@@ -119,7 +118,7 @@ router.put('/update', removeCache(['/explorationEggsBatch']), async (req, res) =
     }
 })
 
-router.delete('/delete', removeCache(['/explorationEggsBatch']), async (req, res) => {
+router.delete('/delete', removeCache(['/eggsBatchExplorations']), async (req, res) => {
     const response = new ResponseModel()
     try {
         const { ExplorationId, EggsBatchId } = req.body

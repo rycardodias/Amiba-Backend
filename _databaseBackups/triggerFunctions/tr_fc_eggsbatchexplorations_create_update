@@ -1,0 +1,33 @@
+-- FUNCTION: public.tr_fc_eggsbatchexplorations_create_update()
+
+-- DROP FUNCTION public.tr_fc_eggsbatchexplorations_create_update();
+
+CREATE FUNCTION public.tr_fc_eggsbatchexplorations_create_update()
+    RETURNS trigger
+    LANGUAGE 'plpgsql'
+    COST 100
+    VOLATILE NOT LEAKPROOF
+AS $BODY$
+DECLARE
+	v_newQuantityAvailable integer default 0;
+	v_quantity integer default 0;
+	v_existing_quantity integer default 0;
+BEGIN
+	IF(TG_OP = 'UPDATE') THEN
+		IF(OLD."ExplorationId"<>NEW."ExplorationId") THEN
+			RAISE EXCEPTION 'EggsBatchExplorations.ExplorationId cannot be changed';
+		END IF;
+		IF(OLD."EggsBatchId"<>NEW."EggsBatchId") THEN
+			RAISE EXCEPTION 'EggsBatchExplorations.EggsBatchId cannot be changed';
+		END IF;
+		IF(OLD."createdAt"<>NEW."createdAt") THEN
+			RAISE EXCEPTION 'EggsBatchExplorations.createdAt cannot be changed';
+		END IF;
+	END IF;
+	
+	RETURN NEW;
+END;
+$BODY$;
+
+ALTER FUNCTION public.tr_fc_eggsbatchexplorations_create_update()
+    OWNER TO postgres;
