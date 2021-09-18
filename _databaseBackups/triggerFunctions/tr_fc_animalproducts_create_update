@@ -48,10 +48,10 @@ BEGIN
 			RAISE EXCEPTION 'AnimalProducts.quantityAvailable cannot be changed';
 		END IF;
 		
-		IF(NEW."quantity" > OLD."quantity") THEN
-			NEW."quantityAvailable" = OLD."quantityAvailable" + (NEW."quantity" - OLD."quantity");
-		ELSIF (NEW."quantity" > OLD."quantity") THEN
-			NEW."quantityAvailable" = OLD."quantityAvailable" - (OLD."quantity" - NEW."quantity");
+		NEW."quantityAvailable" = OLD."quantityAvailable" + (NEW."quantity" - OLD."quantity");
+
+		IF(NEW."quantityAvailable">NEW."quantity") THEN
+			RAISE EXCEPTION 'AnimalProducts.quantityAvailable cannot be higher than quantity';
 		END IF;
 	END IF;
 	RETURN NEW;

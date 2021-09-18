@@ -10,12 +10,6 @@ const Certification = db.define('Certification', {
     },
     certificationCode: {
         type: DataTypes.STRING,
-        allowNull: false,
-        validate: {
-            notEmpty: {
-                msg: "certificationCode field is required",
-            }
-        }
     },
     initialDate: {
         type: DataTypes.DATEONLY,
@@ -48,12 +42,6 @@ Certification.belongsTo(Exploration, {
 })
 Exploration.hasMany(Certification)
 
-// Certification.sync({ alter: true })
-//     .then(() => {
-//         db.query("ALTER TABLE \"Certifications\" DROP CONSTRAINT \"Certifications_ExplorationId_fkey\", " +
-//             " ADD CONSTRAINT \"Certifications_ExplorationId_fkey\" FOREIGN KEY(\"ExplorationId\") REFERENCES \"Explorations\" " +
-//             "ON UPDATE NO ACTION;")
-//     })
-
+// Certification.sync({alter: true})
 
 module.exports = Certification

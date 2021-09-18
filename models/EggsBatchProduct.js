@@ -20,10 +20,13 @@ const EggsBatchProduct = db.define('EggsBatchProduct', {
     },
     quantityAvailable: {
         type: DataTypes.INTEGER,
+    },
+    divider: {
+        type: DataTypes.INTEGER,
         allowNull: false,
         validate: {
             notEmpty: {
-                msg: "quantityAvailable field is required",
+                msg: "divider field is required",
             }
         }
     },
@@ -45,5 +48,5 @@ EggsBatchProduct.belongsTo(EggsBatch, {
 })
 EggsBatch.hasMany(EggsBatchProduct)
 
-
+// EggsBatchProduct.sync({ alter: true })
 module.exports = EggsBatchProduct

@@ -56,7 +56,7 @@ router.post('/create', removeCache(['/certifications']), async (req, res) => {
     try {
         const { ExplorationId, certificationCode, initialDate, finalDate, description } = req.body
 
-        if (!(ExplorationId && certificationCode && initialDate && finalDate)) {
+        if (!(ExplorationId && initialDate && finalDate)) {
             response.error = error_missing_fields
             return res.status(400).json(response)
         }
@@ -89,7 +89,7 @@ router.post('/create', removeCache(['/certifications']), async (req, res) => {
 router.put('/update', removeCache(['/certifications']), async (req, res) => {
     const response = new ResponseModel()
     try {
-        const { id, ExplorationId, certificationCode, initialDate, finalDate, description } = req.body
+        const { id, description } = req.body
 
         if (!id) {
             response.error = error_missing_fields
@@ -97,10 +97,6 @@ router.put('/update', removeCache(['/certifications']), async (req, res) => {
         }
 
         const data = {
-            ExplorationId: ExplorationId,
-            certificationCode: certificationCode,
-            initialDate: initialDate,
-            finalDate: finalDate,
             description: description
         }
 
