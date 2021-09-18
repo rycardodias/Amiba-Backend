@@ -59,15 +59,14 @@ router.post('/create', removeCache(['/eggsBatchExplorations']), async (req, res)
         const { ExplorationId, EggsBatchId } = req.body
 
 
-        if (!(ExplorationId && EggsBatchId && quantity)) {
+        if (!(ExplorationId && EggsBatchId)) {
             response.error = error_missing_fields
             return res.status(400).json(response)
         }
 
         const data = {
             ExplorationId: ExplorationId,
-            EggsBatchId: EggsBatchId,
-            quantity: quantity
+            EggsBatchId: EggsBatchId
         }
 
         const request = await Model.create(data)
