@@ -28,7 +28,7 @@ router.get('/', cache(), async (req, res) => {
     }
 })
 
-router.get('/id/:id',  async (req, res) => {
+router.get('/id/:id', async (req, res) => {
     const response = new ResponseModel()
     try {
         if (!req.params.id) {
@@ -94,7 +94,7 @@ router.post('/create', removeCache(['/explorations']), async (req, res) => {
 router.put('/update', removeCache(['/explorations']), async (req, res) => {
     const response = new ResponseModel()
     try {
-        const { id, OrganizationId, ExplorationTypeId, name, address, locale, zipcode, telephone, mobilePhone, fiscalNumber, gpsLocalization } = req.body
+        const { id, ExplorationTypeId, name, address, locale, zipcode, telephone, mobilePhone, fiscalNumber, gpsLocalization } = req.body
 
 
         if (!id) {
@@ -103,7 +103,6 @@ router.put('/update', removeCache(['/explorations']), async (req, res) => {
         }
 
         const data = {
-            OrganizationId: OrganizationId,
             ExplorationTypeId: ExplorationTypeId,
             name: name,
             address: address,

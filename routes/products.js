@@ -232,7 +232,7 @@ router.post('/create', removeCache(['/products']), async (req, res) => {
 router.put('/update', removeCache(['/products', '/products/allAvailable']), async (req, res) => {
     const response = new ResponseModel()
     try {
-        const { id, ProductTypeId, OrganizationId, tax, name, description, price, unit } = req.body
+        const { id, ProductTypeId, tax, name, description, price } = req.body
 
         if (!id) {
             response.error = error_missing_fields
@@ -241,12 +241,10 @@ router.put('/update', removeCache(['/products', '/products/allAvailable']), asyn
 
         const data = {
             ProductTypeId: ProductTypeId,
-            OrganizationId: OrganizationId,
             tax: tax,
             name: name,
             description: description,
             price: price,
-            unit: unit
         }
 
         const request = await Model.update(data, { where: { id: id } })
