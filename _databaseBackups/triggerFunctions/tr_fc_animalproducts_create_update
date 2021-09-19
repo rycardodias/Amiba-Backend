@@ -10,8 +10,11 @@ CREATE FUNCTION public.tr_fc_animalproducts_create_update()
 AS $BODY$
 DECLARE
 	v_unit varchar(50);
-	
 BEGIN
+	IF (NEW."quantity" <1) THEN
+		RAISE EXCEPTION 'Quantity cannot be lower than 1';
+	END IF;
+	
 	SELECT "unit"
 	  INTO v_unit
 	  FROM public."Products"
@@ -22,12 +25,7 @@ BEGIN
 	END IF;
 	 
 	IF(TG_OP = 'INSERT') THEN
-		IF (NEW."quantity" <1) THEN
-			RAISE EXCEPTION 'Quantity cannot be lower than 1';
-		END IF;
-		
 		NEW."quantityAvailable" = NEW."quantity";
-		
 	ELSIF (TG_OP = 'UPDATE') THEN
 		IF(OLD."id"<>NEW."id") THEN
 			RAISE EXCEPTION 'AnimalProducts.id cannot be changed';
@@ -44,12 +42,11 @@ BEGIN
 		IF(OLD."weight"<>NEW."weight") THEN
 			RAISE EXCEPTION 'AnimalProducts.weight cannot be changed';
 		END IF;
-		IF(OLD."quantityAvailable"<>NEW."quantityAvailable") THEN
-			RAISE EXCEPTION 'AnimalProducts.quantityAvailable cannot be changed';
+		
+		IF(OLD."quantity"<>NEW."quantity") THEN
+			NEW."quantityAvailable" = OLD."quantityAvailable" + (NEW."quantity" - OLD."quantity");
 		END IF;
 		
-		NEW."quantityAvailable" = OLD."quantityAvailable" + (NEW."quantity" - OLD."quantity");
-
 		IF(NEW."quantityAvailable">NEW."quantity") THEN
 			RAISE EXCEPTION 'AnimalProducts.quantityAvailable cannot be higher than quantity';
 		END IF;

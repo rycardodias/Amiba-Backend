@@ -39,16 +39,14 @@ BEGIN
 		IF(OLD."divider"<>NEW."divider") THEN
 			RAISE EXCEPTION 'EggsBatchProducts.divider cannot be changed';
 		END IF;
-		IF(OLD."quantityAvailable"<>NEW."quantityAvailable") THEN
-			RAISE EXCEPTION 'EggsBatchProducts.quantityAvailable cannot be changed';
+		IF(OLD."quantity"<>NEW."quantity") THEN
+			NEW."quantityAvailable" = OLD."quantityAvailable" + (NEW."quantity" - OLD."quantity");
 		END IF;
 		
-		NEW."quantityAvailable" = OLD."quantityAvailable" + (NEW."quantity" - OLD."quantity");
 
 		IF(NEW."quantityAvailable">NEW."quantity") THEN
-			RAISE EXCEPTION 'EggsBatchProducts.quantityAvailable cannot be higher than EggsBatchProducts.quantity';
+			RAISE EXCEPTION 'EggsBatchProducts.quantityAvailable cannot be higher than quantity';
 		END IF;
-
 	END IF;
 	RETURN NEW;
 
