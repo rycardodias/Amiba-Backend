@@ -48,5 +48,5 @@ EggsBatchProduct.belongsTo(EggsBatch, {
 })
 EggsBatch.hasMany(EggsBatchProduct)
 
-// EggsBatchProduct.sync({ alter: true })
+// EggsBatchProduct.sync({ force: true })
 module.exports = EggsBatchProduct

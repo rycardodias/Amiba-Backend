@@ -227,7 +227,7 @@ router.get('/me/:token', cache(15), async (req, res) => {
 
     try {
         const userID = jwt.verify(req.session.token || req.params.token, "MySecret");
-        const request = await Model.findByPk(userID.id)
+        const request = await Model.findByPk(userID.id, { attributes: ['id', 'name', 'permission'] }) 
 
         if (request) {
             response.data = request

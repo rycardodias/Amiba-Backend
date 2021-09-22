@@ -27,7 +27,7 @@ router.get('/', cache(), async (req, res) => {
 
 })
 
-router.get('/id/:id',  async (req, res) => {
+router.get('/id/:id', async (req, res) => {
     const response = new ResponseModel()
     try {
         if (!req.params.id) {
@@ -56,18 +56,18 @@ router.post('/create', removeCache('/orderLines', '/orders'), async (req, res) =
     try {
         const { OrderId, quantity, total, totalVAT, AnimalProductId, EggsBatchProductId } = req.body
 
-
-        if (!(OrderId && quantity && total && totalVAT && (AnimalProductId || EggsBatchProductId))) {
-            response.error = error_missing_fields
-            return res.status(400).json(response)
-        }
+        //FIXME não esta a deixar criar um estes parametros, falta os id ||id
+        // if (!(OrderId && quantity && total && totalVAT)) {
+        //     response.error = error_missing_fields
+        //     return res.status(400).json(response)
+        // }
 
         const data = {
             OrderId: OrderId,
             quantity: quantity,
             total: total,
-            totalVAT: totalVAT, 
-            AnimalProductId: AnimalProductId, 
+            totalVAT: totalVAT,
+            AnimalProductId: AnimalProductId,
             EggsBatchProductId: EggsBatchProductId,
         }
 
@@ -104,7 +104,7 @@ router.put('/update', removeCache('/orderLines', '/orders'), async (req, res) =>
             quantity: quantity,
             total: total,
             totalVAT: totalVAT,
-            AnimalProductId: AnimalProductId, 
+            AnimalProductId: AnimalProductId,
             EggsBatchProductId: EggsBatchProductId,
         }
 

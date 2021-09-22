@@ -26,15 +26,6 @@ const EggsBatch = db.define('EggsBatch', {
             }
         }
     },
-    quantity: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        validate: {
-            notEmpty: {
-                msg: "quantity field is required",
-            }
-        }
-    },
 
 },
 )
@@ -44,4 +35,5 @@ EggsBatch.belongsTo(Race, {
 })
 Race.hasMany(EggsBatch)
 
+// EggsBatch.sync({ force: true })
 module.exports = EggsBatch

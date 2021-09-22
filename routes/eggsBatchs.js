@@ -54,10 +54,10 @@ router.get('/id/:id', async (req, res) => {
 router.post('/create', removeCache(['/eggsBatchs']), async (req, res) => {
     const response = new ResponseModel()
     try {
-        const { name, caliber, quantity, RaceId } = req.body
+        const { name, caliber, RaceId } = req.body
 
 
-        if (!(name && caliber && quantity && RaceId)) {
+        if (!(name && caliber && RaceId)) {
             response.error = error_missing_fields
             return res.status(400).json(response)
         }
@@ -65,7 +65,6 @@ router.post('/create', removeCache(['/eggsBatchs']), async (req, res) => {
         const data = {
             name: name,
             caliber: caliber,
-            quantity: quantity,
             RaceId: RaceId,
         }
 
@@ -89,7 +88,7 @@ router.post('/create', removeCache(['/eggsBatchs']), async (req, res) => {
 router.put('/update', removeCache(['/eggsBatchs']), async (req, res) => {
     const response = new ResponseModel()
     try {
-        const { id, name, quantity } = req.body
+        const { id, name } = req.body
 
         if (!id) {
             response.error = error_missing_fields
@@ -101,7 +100,7 @@ router.put('/update', removeCache(['/eggsBatchs']), async (req, res) => {
         }
 
         const request = await Model.update(data, { where: { id: id } })
-        
+
         if (request == 1) {
             response.data = success_row_update
             res.status(200).json(response)

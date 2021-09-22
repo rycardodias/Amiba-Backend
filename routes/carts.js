@@ -91,8 +91,8 @@ router.get('/UserId/Product/:UserId', async (req, res) => {
         const request = await Model.findAll({
             where: { UserId: UserId },
             include: [
-                { model: AnimalProduct, attributes: ['ProductId'], include: Product },
-                { model: EggsBatchProduct, attributes: ['ProductId'], include: Product }
+                { model: AnimalProduct,  include: Product },
+                { model: EggsBatchProduct,  include: Product }
             ]
         })
 
