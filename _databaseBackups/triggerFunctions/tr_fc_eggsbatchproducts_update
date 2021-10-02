@@ -1,0 +1,54 @@
+-- FUNCTION: public.tr_fc_eggsbatchproducts_update()
+
+-- DROP FUNCTION public.tr_fc_eggsbatchproducts_update();
+
+CREATE FUNCTION public.tr_fc_eggsbatchproducts_update()
+    RETURNS trigger
+    LANGUAGE 'plpgsql'
+    COST 100
+    VOLATILE NOT LEAKPROOF
+AS $BODY$
+DECLARE
+	v_quantity integer default 0;
+	v_quantityAvailable integer default 0;
+BEGIN
+	IF (NEW."quantity" <1) THEN
+		RAISE EXCEPTION 'Quantity must be greater than 0';
+	END IF;
+	IF (NEW."divider" <1) THEN
+		RAISE EXCEPTION 'divider must be greater than 0';
+	END IF;
+	IF((NEW."quantity"%NEW."divider")<>0) THEN
+		RAISE EXCEPTION 'quantity must have 0 remaining from division';
+	END IF;
+	IF (NEW."quantityAvailable"<>OLD."quantityAvailable") THEN
+		RAISE EXCEPTION 'quantityAvailable cannot be changed';
+	END IF;
+	IF (NEW."ProductId"<>OLD."ProductId") THEN
+		RAISE EXCEPTION 'ProductId cannot be changed';
+	END IF;
+	IF (NEW."EggsBatchId"<>OLD."EggsBatchId") THEN
+		RAISE EXCEPTION 'EggsBatchId cannot be changed';
+	END IF;
+	
+	NEW."quantityAvailable" = OLD."quantityAvailable" + (NEW."quantity"- OLD."quantity");
+	
+	SELECT "quantityAvailable"
+	  INTO v_quantityAvailable
+	  FROM public."EggsBatches"
+	 WHERE "id" = NEW."EggsBatchId";
+	 
+	 IF ((v_quantityAvailable + (OLD."quantity" - NEW."quantity")) <0) THEN
+		RAISE EXCEPTION 'quantity required is greater than available';
+	END IF;
+	 
+	 UPDATE public."EggsBatches"
+	    SET "quantityAvailable" = v_quantityAvailable + (OLD."quantity" - NEW."quantity")
+	  WHERE "id" = NEW."EggsBatchId";
+	RETURN NEW;
+
+END;
+$BODY$;
+
+ALTER FUNCTION public.tr_fc_eggsbatchproducts_update()
+    OWNER TO postgres;

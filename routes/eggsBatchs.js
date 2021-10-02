@@ -8,7 +8,7 @@ const Race = require('../models/Race')
 const cache = require('../lib/cache/routeCache')
 const removeCache = require('../lib/cache/removeCache')
 
-router.get('/', cache(), async (req, res) => {
+router.get('/', async (req, res) => {
     const response = new ResponseModel()
     try {
         const request = await Model.findAll({ include: Race })

@@ -1,0 +1,29 @@
+-- FUNCTION: public.tr_fc_eggsbatchproducts_delete()
+
+-- DROP FUNCTION public.tr_fc_eggsbatchproducts_delete();
+
+CREATE FUNCTION public.tr_fc_eggsbatchproducts_delete()
+    RETURNS trigger
+    LANGUAGE 'plpgsql'
+    COST 100
+    VOLATILE NOT LEAKPROOF
+AS $BODY$
+DECLARE
+	v_quantity integer default 0;
+	v_quantityAvailable integer default 0;
+BEGIN
+	SELECT "quantityAvailable"
+	  INTO v_quantityAvailable
+	  FROM public."EggsBatches"
+	 WHERE "id" = NEW."EggsBatchId";
+	 
+	 UPDATE public."EggsBatches"
+	    SET "quantityAvailable" = v_quantityAvailable + OLD."quantity"
+	  WHERE "id" = NEW."EggsBatchId";
+	  
+	RETURN OLD;
+END;
+$BODY$;
+
+ALTER FUNCTION public.tr_fc_eggsbatchproducts_delete()
+    OWNER TO postgres;
