@@ -1,8 +1,8 @@
--- FUNCTION: public.tr_fc_eggsbatchexplorations_create()
+-- FUNCTION: public.tr_fc_eggsbatchexplorations_insert()
 
--- DROP FUNCTION public.tr_fc_eggsbatchexplorations_create();
+-- DROP FUNCTION public.tr_fc_eggsbatchexplorations_insert();
 
-CREATE OR REPLACE FUNCTION public.tr_fc_eggsbatchexplorations_create()
+CREATE FUNCTION public.tr_fc_eggsbatchexplorations_insert()
     RETURNS trigger
     LANGUAGE 'plpgsql'
     COST 100
@@ -12,6 +12,10 @@ DECLARE
 	v_quantity integer default 0;
 	v_quantityAvailable integer default 0;
 BEGIN
+	IF(NEW."quantity"<1) THEN
+		RAISE EXCEPTION 'Quantity must be greater than 0';
+	END IF;
+	
 	SELECT COALESCE("quantity", 0), COALESCE("quantityAvailable", 0)
 	  INTO v_quantity, v_quantityAvailable
 	  FROM public."EggsBatches"
@@ -26,5 +30,5 @@ BEGIN
 END;
 $BODY$;
 
-ALTER FUNCTION public.tr_fc_eggsbatchexplorations_create()
+ALTER FUNCTION public.tr_fc_eggsbatchexplorations_insert()
     OWNER TO postgres;

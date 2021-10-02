@@ -1,0 +1,9 @@
+-- Trigger: tr_eggsbatchexplorations_update
+
+-- DROP TRIGGER tr_eggsbatchexplorations_update ON public."EggsBatchExplorations";
+
+CREATE TRIGGER tr_eggsbatchexplorations_update
+    BEFORE UPDATE
+    ON public."EggsBatchExplorations"
+    FOR EACH ROW
+    EXECUTE FUNCTION public.tr_fc_eggsbatchexplorations_update();

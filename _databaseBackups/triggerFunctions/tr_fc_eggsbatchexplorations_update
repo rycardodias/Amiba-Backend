@@ -1,0 +1,34 @@
+-- FUNCTION: public.tr_fc_eggsbatchexplorations_update()
+
+-- DROP FUNCTION public.tr_fc_eggsbatchexplorations_update();
+
+CREATE FUNCTION public.tr_fc_eggsbatchexplorations_update()
+    RETURNS trigger
+    LANGUAGE 'plpgsql'
+    COST 100
+    VOLATILE NOT LEAKPROOF
+AS $BODY$
+DECLARE
+	v_quantity integer default 0;
+	v_quantityAvailable integer default 0;
+BEGIN
+	IF(NEW."quantity"<1) THEN
+		RAISE EXCEPTION 'quantity must be greater than 0';
+	END IF;
+	
+	SELECT COALESCE("quantity", 0), COALESCE("quantityAvailable", 0)
+	  INTO v_quantity, v_quantityAvailable
+	  FROM public."EggsBatches"
+	 WHERE "id" = NEW."EggsBatchId"; 
+	 
+	UPDATE public."EggsBatches"
+	   SET "quantity" = v_quantity + (NEW."quantity" - OLD."quantity"),
+	       "quantityAvailable" = v_quantityAvailable + (NEW."quantity" - OLD."quantity")
+	 WHERE "id" = NEW."EggsBatchId";
+	
+	RETURN NEW;
+END;
+$BODY$;
+
+ALTER FUNCTION public.tr_fc_eggsbatchexplorations_update()
+    OWNER TO postgres;
