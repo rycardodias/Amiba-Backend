@@ -28,7 +28,7 @@ router.get('/', cache(), async (req, res) => {
 
 })
 
-router.get('/id/:id',  async (req, res) => {
+router.get('/id/:id', async (req, res) => {
     const response = new ResponseModel()
     try {
         if (!req.params.id) {
@@ -55,18 +55,15 @@ router.get('/id/:id',  async (req, res) => {
 router.post('/create', removeCache(['/orders']), async (req, res) => {
     const response = new ResponseModel()
     try {
-        const { UserId, total, totalVAT, address, locale, zipcode, observation, fiscalNumber } = req.body
+        const { UserId, address, locale, zipcode, observation, fiscalNumber } = req.body
 
-
-        if (!(UserId && total && totalVAT && address && locale && zipcode && fiscalNumber)) {
+        if (!(UserId)) {
             response.error = error_missing_fields
             return res.status(400).json(response)
         }
 
         const data = {
             UserId: UserId,
-            total: total,
-            totalVAT: totalVAT,
             address: address,
             locale: locale,
             zipcode: zipcode,

@@ -26,6 +26,12 @@ const EggsBatch = db.define('EggsBatch', {
             }
         }
     },
+    quantity: {
+        type: DataTypes.INTEGER,
+    },
+    quantityAvailable: {
+        type: DataTypes.INTEGER,
+    },
 
 },
 )

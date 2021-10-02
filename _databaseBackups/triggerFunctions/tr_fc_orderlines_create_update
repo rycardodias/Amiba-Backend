@@ -14,8 +14,13 @@ DECLARE
 	v_existing_quantity integer default 0;
 	
 	v_UserId uuid;
+	v_ProductId uuid;
 	v_quantity_carts integer default 0;
 	v_quantity_products integer default 0;
+	v_product_unit varchar(255);
+	v_product_price float;
+	v_animalProduct_weight integer default 0;
+	v_product_tax integer default 0;
 	
 BEGIN
 	IF (NEW."AnimalProductId" IS NOT NULL AND NEW."EggsBatchProductId" IS NOT NULL) THEN
@@ -95,8 +100,8 @@ BEGIN
 	END IF;
 	
 	IF(NEW."AnimalProductId" IS NOT NULL) THEN
-		SELECT quantity
-		  INTO v_quantity_products 
+		SELECT quantity, "ProductId", "weight"
+		  INTO v_quantity_products, v_ProductId, v_animalProduct_weight
 		  FROM public."AnimalProducts"
 		 WHERE "AnimalProducts"."id" = NEW."AnimalProductId";
 		 
@@ -107,10 +112,29 @@ BEGIN
 		UPDATE public."AnimalProducts"
 		   SET "quantityAvailable" = (v_quantity_products - NEW."quantity")
 		 WHERE "AnimalProducts"."id" = NEW."AnimalProductId";
+		 
+		  
+		  
+		 /* CALCULAR O PREÇO APARTIR DAS UNIDADES DOS PRODUTOS*/
+		 SELECT "unit", "tax", "price"
+		   INTO v_product_unit, v_product_tax, v_product_price
+		   FROM public."Products"
+		  WHERE "id" = v_ProductId;
+		  
+		 
+		 IF(v_product_unit = 'UNID') THEN
+		 	NEW."total"= NEW."quantity" * v_product_price::float;
+		 ELSIF (v_product_unit = 'KG') THEN
+		 	NEW."total"=  NEW."quantity" * (v_animalProduct_weight::float(2)/1000) * v_product_price::float;
+		 END IF;
+		 
+		 NEW."totalVAT"= NEW."total" * (v_product_tax::float/100);
+		 
+		 
 	
 	ELSIF(NEW."EggsBatchProductId" IS NOT NULL) THEN
-		SELECT quantity
-		  INTO v_quantity_products
+		SELECT quantity, "ProductId"
+		  INTO v_quantity_products, v_ProductId
 		  FROM public."EggsBatchProducts"
 		 WHERE "EggsBatchProducts"."id" = NEW."EggsBatchProductId";
 		 
@@ -121,6 +145,15 @@ BEGIN
 		UPDATE public."EggsBatchProducts"
 		   SET "quantityAvailable" = (v_quantity_products - NEW."quantity")
 		 WHERE "EggsBatchProducts"."id" = NEW."EggsBatchProductId";
+		 
+		 /* CALCULAR O PREÇO APARTIR DAS UNIDADES DOS PRODUTOS*/
+		 SELECT "tax", "price"
+		   INTO v_product_tax, v_product_price
+		   FROM public."Products"
+		  WHERE "id" = v_ProductId;
+		 
+		 NEW."total"= NEW."quantity" * v_product_price::float;
+		 NEW."totalVAT"= NEW."total" * (v_product_tax::float/100);
 	END IF;
 		RETURN NEW;
 

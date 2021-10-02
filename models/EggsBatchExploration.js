@@ -4,6 +4,15 @@ const Exploration = require('./Exploration');
 const EggsBatch = require('./EggsBatch');
 
 const EggsBatchExploration = db.define('EggsBatchExploration', {
+    quantity: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        validate: {
+            notEmpty: {
+                msg: "quantity field is required",
+            }
+        }
+    },
 },
 )
 

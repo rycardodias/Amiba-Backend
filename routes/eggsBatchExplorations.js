@@ -56,17 +56,17 @@ router.get('/id/:ExplorationId/:EggsBatchId', async (req, res) => {
 router.post('/create', removeCache(['/eggsBatchExplorations']), async (req, res) => {
     const response = new ResponseModel()
     try {
-        const { ExplorationId, EggsBatchId } = req.body
+        const { ExplorationId, EggsBatchId, quantity } = req.body
 
-
-        if (!(ExplorationId && EggsBatchId)) {
+        if (!(ExplorationId && EggsBatchId && quantity)) {
             response.error = error_missing_fields
             return res.status(400).json(response)
         }
 
         const data = {
             ExplorationId: ExplorationId,
-            EggsBatchId: EggsBatchId
+            EggsBatchId: EggsBatchId,
+            quantity: quantity,
         }
 
         const request = await Model.create(data)
@@ -89,7 +89,7 @@ router.post('/create', removeCache(['/eggsBatchExplorations']), async (req, res)
 router.put('/update', removeCache(['/eggsBatchExplorations']), async (req, res) => {
     const response = new ResponseModel()
     try {
-        const { ExplorationId, EggsBatchId } = req.body
+        const { ExplorationId, EggsBatchId, quantity } = req.body
 
         if (!(ExplorationId && EggsBatchId)) {
             response.error = error_missing_fields
@@ -98,7 +98,8 @@ router.put('/update', removeCache(['/eggsBatchExplorations']), async (req, res) 
 
         const data = {
             ExplorationId: ExplorationId,
-            EggsBatchId: EggsBatchId
+            EggsBatchId: EggsBatchId,
+            quantity: quantity,
         }
 
         const request = await Model.update(data, { where: { ExplorationId: ExplorationId, EggsBatchId: EggsBatchId } })

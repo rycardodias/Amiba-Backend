@@ -21,29 +21,12 @@ const OrderLine = db.define('OrderLine', {
     },
     total: {
         type: DataTypes.FLOAT,
-        allowNull: false,
-        validate: {
-            notEmpty: {
-                msg: "total field is required",
-            }
-        },
     },
     totalVAT: {
         type: DataTypes.FLOAT,
-        allowNull: false,
-        validate: {
-            notEmpty: {
-                msg: "totalVAT field is required",
-            }
-        },
     },
 },
 )
-
-// OrderLine.beforeCreate(orderLine => {
-//     Order.create(UserId, total, totalVAT, address, locale, zipcode, observation, fiscalNumber)
-//     console.log("teste create", user)
-// })
 
 OrderLine.belongsTo(Order, {
     onDelete: 'RESTRICT',
@@ -64,6 +47,6 @@ OrderLine.belongsTo(EggsBatchProduct, {
 EggsBatchProduct.hasMany(OrderLine)
 
 
-
+// OrderLine.sync({ force: true })
 
 module.exports = OrderLine

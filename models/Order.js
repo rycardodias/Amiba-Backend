@@ -11,6 +11,7 @@ const Order = db.define('Order', {
     total: {
         type: DataTypes.FLOAT,
         allowNull: false,
+        defaultValue: 0,
         validate: {
             notEmpty: {
                 msg: "total field is required",
@@ -20,6 +21,7 @@ const Order = db.define('Order', {
     totalVAT: {
         type: DataTypes.FLOAT,
         allowNull: false,
+        defaultValue: 0,
         validate: {
             notEmpty: {
                 msg: "totalVAT field is required",
@@ -28,30 +30,12 @@ const Order = db.define('Order', {
     },
     address: {
         type: DataTypes.STRING,
-        allowNull: false,
-        validate: {
-            notEmpty: {
-                msg: "address field is required",
-            }
-        },
     },
     locale: {
         type: DataTypes.STRING,
-        allowNull: false,
-        validate: {
-            notEmpty: {
-                msg: "locale field is required",
-            }
-        },
     },
     zipcode: {
         type: DataTypes.STRING,
-        allowNull: false,
-        validate: {
-            notEmpty: {
-                msg: "zipcode field is required",
-            }
-        },
     },
     observation: {
         type: DataTypes.STRING,
@@ -59,14 +43,6 @@ const Order = db.define('Order', {
     fiscalNumber: {
         type: DataTypes.STRING,
     },
-    UserId: {
-        type: DataTypes.UUID,
-        allowNull: false,
-        references: {
-            model: User,
-            key: 'id'
-        }
-    }
 },
 )
 
@@ -75,5 +51,7 @@ Order.belongsTo(User, {
     onUpdate: 'RESTRICT'
 })
 User.hasMany(Order)
+
+// Order.sync({ force: true })
 
 module.exports = Order

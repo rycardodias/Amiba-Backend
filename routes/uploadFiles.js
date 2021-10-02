@@ -7,10 +7,11 @@ const fs = require('fs')
 const ResponseModel = require('../lib/ResponseModel')
 const { uuid } = require('uuidv4')
 
-router.get("/:file", async (req, res) => {
+router.get("/:folder/:file", async (req, res) => {
     try {
-        let img = "../Projeto-Investigacao/public/uploads/" + req.params.file
-
+        const folder = req.params.folder + '/'
+        const img = "../Projeto-Investigacao/public/uploads/" + folder + req.params.file
+        console.log(img)
         fs.access(img, fs.constants.F_OK, err => {
             return err
         })
@@ -26,14 +27,13 @@ router.get("/:file", async (req, res) => {
             }
         })
     } catch (error) {
-
     }
 })
 
 router.post("/create", async (req, res) => {
     const response = new ResponseModel()
-
     try {
+        const directory = req.body.directory
         const file = req.files.file
         const fileName = file.name
         const size = file.data.length
@@ -46,12 +46,15 @@ router.post("/create", async (req, res) => {
 
         const md5 = file.md5
 
-        const URL = "/uploads/" + md5 + uuid() + extension
+        const fileNameSaved = md5 + uuid() + extension
+
+        const URL = "/uploads/" + directory + '/' + fileNameSaved
+        console.log(URL)
 
         await util.promisify(file.mv)("../Projeto-Investigacao/public" + URL)
 
         response.message = "file uploaded"
-        response.data = { url: URL }
+        response.data = { url: URL, fileName: fileNameSaved }
 
         res.status(200).json(response)
     } catch (error) {
