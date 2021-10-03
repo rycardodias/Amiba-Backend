@@ -88,6 +88,8 @@ BEGIN
 		NEW."total"= NEW."quantity" * v_product_price::float;
 	ELSIF (v_product_unit = 'KG') THEN
 		NEW."total"=  NEW."quantity" * (v_animalProduct_weight::float(2)/1000) * v_product_price::float;
+	ELSIF(v_product_unit = 'DOZEN') THEN
+		NEW."total"= (NEW."quantity" * v_product_price::float) / 12;
 	END IF;
 
 	NEW."totalVAT"= NEW."total" * (v_product_tax::float/100);

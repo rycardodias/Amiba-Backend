@@ -22,26 +22,26 @@ SET row_security = off;
 
 CREATE FUNCTION public.tr_fc_animalproducts_insert() RETURNS trigger
     LANGUAGE plpgsql
-    AS $$
-DECLARE
-	v_unit varchar(50);
-BEGIN
-	IF (NEW."quantity" <1) THEN
-		RAISE EXCEPTION 'Quantity cannot be lower than 1';
-	END IF;
-	
-	SELECT "unit"
-	  INTO v_unit
-	  FROM public."Products"
-	 WHERE "Products"."id" = NEW."ProductId";
-	 
-	IF(v_unit = 'KG' AND NEW."weight"<1) THEN
-		RAISE EXCEPTION 'Products in KG must have weight';
-	END IF;
-	 
-	NEW."quantityAvailable" = NEW."quantity";
-	RETURN NEW;
-END;
+    AS $$
+DECLARE
+	v_unit varchar(50);
+BEGIN
+	IF (NEW."quantity" <1) THEN
+		RAISE EXCEPTION 'Quantity cannot be lower than 1';
+	END IF;
+	
+	SELECT "unit"
+	  INTO v_unit
+	  FROM public."Products"
+	 WHERE "Products"."id" = NEW."ProductId";
+	 
+	IF(v_unit = 'KG' AND NEW."weight"<1) THEN
+		RAISE EXCEPTION 'Products in KG must have weight';
+	END IF;
+	 
+	NEW."quantityAvailable" = NEW."quantity";
+	RETURN NEW;
+END;
 $$;
 
 
@@ -53,50 +53,50 @@ ALTER FUNCTION public.tr_fc_animalproducts_insert() OWNER TO postgres;
 
 CREATE FUNCTION public.tr_fc_animalproducts_update() RETURNS trigger
     LANGUAGE plpgsql
-    AS $$
-DECLARE
-	v_unit varchar(50);
-BEGIN
-	IF (NEW."quantity" <1) THEN
-		RAISE EXCEPTION 'Quantity cannot be lower than 1';
-	END IF;
-
-	
-	IF(OLD."id"<>NEW."id") THEN
-		RAISE EXCEPTION 'AnimalProducts.id cannot be changed';
-	END IF;
-	IF(OLD."createdAt"<>NEW."createdAt") THEN
-		RAISE EXCEPTION 'AnimalProducts.createdAt cannot be changed';
-	END IF;
-	IF(OLD."ProductId"<>NEW."ProductId") THEN
-		RAISE EXCEPTION 'AnimalProducts.ProductId cannot be changed';
-	END IF;
-	IF(OLD."AnimalId"<>NEW."AnimalId") THEN
-		RAISE EXCEPTION 'AnimalProducts.AnimalId cannot be changed';
-	END IF;
-	IF(OLD."weight"<>NEW."weight") THEN
-		RAISE EXCEPTION 'AnimalProducts.weight cannot be changed';
-	END IF;
-	
-	SELECT "unit"
-	  INTO v_unit
-	  FROM public."Products"
-	 WHERE "Products"."id" = NEW."ProductId";
-	 
-	IF(v_unit = 'KG' AND NEW."weight"<1) THEN
-			RAISE EXCEPTION 'Products in KG must have weight';
-	END IF;
-	 
-	IF(OLD."quantity"<>NEW."quantity") THEN
-		NEW."quantityAvailable" = OLD."quantityAvailable" + (NEW."quantity" - OLD."quantity");
-	END IF;
-	
-	IF(NEW."quantityAvailable" >NEW."quantity") THEN
-		RAISE EXCEPTION 'AnimalProducts.quantityAvailable cannot be greater then AnimalProducts.quantity';
-	END IF;
-	
-	RETURN NEW;
-END;
+    AS $$
+DECLARE
+	v_unit varchar(50);
+BEGIN
+	IF (NEW."quantity" <1) THEN
+		RAISE EXCEPTION 'Quantity cannot be lower than 1';
+	END IF;
+
+	
+	IF(OLD."id"<>NEW."id") THEN
+		RAISE EXCEPTION 'AnimalProducts.id cannot be changed';
+	END IF;
+	IF(OLD."createdAt"<>NEW."createdAt") THEN
+		RAISE EXCEPTION 'AnimalProducts.createdAt cannot be changed';
+	END IF;
+	IF(OLD."ProductId"<>NEW."ProductId") THEN
+		RAISE EXCEPTION 'AnimalProducts.ProductId cannot be changed';
+	END IF;
+	IF(OLD."AnimalId"<>NEW."AnimalId") THEN
+		RAISE EXCEPTION 'AnimalProducts.AnimalId cannot be changed';
+	END IF;
+	IF(OLD."weight"<>NEW."weight") THEN
+		RAISE EXCEPTION 'AnimalProducts.weight cannot be changed';
+	END IF;
+	
+	SELECT "unit"
+	  INTO v_unit
+	  FROM public."Products"
+	 WHERE "Products"."id" = NEW."ProductId";
+	 
+	IF(v_unit = 'KG' AND NEW."weight"<1) THEN
+			RAISE EXCEPTION 'Products in KG must have weight';
+	END IF;
+	 
+	IF(OLD."quantity"<>NEW."quantity") THEN
+		NEW."quantityAvailable" = OLD."quantityAvailable" + (NEW."quantity" - OLD."quantity");
+	END IF;
+	
+	IF(NEW."quantityAvailable" >NEW."quantity") THEN
+		RAISE EXCEPTION 'AnimalProducts.quantityAvailable cannot be greater then AnimalProducts.quantity';
+	END IF;
+	
+	RETURN NEW;
+END;
 $$;
 
 
@@ -108,17 +108,17 @@ ALTER FUNCTION public.tr_fc_animalproducts_update() OWNER TO postgres;
 
 CREATE FUNCTION public.tr_fc_animals_insert() RETURNS trigger
     LANGUAGE plpgsql
-    AS $$
-DECLARE
-	
-BEGIN
-	IF (NEW."weight" <1) THEN
-		RAISE EXCEPTION 'weight cannot be lower than 1';
-	END IF;
-	
-	RETURN NEW;
-
-END;
+    AS $$
+DECLARE
+	
+BEGIN
+	IF (NEW."weight" <1) THEN
+		RAISE EXCEPTION 'weight cannot be lower than 1';
+	END IF;
+	
+	RETURN NEW;
+
+END;
 $$;
 
 
@@ -130,40 +130,220 @@ ALTER FUNCTION public.tr_fc_animals_insert() OWNER TO postgres;
 
 CREATE FUNCTION public.tr_fc_animals_update() RETURNS trigger
     LANGUAGE plpgsql
+    AS $$
+DECLARE
+	
+BEGIN
+	IF (NEW."weight" <1) THEN
+		RAISE EXCEPTION 'weight cannot be lower than 1';
+	END IF;
+	IF(OLD."id"<>NEW."id") THEN
+		RAISE EXCEPTION 'Animals.id cannot be changed';
+	END IF;
+	IF(OLD."createdAt"<>NEW."createdAt") THEN
+		RAISE EXCEPTION 'Animals.createdAt cannot be changed';
+	END IF;
+	IF(OLD."gender"<>NEW."gender") THEN
+		RAISE EXCEPTION 'Animals.gender cannot be changed';
+	END IF;
+	IF(OLD."birthDate"<>NEW."birthDate") THEN
+		RAISE EXCEPTION 'Animals.birthDate cannot be changed';
+	END IF;
+	IF(OLD."weight"<>NEW."weight") THEN
+		RAISE EXCEPTION 'Animals.weight cannot be changed';
+	END IF;
+	IF(OLD."RaceId"<>NEW."RaceId") THEN
+		RAISE EXCEPTION 'Animals.RaceId cannot be changed';
+	END IF;
+	IF(OLD."ExplorationId"<>NEW."ExplorationId") THEN
+		RAISE EXCEPTION 'Animals.ExplorationId cannot be changed';
+	END IF;
+	RETURN NEW;
+END;
+$$;
+
+
+ALTER FUNCTION public.tr_fc_animals_update() OWNER TO postgres;
+
+--
+-- Name: tr_fc_carts_delete(); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION public.tr_fc_carts_delete() RETURNS trigger
+    LANGUAGE plpgsql
     AS $$
 DECLARE
-	
+	v_lastQuantityAvailable integer default 0;
+	v_newQuantityAvailable integer default 0;
 BEGIN
-	IF (NEW."weight" <1) THEN
-		RAISE EXCEPTION 'weight cannot be lower than 1';
+	IF(OLD."AnimalProductId" IS NOT NULL) THEN
+		SELECT "quantityAvailable"
+		  INTO v_lastQuantityAvailable
+		  FROM public."AnimalProducts"
+		 WHERE "id" = OLD."AnimalProductId";
+		 
+		 v_newQuantityAvailable = (v_lastQuantityAvailable + OLD."quantity");
+
+	   	UPDATE public."AnimalProducts"
+		   SET  "quantityAvailable"= v_newQuantityAvailable
+		 WHERE "id" = OLD."AnimalProductId";
+	ELSE
+		SELECT "quantityAvailable"
+		  INTO v_lastQuantityAvailable
+	 	  FROM public."EggsBatchProducts"
+		 WHERE "id" = OLD."EggsBatchProductId";
+	
+		v_newQuantityAvailable = (v_lastQuantityAvailable + OLD."quantity");
+
+	   UPDATE public."EggsBatchProducts"
+		  SET  "quantityAvailable"= v_newQuantityAvailable
+		WHERE "id" = OLD."EggsBatchProductId";
 	END IF;
-	IF(OLD."id"<>NEW."id") THEN
-		RAISE EXCEPTION 'Animals.id cannot be changed';
+	
+	RETURN OLD;
+END;
+$$;
+
+
+ALTER FUNCTION public.tr_fc_carts_delete() OWNER TO postgres;
+
+--
+-- Name: tr_fc_carts_insert(); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION public.tr_fc_carts_insert() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+DECLARE
+	v_newQuantityAvailable integer default 0;
+	v_quantity integer default 0;
+	v_existing_quantity integer default 0;
+BEGIN
+	IF (NEW."AnimalProductId" IS NOT NULL AND NEW."EggsBatchProductId" IS NOT NULL) THEN
+		RAISE EXCEPTION 'Record cannot have AnimalProductId and EggsBatchProductId fields';
 	END IF;
-	IF(OLD."createdAt"<>NEW."createdAt") THEN
-		RAISE EXCEPTION 'Animals.createdAt cannot be changed';
+	
+	IF (NEW."quantity" <1) THEN
+		RAISE EXCEPTION 'Quantity cannot be lower than 1';
 	END IF;
-	IF(OLD."gender"<>NEW."gender") THEN
-		RAISE EXCEPTION 'Animals.gender cannot be changed';
+	
+	SELECT quantity
+	  INTO v_existing_quantity
+	  FROM public."Carts"
+	 WHERE "Carts"."UserId" = NEW."UserId"
+	   AND ("Carts"."AnimalProductId" = NEW."AnimalProductId"
+		 	OR "Carts"."EggsBatchProductId" = NEW."EggsBatchProductId");
+	
+	IF(v_existing_quantity IS NOT NULL) THEN	
+		UPDATE public."Carts"
+		   SET  "quantity" = (v_existing_quantity + NEW."quantity")
+		 WHERE "Carts"."UserId" = NEW."UserId"
+		   AND ("Carts"."AnimalProductId" = NEW."AnimalProductId"
+			   OR "Carts"."EggsBatchProductId" = NEW."EggsBatchProductId");
+		RETURN OLD;
 	END IF;
-	IF(OLD."birthDate"<>NEW."birthDate") THEN
-		RAISE EXCEPTION 'Animals.birthDate cannot be changed';
+	
+	IF(NEW."AnimalProductId" IS NOT NULL) THEN
+		SELECT "quantity"
+		  INTO v_quantity
+		  FROM public."AnimalProducts"
+		 WHERE "id" = NEW."AnimalProductId";
+	ELSIF(NEW."EggsBatchProductId" IS NOT NULL) THEN
+		SELECT "quantity"
+		  INTO v_quantity
+		  FROM public."EggsBatchProducts"
+		 WHERE "id" = NEW."EggsBatchProductId";
 	END IF;
-	IF(OLD."weight"<>NEW."weight") THEN
-		RAISE EXCEPTION 'Animals.weight cannot be changed';
+	
+	 v_newQuantityAvailable = (v_quantity - NEW."quantity");
+
+	 IF(v_newQuantityAvailable<0) THEN
+		RAISE EXCEPTION 'quantityAvailable cannot be lower than 0';
+	 END IF;
+	 
+	 IF(NEW."AnimalProductId" IS NOT NULL) THEN
+	 	UPDATE public."AnimalProducts"
+		   SET  "quantityAvailable" = v_newQuantityAvailable
+		 WHERE "id" = NEW."AnimalProductId";
+	 ELSIF(NEW."EggsBatchProductId" IS NOT NULL) THEN		 
+		UPDATE public."EggsBatchProducts"
+		   SET  "quantityAvailable"= v_newQuantityAvailable
+		 WHERE "id" = NEW."EggsBatchProductId";
 	END IF;
-	IF(OLD."RaceId"<>NEW."RaceId") THEN
-		RAISE EXCEPTION 'Animals.RaceId cannot be changed';
-	END IF;
-	IF(OLD."ExplorationId"<>NEW."ExplorationId") THEN
-		RAISE EXCEPTION 'Animals.ExplorationId cannot be changed';
-	END IF;
+	
 	RETURN NEW;
 END;
 $$;
 
 
-ALTER FUNCTION public.tr_fc_animals_update() OWNER TO postgres;
+ALTER FUNCTION public.tr_fc_carts_insert() OWNER TO postgres;
+
+--
+-- Name: tr_fc_carts_update(); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION public.tr_fc_carts_update() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+DECLARE
+	v_newQuantityAvailable integer default 0;
+	v_quantity integer default 0;
+	v_existing_quantity integer default 0;
+BEGIN	
+	IF (NEW."quantity" <1) THEN
+		RAISE EXCEPTION 'Quantity cannot be lower than 1';
+	END IF;
+	
+	IF(OLD."id"<>NEW."id") THEN
+		RAISE EXCEPTION 'Carts.id cannot be changed';
+	END IF;
+	IF(OLD."createdAt"<>NEW."createdAt") THEN
+		RAISE EXCEPTION 'Carts.createdAt cannot be changed';
+	END IF;
+	IF(OLD."AnimalProductId"<>NEW."AnimalProductId") THEN
+		RAISE EXCEPTION 'Carts.AnimalProductId cannot be changed';
+	END IF;
+	IF(OLD."EggsBatchProductId"<>NEW."EggsBatchProductId") THEN
+		RAISE EXCEPTION 'Carts.EggsBatchProductId cannot be changed';
+	END IF;
+	IF(OLD."UserId"<>NEW."UserId") THEN
+		RAISE EXCEPTION 'Carts.UserId cannot be changed';
+	END IF;
+	
+	IF(NEW."AnimalProductId" IS NOT NULL) THEN
+		SELECT "quantity"
+		  INTO v_quantity
+		  FROM public."AnimalProducts"
+		 WHERE "id" = NEW."AnimalProductId";
+	ELSIF(NEW."EggsBatchProductId" IS NOT NULL) THEN
+		SELECT "quantity"
+		  INTO v_quantity
+		  FROM public."EggsBatchProducts"
+		 WHERE "id" = NEW."EggsBatchProductId";
+	END IF;
+	
+	 v_newQuantityAvailable = (v_quantity - NEW."quantity");
+
+	 IF(v_newQuantityAvailable<0) THEN
+		RAISE EXCEPTION 'quantityAvailable cannot be lower than 0';
+	 END IF;
+	 
+	 IF(NEW."AnimalProductId" IS NOT NULL) THEN
+	 	UPDATE public."AnimalProducts"
+		   SET  "quantityAvailable" = v_newQuantityAvailable
+		 WHERE "id" = NEW."AnimalProductId";
+	 ELSIF(NEW."EggsBatchProductId" IS NOT NULL) THEN		 
+		UPDATE public."EggsBatchProducts"
+		   SET  "quantityAvailable"= v_newQuantityAvailable
+		 WHERE "id" = NEW."EggsBatchProductId";
+	END IF;
+	
+	RETURN NEW;
+END;
+$$;
+
+
+ALTER FUNCTION public.tr_fc_carts_update() OWNER TO postgres;
 
 --
 -- Name: tr_fc_certifications_update(); Type: FUNCTION; Schema: public; Owner: postgres
@@ -171,35 +351,266 @@ ALTER FUNCTION public.tr_fc_animals_update() OWNER TO postgres;
 
 CREATE FUNCTION public.tr_fc_certifications_update() RETURNS trigger
     LANGUAGE plpgsql
+    AS $$
+DECLARE
+	
+BEGIN
+	IF(OLD."id"<>NEW."id") THEN
+		RAISE EXCEPTION 'Certifications.id cannot be changed';
+	END IF;
+	IF(OLD."createdAt"<>NEW."createdAt") THEN
+		RAISE EXCEPTION 'Certifications.createdAt cannot be changed';
+	END IF;
+	IF(OLD."certificationCode"<>NEW."certificationCode") THEN
+		RAISE EXCEPTION 'Certifications.certificationCode cannot be changed';
+	END IF;
+	IF(OLD."initialDate"<>NEW."initialDate") THEN
+		RAISE EXCEPTION 'Certifications.initialDate cannot be changed';
+	END IF;
+	IF(OLD."finalDate"<>NEW."finalDate") THEN
+		RAISE EXCEPTION 'Certifications.finalDate cannot be changed';
+	END IF;
+	IF(OLD."ExplorationId"<>NEW."ExplorationId") THEN
+		RAISE EXCEPTION 'Certifications.ExplorationId cannot be changed';
+	END IF;
+
+	RETURN NEW;
+END;
+$$;
+
+
+ALTER FUNCTION public.tr_fc_certifications_update() OWNER TO postgres;
+
+--
+-- Name: tr_fc_eggsbatches_update(); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION public.tr_fc_eggsbatches_update() RETURNS trigger
+    LANGUAGE plpgsql
     AS $$
 DECLARE
-	
+	v_unit varchar(50);
 BEGIN
+	IF (NEW."quantity" <0) THEN
+		RAISE EXCEPTION 'EggsBatches.quantity cannot be lower than 0';
+	END IF;
+	IF (NEW."quantityAvailable" <0) THEN
+		RAISE EXCEPTION 'EggsBatches.quantityAvailable cannot be lower than 0';
+	END IF;
+	 
 	IF(OLD."id"<>NEW."id") THEN
-		RAISE EXCEPTION 'Certifications.id cannot be changed';
+		RAISE EXCEPTION 'EggsBatches.id cannot be changed';
 	END IF;
 	IF(OLD."createdAt"<>NEW."createdAt") THEN
-		RAISE EXCEPTION 'Certifications.createdAt cannot be changed';
+		RAISE EXCEPTION 'EggsBatches.createdAt cannot be changed';
 	END IF;
-	IF(OLD."certificationCode"<>NEW."certificationCode") THEN
-		RAISE EXCEPTION 'Certifications.certificationCode cannot be changed';
+	IF(OLD."RaceId"<>NEW."RaceId") THEN
+		RAISE EXCEPTION 'EggsBatches.RaceId cannot be changed';
 	END IF;
-	IF(OLD."initialDate"<>NEW."initialDate") THEN
-		RAISE EXCEPTION 'Certifications.initialDate cannot be changed';
+	IF(OLD."caliber"<>NEW."caliber") THEN
+		RAISE EXCEPTION 'EggsBatches.caliber cannot be changed';
 	END IF;
-	IF(OLD."finalDate"<>NEW."finalDate") THEN
-		RAISE EXCEPTION 'Certifications.finalDate cannot be changed';
-	END IF;
-	IF(OLD."ExplorationId"<>NEW."ExplorationId") THEN
-		RAISE EXCEPTION 'Certifications.ExplorationId cannot be changed';
-	END IF;
-
 	RETURN NEW;
 END;
 $$;
 
 
-ALTER FUNCTION public.tr_fc_certifications_update() OWNER TO postgres;
+ALTER FUNCTION public.tr_fc_eggsbatches_update() OWNER TO postgres;
+
+--
+-- Name: tr_fc_eggsbatchexplorations_insert(); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION public.tr_fc_eggsbatchexplorations_insert() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+DECLARE
+	v_quantity integer default 0;
+	v_quantityAvailable integer default 0;
+BEGIN
+	IF(NEW."quantity"<1) THEN
+		RAISE EXCEPTION 'Quantity must be greater than 0';
+	END IF;
+	
+	SELECT COALESCE("quantity", 0), COALESCE("quantityAvailable", 0)
+	  INTO v_quantity, v_quantityAvailable
+	  FROM public."EggsBatches"
+	 WHERE "id" = NEW."EggsBatchId"; 
+	 
+	UPDATE public."EggsBatches"
+	   SET "quantity" = v_quantity + NEW."quantity",
+	       "quantityAvailable" = v_quantityAvailable + NEW."quantity"
+	 WHERE "id" = NEW."EggsBatchId";
+	
+	RETURN NEW;
+END;
+$$;
+
+
+ALTER FUNCTION public.tr_fc_eggsbatchexplorations_insert() OWNER TO postgres;
+
+--
+-- Name: tr_fc_eggsbatchexplorations_update(); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION public.tr_fc_eggsbatchexplorations_update() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+DECLARE
+	v_quantity integer default 0;
+	v_quantityAvailable integer default 0;
+BEGIN
+	IF(NEW."quantity"<1) THEN
+		RAISE EXCEPTION 'quantity must be greater than 0';
+	END IF;
+	
+	SELECT COALESCE("quantity", 0), COALESCE("quantityAvailable", 0)
+	  INTO v_quantity, v_quantityAvailable
+	  FROM public."EggsBatches"
+	 WHERE "id" = NEW."EggsBatchId"; 
+
+	IF((v_quantity + (NEW."quantity" - OLD."quantity"))<0) THEN
+		RAISE EXCEPTION 'EggsBatches.quantity must be greater or equal than 0';
+	END IF;
+
+	IF((v_quantityAvailable + (NEW."quantity" - OLD."quantity"))<0) THEN
+		RAISE EXCEPTION 'EggsBatches.quantityAvailable must be greater or equal than 0';
+	END IF;
+	 
+	UPDATE public."EggsBatches"
+	   SET "quantity" = v_quantity + (NEW."quantity" - OLD."quantity"),
+	       "quantityAvailable" = v_quantityAvailable + (NEW."quantity" - OLD."quantity")
+	 WHERE "id" = NEW."EggsBatchId";
+	
+	RETURN NEW;
+END;
+$$;
+
+
+ALTER FUNCTION public.tr_fc_eggsbatchexplorations_update() OWNER TO postgres;
+
+--
+-- Name: tr_fc_eggsbatchproducts_delete(); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION public.tr_fc_eggsbatchproducts_delete() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+DECLARE
+	v_quantity integer default 0;
+	v_quantityAvailable integer default 0;
+BEGIN
+	SELECT "quantityAvailable"
+	  INTO v_quantityAvailable
+	  FROM public."EggsBatches"
+	 WHERE "id" = OLD."EggsBatchId";
+	 
+	 UPDATE public."EggsBatches"
+	    SET "quantityAvailable" = v_quantityAvailable + OLD."quantity"
+	  WHERE "id" = OLD."EggsBatchId";
+	  
+	RETURN OLD;
+END;
+$$;
+
+
+ALTER FUNCTION public.tr_fc_eggsbatchproducts_delete() OWNER TO postgres;
+
+--
+-- Name: tr_fc_eggsbatchproducts_insert(); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION public.tr_fc_eggsbatchproducts_insert() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+DECLARE
+	v_quantity integer default 0;
+	v_quantityAvailable integer default 0;
+BEGIN
+	IF (NEW."quantity" <1) THEN
+		RAISE EXCEPTION 'Quantity must be greater than 0';
+	END IF;
+	IF (NEW."divider" <1) THEN
+		RAISE EXCEPTION 'divider must be greater than 0';
+	END IF;
+	
+	IF((NEW."quantity"%NEW."divider")<>0) THEN
+		RAISE EXCEPTION 'quantity must have 0 remaining from division';
+	END IF;
+	
+	NEW."quantityAvailable" = NEW."quantity";
+	
+	SELECT "quantityAvailable"
+	  INTO v_quantityAvailable
+	  FROM public."EggsBatches"
+	 WHERE "id" = NEW."EggsBatchId";
+	 
+	 IF ((v_quantityAvailable - NEW."quantity") <0) THEN
+		RAISE EXCEPTION 'quantity required is greater than available';
+	END IF;
+	 
+	 UPDATE public."EggsBatches"
+	    SET "quantityAvailable" = v_quantityAvailable - NEW."quantity"
+	  WHERE "id" = NEW."EggsBatchId";
+	RETURN NEW;
+
+END;
+$$;
+
+
+ALTER FUNCTION public.tr_fc_eggsbatchproducts_insert() OWNER TO postgres;
+
+--
+-- Name: tr_fc_eggsbatchproducts_update(); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION public.tr_fc_eggsbatchproducts_update() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+DECLARE
+	v_quantity integer default 0;
+	v_quantityAvailable integer default 0;
+BEGIN
+	IF (NEW."quantity" <1) THEN
+		RAISE EXCEPTION 'Quantity must be greater than 0';
+	END IF;
+	IF (NEW."divider" <1) THEN
+		RAISE EXCEPTION 'divider must be greater than 0';
+	END IF;
+	IF((NEW."quantity"%NEW."divider")<>0) THEN
+		RAISE EXCEPTION 'quantity must have 0 remaining from division';
+	END IF;
+	IF (NEW."quantityAvailable"<>OLD."quantityAvailable") THEN
+		RAISE EXCEPTION 'quantityAvailable cannot be changed';
+	END IF;
+	IF (NEW."ProductId"<>OLD."ProductId") THEN
+		RAISE EXCEPTION 'ProductId cannot be changed';
+	END IF;
+	IF (NEW."EggsBatchId"<>OLD."EggsBatchId") THEN
+		RAISE EXCEPTION 'EggsBatchId cannot be changed';
+	END IF;
+	
+	NEW."quantityAvailable" = OLD."quantityAvailable" + (NEW."quantity"- OLD."quantity");
+	
+	SELECT "quantityAvailable"
+	  INTO v_quantityAvailable
+	  FROM public."EggsBatches"
+	 WHERE "id" = NEW."EggsBatchId";
+	 
+	 IF ((v_quantityAvailable + (OLD."quantity" - NEW."quantity")) <0) THEN
+		RAISE EXCEPTION 'quantity required is greater than available';
+	END IF;
+	 
+	 UPDATE public."EggsBatches"
+	    SET "quantityAvailable" = v_quantityAvailable + (OLD."quantity" - NEW."quantity")
+	  WHERE "id" = NEW."EggsBatchId";
+	RETURN NEW;
+
+END;
+$$;
+
+
+ALTER FUNCTION public.tr_fc_eggsbatchproducts_update() OWNER TO postgres;
 
 --
 -- Name: tr_fc_explorations_update(); Type: FUNCTION; Schema: public; Owner: postgres
@@ -207,25 +618,316 @@ ALTER FUNCTION public.tr_fc_certifications_update() OWNER TO postgres;
 
 CREATE FUNCTION public.tr_fc_explorations_update() RETURNS trigger
     LANGUAGE plpgsql
+    AS $$
+DECLARE
+	
+BEGIN
+	IF(OLD."id"<>NEW."id") THEN
+		RAISE EXCEPTION 'Explorations.id cannot be changed';
+	END IF;
+	IF(OLD."createdAt"<>NEW."createdAt") THEN
+		RAISE EXCEPTION 'Explorations.createdAt cannot be changed';
+	END IF;
+	IF(OLD."OrganizationId"<>NEW."OrganizationId") THEN
+		RAISE EXCEPTION 'Explorations.OrganizationId cannot be changed';
+	END IF;
+	RETURN NEW;
+END;
+$$;
+
+
+ALTER FUNCTION public.tr_fc_explorations_update() OWNER TO postgres;
+
+--
+-- Name: tr_fc_orderlines_delete(); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION public.tr_fc_orderlines_delete() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+DECLARE
+	v_quantityAvailable integer default 0;
+	v_newQuantityAvailable integer default 0;
+BEGIN
+	IF(OLD."AnimalProductId" IS NOT NULL) THEN
+		SELECT "quantityAvailable"
+		  INTO v_quantityAvailable
+		  FROM public."AnimalProducts"
+		 WHERE "id" = OLD."AnimalProductId";
+		 
+		 v_newQuantityAvailable = (v_quantityAvailable + OLD."quantity");
+
+	   UPDATE public."AnimalProducts"
+		  SET  "quantityAvailable"= v_newQuantityAvailable
+		WHERE "id" = OLD."AnimalProductId";
+	ELSE
+		SELECT "quantityAvailable"
+		  INTO v_quantityAvailable
+	 	 FROM public."EggsBatchProducts"
+		 WHERE "id" = OLD."EggsBatchProductId";
+	
+		v_newQuantityAvailable = (v_quantityAvailable + OLD."quantity");
+
+	   UPDATE public."EggsBatchProducts"
+		  SET  "quantityAvailable"= v_newQuantityAvailable
+		WHERE "id" = OLD."EggsBatchProductId";
+	END IF;
+	
+	RETURN OLD;
+END;
+$$;
+
+
+ALTER FUNCTION public.tr_fc_orderlines_delete() OWNER TO postgres;
+
+--
+-- Name: tr_fc_orderlines_insert(); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION public.tr_fc_orderlines_insert() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+DECLARE
+	v_UserId uuid;
+	v_quantity_carts integer default 0;
+	v_quantity_products integer default 0;
+	v_ProductId uuid;
+	v_animalProduct_weight integer default 0;
+	v_product_unit varchar(255);
+	v_product_price float;
+	v_product_tax integer default 0;
+BEGIN
+	IF (NEW."AnimalProductId" IS NOT NULL AND NEW."EggsBatchProductId" IS NOT NULL) THEN
+		RAISE EXCEPTION 'Record cannot have AnimalProductId and EggsBatchProductId fields';
+	END IF;
+	IF (NEW."quantity" <1) THEN
+		RAISE EXCEPTION 'Quantity cannot be lower than 1';
+	END IF;
+	
+	SELECT "UserId"
+	  INTO v_UserId
+	  FROM public."Orders"
+	 WHERE "Orders"."id" = NEW."OrderId";
+	 
+	 SELECT quantity
+	   INTO v_quantity_carts
+	   FROM public."Carts"
+	  WHERE "Carts"."UserId" = v_UserId
+		AND ("Carts"."AnimalProductId" = NEW."AnimalProductId"
+			 OR "Carts"."EggsBatchProductId" = NEW."EggsBatchProductId");
+			 
+	IF(v_quantity_carts > 0) THEN
+		IF(v_quantity_carts = NEW."quantity") THEN
+			DELETE FROM public."Carts"
+			 WHERE "Carts"."UserId" = v_UserId
+			   AND ("Carts"."AnimalProductId" = NEW."AnimalProductId"
+			 		OR "Carts"."EggsBatchProductId" = NEW."EggsBatchProductId");
+		ELSE
+			UPDATE public."Carts"
+			   SET "quantity" = (v_quantity_carts - NEW."quantity")
+			 WHERE "Carts"."UserId" = v_UserId
+			   AND ("Carts"."AnimalProductId" = NEW."AnimalProductId"
+			 		OR "Carts"."EggsBatchProductId" = NEW."EggsBatchProductId");
+		END IF;
+	END IF;
+	
+	IF(NEW."AnimalProductId" IS NOT NULL) THEN
+		SELECT quantity, "ProductId", "weight"
+		  INTO v_quantity_products, v_ProductId, v_animalProduct_weight
+		  FROM public."AnimalProducts"
+		 WHERE "AnimalProducts"."id" = NEW."AnimalProductId";
+	ELSIF(NEW."EggsBatchProductId" IS NOT NULL) THEN
+		SELECT quantity, "ProductId"
+		  INTO v_quantity_products, v_ProductId
+		  FROM public."EggsBatchProducts"
+		 WHERE "EggsBatchProducts"."id" = NEW."EggsBatchProductId";
+	END IF;
+	
+	IF((v_quantity_products - NEW."quantity")<0) THEN
+		RAISE EXCEPTION 'quantityAvailable cannot be less than AnimalProducts.quantity';
+	END IF;
+	
+	IF(NEW."AnimalProductId" IS NOT NULL) THEN
+		UPDATE public."AnimalProducts"
+		   SET "quantityAvailable" = (v_quantity_products - NEW."quantity")
+		 WHERE "AnimalProducts"."id" = NEW."AnimalProductId";
+	ELSIF(NEW."EggsBatchProductId" IS NOT NULL) THEN
+		UPDATE public."EggsBatchProducts"
+		   SET "quantityAvailable" = (v_quantity_products - NEW."quantity")
+		 WHERE "EggsBatchProducts"."id" = NEW."EggsBatchProductId";
+	END IF;
+				
+	/* CALCULAR O PREÇO APARTIR DAS UNIDADES DOS PRODUTOS*/
+	SELECT "unit", "tax", "price"
+	  INTO v_product_unit, v_product_tax, v_product_price
+	  FROM public."Products"
+	 WHERE "id" = v_ProductId;
+		   
+	IF(v_product_unit = 'UNID') THEN
+		NEW."total"= NEW."quantity" * v_product_price::float;
+	ELSIF (v_product_unit = 'KG') THEN
+		NEW."total"=  NEW."quantity" * (v_animalProduct_weight::float(2)/1000) * v_product_price::float;
+	END IF;
+
+	NEW."totalVAT"= NEW."total" * (v_product_tax::float/100);
+	
+	RETURN NEW;
+END;
+$$;
+
+
+ALTER FUNCTION public.tr_fc_orderlines_insert() OWNER TO postgres;
+
+--
+-- Name: tr_fc_orderlines_update(); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION public.tr_fc_orderlines_update() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+DECLARE
+	v_UserId uuid;
+	v_quantity_carts integer default 0;
+	v_quantity_products integer default 0;
+	v_ProductId uuid;
+	v_animalProduct_weight integer default 0;
+	v_product_unit varchar(255);
+	v_product_price float;
+	v_product_tax integer default 0;
+BEGIN
+	IF (NEW."AnimalProductId" IS NOT NULL AND NEW."EggsBatchProductId" IS NOT NULL) THEN
+		RAISE EXCEPTION 'Record cannot have AnimalProductId and EggsBatchProductId fields';
+	END IF;
+	IF (NEW."quantity" <1) THEN
+		RAISE EXCEPTION 'Quantity cannot be lower than 1';
+	END IF;
+	IF(OLD."id"<>NEW."id") THEN
+		RAISE EXCEPTION 'OrderLines.id cannot be changed';
+	END IF;
+	IF(OLD."createdAt"<>NEW."createdAt") THEN
+		RAISE EXCEPTION 'OrderLines.createdAt cannot be changed';
+	END IF;
+	IF(OLD."OrderId"<>NEW."OrderId") THEN
+		RAISE EXCEPTION 'OrderLines.OrderId cannot be changed';
+	END IF;
+	IF(OLD."AnimalProductId"<>NEW."AnimalProductId") THEN
+		RAISE EXCEPTION 'OrderLines.AnimalProductId cannot be changed';
+	END IF;
+	IF(OLD."EggsBatchProductId"<>NEW."EggsBatchProductId") THEN
+		RAISE EXCEPTION 'OrderLines.EggsBatchProductId cannot be changed';
+	END IF;
+
+	IF(OLD."total"<>NEW."total") THEN
+		RAISE EXCEPTION 'OrderLines.total cannot be changed';
+	END IF;
+
+	IF(OLD."totalVAT"<>NEW."totalVAT") THEN
+		RAISE EXCEPTION 'OrderLines.totalVAT cannot be changed';
+	END IF;
+
+	SELECT "UserId"
+	  INTO v_UserId
+	  FROM public."Orders"
+	 WHERE "Orders"."id" = NEW."OrderId";
+	 
+	 SELECT quantity
+	   INTO v_quantity_carts
+	   FROM public."Carts"
+	  WHERE "Carts"."UserId" = v_UserId
+		AND ("Carts"."AnimalProductId" = NEW."AnimalProductId"
+			 OR "Carts"."EggsBatchProductId" = NEW."EggsBatchProductId");
+			 
+	IF(v_quantity_carts > 0) THEN
+		IF(v_quantity_carts = NEW."quantity") THEN
+			DELETE FROM public."Carts"
+			 WHERE "Carts"."UserId" = v_UserId
+			   AND ("Carts"."AnimalProductId" = NEW."AnimalProductId"
+			 		OR "Carts"."EggsBatchProductId" = NEW."EggsBatchProductId");
+		ELSE
+			UPDATE public."Carts"
+			   SET "quantity" = (v_quantity_carts - NEW."quantity")
+			 WHERE "Carts"."UserId" = v_UserId
+			   AND ("Carts"."AnimalProductId" = NEW."AnimalProductId"
+			 		OR "Carts"."EggsBatchProductId" = NEW."EggsBatchProductId");
+		END IF;
+	END IF;
+	
+	IF(NEW."AnimalProductId" IS NOT NULL) THEN
+		SELECT quantity, "ProductId", "weight"
+		  INTO v_quantity_products, v_ProductId, v_animalProduct_weight
+		  FROM public."AnimalProducts"
+		 WHERE "AnimalProducts"."id" = NEW."AnimalProductId";
+	ELSIF(NEW."EggsBatchProductId" IS NOT NULL) THEN
+		SELECT quantity, "ProductId"
+		  INTO v_quantity_products, v_ProductId
+		  FROM public."EggsBatchProducts"
+		 WHERE "EggsBatchProducts"."id" = NEW."EggsBatchProductId";
+	END IF;
+	
+	IF((v_quantity_products - NEW."quantity")<0) THEN
+		RAISE EXCEPTION 'quantityAvailable cannot be less than AnimalProducts.quantity';
+	END IF;
+	
+	IF(NEW."AnimalProductId" IS NOT NULL) THEN
+		UPDATE public."AnimalProducts"
+		   SET "quantityAvailable" = (v_quantity_products - NEW."quantity")
+		 WHERE "AnimalProducts"."id" = NEW."AnimalProductId";
+	ELSIF(NEW."EggsBatchProductId" IS NOT NULL) THEN
+		UPDATE public."EggsBatchProducts"
+		   SET "quantityAvailable" = (v_quantity_products - NEW."quantity")
+		 WHERE "EggsBatchProducts"."id" = NEW."EggsBatchProductId";
+	END IF;
+				
+	/* CALCULAR O PREÇO APARTIR DAS UNIDADES DOS PRODUTOS*/
+	SELECT "unit", "tax", "price"
+	  INTO v_product_unit, v_product_tax, v_product_price
+	  FROM public."Products"
+	 WHERE "id" = v_ProductId;
+		   
+	IF(v_product_unit = 'UNID') THEN
+		NEW."total"= NEW."quantity" * v_product_price::float;
+	ELSIF (v_product_unit = 'KG') THEN
+		NEW."total"=  NEW."quantity" * (v_animalProduct_weight::float(2)/1000) * v_product_price::float;
+	END IF;
+
+	NEW."totalVAT"= NEW."total" * (v_product_tax::float/100);
+	
+	RETURN NEW;
+
+END;
+$$;
+
+
+ALTER FUNCTION public.tr_fc_orderlines_update() OWNER TO postgres;
+
+--
+-- Name: tr_fc_products_update(); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION public.tr_fc_products_update() RETURNS trigger
+    LANGUAGE plpgsql
     AS $$
 DECLARE
 	
 BEGIN
 	IF(OLD."id"<>NEW."id") THEN
-		RAISE EXCEPTION 'Explorations.id cannot be changed';
+		RAISE EXCEPTION 'Products.id cannot be changed';
 	END IF;
 	IF(OLD."createdAt"<>NEW."createdAt") THEN
-		RAISE EXCEPTION 'Explorations.createdAt cannot be changed';
+		RAISE EXCEPTION 'Products.createdAt cannot be changed';
 	END IF;
 	IF(OLD."OrganizationId"<>NEW."OrganizationId") THEN
-		RAISE EXCEPTION 'Explorations.OrganizationId cannot be changed';
+		RAISE EXCEPTION 'Products.OrganizationId cannot be changed';
+	END IF;
+	IF(OLD."unit"<>NEW."unit") THEN
+		RAISE EXCEPTION 'Products.unit cannot be changed';
 	END IF;
 	RETURN NEW;
 END;
 $$;
 
 
-ALTER FUNCTION public.tr_fc_explorations_update() OWNER TO postgres;
+ALTER FUNCTION public.tr_fc_products_update() OWNER TO postgres;
 
 --
 -- Name: truncate_tables(character varying); Type: FUNCTION; Schema: public; Owner: postgres
@@ -233,16 +935,16 @@ ALTER FUNCTION public.tr_fc_explorations_update() OWNER TO postgres;
 
 CREATE FUNCTION public.truncate_tables(username character varying) RETURNS void
     LANGUAGE plpgsql
-    AS $$
-DECLARE
-    statements CURSOR FOR
-        SELECT tablename FROM pg_tables
-        WHERE tableowner = username AND schemaname = 'public';
-BEGIN
-    FOR stmt IN statements LOOP
-        EXECUTE 'TRUNCATE TABLE ' || quote_ident(stmt.tablename) || ' CASCADE;';
-    END LOOP;
-END;
+    AS $$
+DECLARE
+    statements CURSOR FOR
+        SELECT tablename FROM pg_tables
+        WHERE tableowner = username AND schemaname = 'public';
+BEGIN
+    FOR stmt IN statements LOOP
+        EXECUTE 'TRUNCATE TABLE ' || quote_ident(stmt.tablename) || ' CASCADE;';
+    END LOOP;
+END;
 $$;
 
 
@@ -627,9 +1329,9 @@ ALTER TABLE public."Users" OWNER TO postgres;
 --
 
 COPY public."AnimalProducts" (id, quantity, "quantityAvailable", weight, "createdAt", "updatedAt", "ProductId", "AnimalId") FROM stdin;
-20586541-ba98-4dfe-b90a-9895d2d0d9bc	1	1	500	2021-10-03 18:14:31.695+01	2021-10-03 18:24:46.684+01	c9f03c69-cfb9-45ad-a649-869648dc5f1e	8cebf000-b4fc-43cd-aff9-37e6fe5f249c
-890049fe-8ee3-441a-973c-a4bf9e6b2d2f	1	1	350	2021-10-03 18:25:17.551+01	2021-10-03 18:25:17.551+01	c9f03c69-cfb9-45ad-a649-869648dc5f1e	c3f51573-6504-4a97-b7b4-418023099481
 47ba80f1-68e4-4123-996c-ce8bd1a86b69	2	2	200	2021-10-03 18:26:19.339+01	2021-10-03 18:26:19.339+01	7a29c366-8662-49a4-93c0-d7ad73199f3c	8cebf000-b4fc-43cd-aff9-37e6fe5f249c
+890049fe-8ee3-441a-973c-a4bf9e6b2d2f	1	1	350	2021-10-03 18:25:17.551+01	2021-10-03 18:25:17.551+01	c9f03c69-cfb9-45ad-a649-869648dc5f1e	c3f51573-6504-4a97-b7b4-418023099481
+20586541-ba98-4dfe-b90a-9895d2d0d9bc	1	1	500	2021-10-03 18:14:31.695+01	2021-10-03 18:24:46.684+01	c9f03c69-cfb9-45ad-a649-869648dc5f1e	8cebf000-b4fc-43cd-aff9-37e6fe5f249c
 \.
 
 
@@ -668,6 +1370,8 @@ bf748274-1da1-4697-9b68-717d236caba4	C001	2121-10-03	2022-10-02	Certificação c
 --
 
 COPY public."EggsBatchExplorations" (quantity, "createdAt", "updatedAt", "ExplorationId", "EggsBatchId") FROM stdin;
+12	2021-10-03 22:04:51.367+01	2021-10-03 22:05:32.125+01	0321b342-f490-4c6d-a3f9-41438e6ffdc5	3101f26e-928f-4fec-8657-5b0a87421336
+24	2021-10-03 22:04:43.362+01	2021-10-03 22:19:44.006+01	e22de982-3ba8-46c3-b86f-ee5e2d57bb51	3101f26e-928f-4fec-8657-5b0a87421336
 \.
 
 
@@ -684,6 +1388,7 @@ COPY public."EggsBatchProducts" (id, quantity, "quantityAvailable", divider, "cr
 --
 
 COPY public."EggsBatches" (id, name, caliber, quantity, "quantityAvailable", "createdAt", "updatedAt", "RaceId") FROM stdin;
+3101f26e-928f-4fec-8657-5b0a87421336	Lote 01	12	36	36	2021-10-03 21:58:59.777+01	2021-10-03 21:58:59.777+01	1d8f6bda-1815-42c8-b8f0-8cb965893ce5
 \.
 
 
@@ -737,6 +1442,7 @@ COPY public."OrderLines" (id, quantity, total, "totalVAT", "createdAt", "updated
 --
 
 COPY public."Orders" (id, total, "totalVAT", address, locale, zipcode, observation, "fiscalNumber", "createdAt", "updatedAt", "UserId") FROM stdin;
+02440cdb-da72-4443-9420-8e771a73076b	0	0	\N	\N	\N	\N	\N	2021-10-03 23:30:54.567+01	2021-10-03 23:30:54.567+01	a2c0e744-c1e4-47be-807f-f660dfccdd3d
 \.
 
 
@@ -782,7 +1488,7 @@ COPY public."Products" (id, name, description, price, unit, tax, image, "created
 7a29c366-8662-49a4-93c0-d7ad73199f3c	Galinhas pequenas	Galinhas pequenas para criar	4.2	UNID	6	8a864b50-c025-4e35-923e-a4fb1cf325ef.jpg	2021-10-03 17:35:01.071+01	2021-10-03 17:35:01.071+01	1b7e3cd0-add5-4945-acd8-ff995addfa6f	\N
 c9f03c69-cfb9-45ad-a649-869648dc5f1e	Pernas de Frango		6.99	KG	6	62185668-3b7f-4fd8-88ca-3bb900074bf4.jpg	2021-10-03 17:35:54.622+01	2021-10-03 17:35:54.622+01	e9744d65-8552-4452-9648-f62259be2465	\N
 daa5051b-ef7e-4d8e-98f1-4173e09fe8e4	Ovos Pequenos	Ovos Pequenos à duzia	2.79	UNID	6	1b8f6b5f-c7f1-4e09-852a-f2830a199d4d.jpg	2021-10-03 17:37:00.229+01	2021-10-03 17:37:00.229+01	8de72b98-c41a-410d-b0d6-9c44a7c1d03d	\N
-3dc8026e-6b39-4722-9ab6-083fefbcf180	Peito de Frango		6.25	KG	6		2021-10-03 18:25:54.555+01	2021-10-03 18:25:54.555+01	e9744d65-8552-4452-9648-f62259be2465	\N
+3dc8026e-6b39-4722-9ab6-083fefbcf180	Peito de Frango		6.3	KG	6		2021-10-03 18:25:54.555+01	2021-10-03 18:25:54.555+01	e9744d65-8552-4452-9648-f62259be2465	\N
 \.
 
 
@@ -1151,6 +1857,27 @@ CREATE TRIGGER tr_animals_update BEFORE UPDATE ON public."Animals" FOR EACH ROW 
 
 
 --
+-- Name: Carts tr_carts_delete; Type: TRIGGER; Schema: public; Owner: postgres
+--
+
+CREATE TRIGGER tr_carts_delete BEFORE DELETE ON public."Carts" FOR EACH ROW EXECUTE FUNCTION public.tr_fc_carts_delete();
+
+
+--
+-- Name: Carts tr_carts_insert; Type: TRIGGER; Schema: public; Owner: postgres
+--
+
+CREATE TRIGGER tr_carts_insert BEFORE INSERT ON public."Carts" FOR EACH ROW EXECUTE FUNCTION public.tr_fc_carts_insert();
+
+
+--
+-- Name: Carts tr_carts_update; Type: TRIGGER; Schema: public; Owner: postgres
+--
+
+CREATE TRIGGER tr_carts_update BEFORE UPDATE ON public."Carts" FOR EACH ROW EXECUTE FUNCTION public.tr_fc_carts_update();
+
+
+--
 -- Name: Certifications tr_certifications_update; Type: TRIGGER; Schema: public; Owner: postgres
 --
 
@@ -1158,10 +1885,80 @@ CREATE TRIGGER tr_certifications_update BEFORE UPDATE ON public."Certifications"
 
 
 --
+-- Name: EggsBatches tr_eggsbatches_update; Type: TRIGGER; Schema: public; Owner: postgres
+--
+
+CREATE TRIGGER tr_eggsbatches_update BEFORE UPDATE ON public."EggsBatches" FOR EACH ROW EXECUTE FUNCTION public.tr_fc_eggsbatches_update();
+
+
+--
+-- Name: EggsBatchExplorations tr_eggsbatchexplorations_insert; Type: TRIGGER; Schema: public; Owner: postgres
+--
+
+CREATE TRIGGER tr_eggsbatchexplorations_insert BEFORE INSERT ON public."EggsBatchExplorations" FOR EACH ROW EXECUTE FUNCTION public.tr_fc_eggsbatchexplorations_insert();
+
+
+--
+-- Name: EggsBatchExplorations tr_eggsbatchexplorations_update; Type: TRIGGER; Schema: public; Owner: postgres
+--
+
+CREATE TRIGGER tr_eggsbatchexplorations_update BEFORE UPDATE ON public."EggsBatchExplorations" FOR EACH ROW EXECUTE FUNCTION public.tr_fc_eggsbatchexplorations_update();
+
+
+--
+-- Name: EggsBatchProducts tr_eggsbatchproducts_delete; Type: TRIGGER; Schema: public; Owner: postgres
+--
+
+CREATE TRIGGER tr_eggsbatchproducts_delete BEFORE DELETE ON public."EggsBatchProducts" FOR EACH ROW EXECUTE FUNCTION public.tr_fc_eggsbatchproducts_delete();
+
+
+--
+-- Name: EggsBatchProducts tr_eggsbatchproducts_insert; Type: TRIGGER; Schema: public; Owner: postgres
+--
+
+CREATE TRIGGER tr_eggsbatchproducts_insert BEFORE INSERT ON public."EggsBatchProducts" FOR EACH ROW EXECUTE FUNCTION public.tr_fc_eggsbatchproducts_insert();
+
+
+--
+-- Name: EggsBatchProducts tr_eggsbatchproducts_update; Type: TRIGGER; Schema: public; Owner: postgres
+--
+
+CREATE TRIGGER tr_eggsbatchproducts_update BEFORE UPDATE ON public."EggsBatchProducts" FOR EACH ROW EXECUTE FUNCTION public.tr_fc_eggsbatchproducts_update();
+
+
+--
 -- Name: Explorations tr_explorations_update; Type: TRIGGER; Schema: public; Owner: postgres
 --
 
 CREATE TRIGGER tr_explorations_update BEFORE UPDATE ON public."Explorations" FOR EACH ROW EXECUTE FUNCTION public.tr_fc_explorations_update();
+
+
+--
+-- Name: OrderLines tr_orderLines_delete; Type: TRIGGER; Schema: public; Owner: postgres
+--
+
+CREATE TRIGGER "tr_orderLines_delete" BEFORE DELETE ON public."OrderLines" FOR EACH ROW EXECUTE FUNCTION public.tr_fc_orderlines_delete();
+
+
+--
+-- Name: OrderLines tr_orderLines_insert; Type: TRIGGER; Schema: public; Owner: postgres
+--
+
+CREATE TRIGGER "tr_orderLines_insert" BEFORE INSERT ON public."OrderLines" FOR EACH ROW EXECUTE FUNCTION public.tr_fc_orderlines_insert();
+
+
+--
+-- Name: OrderLines tr_orderlines_update; Type: TRIGGER; Schema: public; Owner: postgres
+--
+
+CREATE TRIGGER tr_orderlines_update BEFORE UPDATE ON public."OrderLines" FOR EACH ROW EXECUTE FUNCTION public.tr_fc_orderlines_update();
+
+
+--
+-- Name: Products tr_products_update; Type: TRIGGER; Schema: public; Owner: postgres
+--
+
+CREATE TRIGGER tr_products_update BEFORE UPDATE ON public."Products" FOR EACH ROW EXECUTE FUNCTION public.tr_fc_products_update();
 
 
 --

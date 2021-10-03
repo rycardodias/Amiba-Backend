@@ -90,7 +90,7 @@ router.post('/create', removeCache('/orderLines', '/orders', '/products/allAvail
 router.put('/update', removeCache('/orderLines', '/orders', '/products/allAvailable'), async (req, res) => {
     const response = new ResponseModel()
     try {
-        const { id, OrderId, quantity, total, totalVAT, AnimalProductId, EggsBatchProductId } = req.body
+        const { id, OrderId, quantity, AnimalProductId, EggsBatchProductId } = req.body
 
         if (!id) {
             response.error = error_missing_fields

@@ -21,9 +21,6 @@ BEGIN
 	IF((NEW."quantity"%NEW."divider")<>0) THEN
 		RAISE EXCEPTION 'quantity must have 0 remaining from division';
 	END IF;
-	IF (NEW."quantityAvailable"<>OLD."quantityAvailable") THEN
-		RAISE EXCEPTION 'quantityAvailable cannot be changed';
-	END IF;
 	IF (NEW."ProductId"<>OLD."ProductId") THEN
 		RAISE EXCEPTION 'ProductId cannot be changed';
 	END IF;
@@ -31,7 +28,10 @@ BEGIN
 		RAISE EXCEPTION 'EggsBatchId cannot be changed';
 	END IF;
 	
-	NEW."quantityAvailable" = OLD."quantityAvailable" + (NEW."quantity"- OLD."quantity");
+	/* É necessario para quando se faz o update da qtdAvailable através de script*/
+	IF (NEW."quantityAvailable" = OLD."quantityAvailable") THEN
+		NEW."quantityAvailable" = OLD."quantityAvailable" + (NEW."quantity"- OLD."quantity");
+	END IF;
 	
 	SELECT "quantityAvailable"
 	  INTO v_quantityAvailable
