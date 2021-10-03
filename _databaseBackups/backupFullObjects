@@ -1,0 +1,1378 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 13.4
+-- Dumped by pg_dump version 13.4
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+--
+-- Name: tr_fc_animalproducts_insert(); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION public.tr_fc_animalproducts_insert() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+DECLARE
+	v_unit varchar(50);
+BEGIN
+	IF (NEW."quantity" <1) THEN
+		RAISE EXCEPTION 'Quantity cannot be lower than 1';
+	END IF;
+	
+	SELECT "unit"
+	  INTO v_unit
+	  FROM public."Products"
+	 WHERE "Products"."id" = NEW."ProductId";
+	 
+	IF(v_unit = 'KG' AND NEW."weight"<1) THEN
+		RAISE EXCEPTION 'Products in KG must have weight';
+	END IF;
+	 
+	NEW."quantityAvailable" = NEW."quantity";
+	RETURN NEW;
+END;
+$$;
+
+
+ALTER FUNCTION public.tr_fc_animalproducts_insert() OWNER TO postgres;
+
+--
+-- Name: tr_fc_animalproducts_update(); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION public.tr_fc_animalproducts_update() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+DECLARE
+	v_unit varchar(50);
+BEGIN
+	IF (NEW."quantity" <1) THEN
+		RAISE EXCEPTION 'Quantity cannot be lower than 1';
+	END IF;
+
+	
+	IF(OLD."id"<>NEW."id") THEN
+		RAISE EXCEPTION 'AnimalProducts.id cannot be changed';
+	END IF;
+	IF(OLD."createdAt"<>NEW."createdAt") THEN
+		RAISE EXCEPTION 'AnimalProducts.createdAt cannot be changed';
+	END IF;
+	IF(OLD."ProductId"<>NEW."ProductId") THEN
+		RAISE EXCEPTION 'AnimalProducts.ProductId cannot be changed';
+	END IF;
+	IF(OLD."AnimalId"<>NEW."AnimalId") THEN
+		RAISE EXCEPTION 'AnimalProducts.AnimalId cannot be changed';
+	END IF;
+	IF(OLD."weight"<>NEW."weight") THEN
+		RAISE EXCEPTION 'AnimalProducts.weight cannot be changed';
+	END IF;
+	
+	SELECT "unit"
+	  INTO v_unit
+	  FROM public."Products"
+	 WHERE "Products"."id" = NEW."ProductId";
+	 
+	IF(v_unit = 'KG' AND NEW."weight"<1) THEN
+			RAISE EXCEPTION 'Products in KG must have weight';
+	END IF;
+	 
+	IF(OLD."quantity"<>NEW."quantity") THEN
+		NEW."quantityAvailable" = OLD."quantityAvailable" + (NEW."quantity" - OLD."quantity");
+	END IF;
+	
+	IF(NEW."quantityAvailable" >NEW."quantity") THEN
+		RAISE EXCEPTION 'AnimalProducts.quantityAvailable cannot be greater then AnimalProducts.quantity';
+	END IF;
+	
+	RETURN NEW;
+END;
+$$;
+
+
+ALTER FUNCTION public.tr_fc_animalproducts_update() OWNER TO postgres;
+
+--
+-- Name: tr_fc_animals_insert(); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION public.tr_fc_animals_insert() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+DECLARE
+	
+BEGIN
+	IF (NEW."weight" <1) THEN
+		RAISE EXCEPTION 'weight cannot be lower than 1';
+	END IF;
+	
+	RETURN NEW;
+
+END;
+$$;
+
+
+ALTER FUNCTION public.tr_fc_animals_insert() OWNER TO postgres;
+
+--
+-- Name: tr_fc_animals_update(); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION public.tr_fc_animals_update() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+DECLARE
+	
+BEGIN
+	IF (NEW."weight" <1) THEN
+		RAISE EXCEPTION 'weight cannot be lower than 1';
+	END IF;
+	IF(OLD."id"<>NEW."id") THEN
+		RAISE EXCEPTION 'Animals.id cannot be changed';
+	END IF;
+	IF(OLD."createdAt"<>NEW."createdAt") THEN
+		RAISE EXCEPTION 'Animals.createdAt cannot be changed';
+	END IF;
+	IF(OLD."gender"<>NEW."gender") THEN
+		RAISE EXCEPTION 'Animals.gender cannot be changed';
+	END IF;
+	IF(OLD."birthDate"<>NEW."birthDate") THEN
+		RAISE EXCEPTION 'Animals.birthDate cannot be changed';
+	END IF;
+	IF(OLD."weight"<>NEW."weight") THEN
+		RAISE EXCEPTION 'Animals.weight cannot be changed';
+	END IF;
+	IF(OLD."RaceId"<>NEW."RaceId") THEN
+		RAISE EXCEPTION 'Animals.RaceId cannot be changed';
+	END IF;
+	IF(OLD."ExplorationId"<>NEW."ExplorationId") THEN
+		RAISE EXCEPTION 'Animals.ExplorationId cannot be changed';
+	END IF;
+	RETURN NEW;
+END;
+$$;
+
+
+ALTER FUNCTION public.tr_fc_animals_update() OWNER TO postgres;
+
+--
+-- Name: tr_fc_certifications_update(); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION public.tr_fc_certifications_update() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+DECLARE
+	
+BEGIN
+	IF(OLD."id"<>NEW."id") THEN
+		RAISE EXCEPTION 'Certifications.id cannot be changed';
+	END IF;
+	IF(OLD."createdAt"<>NEW."createdAt") THEN
+		RAISE EXCEPTION 'Certifications.createdAt cannot be changed';
+	END IF;
+	IF(OLD."certificationCode"<>NEW."certificationCode") THEN
+		RAISE EXCEPTION 'Certifications.certificationCode cannot be changed';
+	END IF;
+	IF(OLD."initialDate"<>NEW."initialDate") THEN
+		RAISE EXCEPTION 'Certifications.initialDate cannot be changed';
+	END IF;
+	IF(OLD."finalDate"<>NEW."finalDate") THEN
+		RAISE EXCEPTION 'Certifications.finalDate cannot be changed';
+	END IF;
+	IF(OLD."ExplorationId"<>NEW."ExplorationId") THEN
+		RAISE EXCEPTION 'Certifications.ExplorationId cannot be changed';
+	END IF;
+
+	RETURN NEW;
+END;
+$$;
+
+
+ALTER FUNCTION public.tr_fc_certifications_update() OWNER TO postgres;
+
+--
+-- Name: tr_fc_explorations_update(); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION public.tr_fc_explorations_update() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+DECLARE
+	
+BEGIN
+	IF(OLD."id"<>NEW."id") THEN
+		RAISE EXCEPTION 'Explorations.id cannot be changed';
+	END IF;
+	IF(OLD."createdAt"<>NEW."createdAt") THEN
+		RAISE EXCEPTION 'Explorations.createdAt cannot be changed';
+	END IF;
+	IF(OLD."OrganizationId"<>NEW."OrganizationId") THEN
+		RAISE EXCEPTION 'Explorations.OrganizationId cannot be changed';
+	END IF;
+	RETURN NEW;
+END;
+$$;
+
+
+ALTER FUNCTION public.tr_fc_explorations_update() OWNER TO postgres;
+
+--
+-- Name: truncate_tables(character varying); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION public.truncate_tables(username character varying) RETURNS void
+    LANGUAGE plpgsql
+    AS $$
+DECLARE
+    statements CURSOR FOR
+        SELECT tablename FROM pg_tables
+        WHERE tableowner = username AND schemaname = 'public';
+BEGIN
+    FOR stmt IN statements LOOP
+        EXECUTE 'TRUNCATE TABLE ' || quote_ident(stmt.tablename) || ' CASCADE;';
+    END LOOP;
+END;
+$$;
+
+
+ALTER FUNCTION public.truncate_tables(username character varying) OWNER TO postgres;
+
+SET default_tablespace = '';
+
+SET default_table_access_method = heap;
+
+--
+-- Name: AnimalProducts; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public."AnimalProducts" (
+    id uuid NOT NULL,
+    quantity integer NOT NULL,
+    "quantityAvailable" integer,
+    weight integer,
+    "createdAt" timestamp with time zone NOT NULL,
+    "updatedAt" timestamp with time zone NOT NULL,
+    "ProductId" uuid,
+    "AnimalId" uuid
+);
+
+
+ALTER TABLE public."AnimalProducts" OWNER TO postgres;
+
+--
+-- Name: Animals; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public."Animals" (
+    id uuid NOT NULL,
+    gender character varying(255),
+    "birthDate" date NOT NULL,
+    weight integer NOT NULL,
+    "slaughterDate" date,
+    "slaughterWeight" integer,
+    "slaughterLocal" character varying(255),
+    "createdAt" timestamp with time zone NOT NULL,
+    "updatedAt" timestamp with time zone NOT NULL,
+    "RaceId" uuid,
+    "ExplorationId" uuid
+);
+
+
+ALTER TABLE public."Animals" OWNER TO postgres;
+
+--
+-- Name: Carts; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public."Carts" (
+    id uuid NOT NULL,
+    quantity integer NOT NULL,
+    "createdAt" timestamp with time zone NOT NULL,
+    "updatedAt" timestamp with time zone NOT NULL,
+    "AnimalProductId" uuid,
+    "EggsBatchProductId" uuid,
+    "UserId" uuid
+);
+
+
+ALTER TABLE public."Carts" OWNER TO postgres;
+
+--
+-- Name: Certifications; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public."Certifications" (
+    id uuid NOT NULL,
+    "certificationCode" character varying(255),
+    "initialDate" date NOT NULL,
+    "finalDate" date NOT NULL,
+    description character varying(255),
+    "createdAt" timestamp with time zone NOT NULL,
+    "updatedAt" timestamp with time zone NOT NULL,
+    "ExplorationId" uuid
+);
+
+
+ALTER TABLE public."Certifications" OWNER TO postgres;
+
+--
+-- Name: EggsBatchExplorations; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public."EggsBatchExplorations" (
+    quantity integer NOT NULL,
+    "createdAt" timestamp with time zone NOT NULL,
+    "updatedAt" timestamp with time zone NOT NULL,
+    "ExplorationId" uuid NOT NULL,
+    "EggsBatchId" uuid NOT NULL
+);
+
+
+ALTER TABLE public."EggsBatchExplorations" OWNER TO postgres;
+
+--
+-- Name: EggsBatchProducts; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public."EggsBatchProducts" (
+    id uuid NOT NULL,
+    quantity integer NOT NULL,
+    "quantityAvailable" integer,
+    divider integer NOT NULL,
+    "createdAt" timestamp with time zone NOT NULL,
+    "updatedAt" timestamp with time zone NOT NULL,
+    "ProductId" uuid,
+    "EggsBatchId" uuid
+);
+
+
+ALTER TABLE public."EggsBatchProducts" OWNER TO postgres;
+
+--
+-- Name: EggsBatches; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public."EggsBatches" (
+    id uuid NOT NULL,
+    name character varying(255) NOT NULL,
+    caliber character varying(255) NOT NULL,
+    quantity integer,
+    "quantityAvailable" integer,
+    "createdAt" timestamp with time zone NOT NULL,
+    "updatedAt" timestamp with time zone NOT NULL,
+    "RaceId" uuid
+);
+
+
+ALTER TABLE public."EggsBatches" OWNER TO postgres;
+
+--
+-- Name: ExplorationTypes; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public."ExplorationTypes" (
+    id uuid NOT NULL,
+    name character varying(255) NOT NULL,
+    description character varying(255),
+    "createdAt" timestamp with time zone NOT NULL,
+    "updatedAt" timestamp with time zone NOT NULL
+);
+
+
+ALTER TABLE public."ExplorationTypes" OWNER TO postgres;
+
+--
+-- Name: Explorations; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public."Explorations" (
+    id uuid NOT NULL,
+    name character varying(255) NOT NULL,
+    address character varying(255) NOT NULL,
+    locale character varying(255) NOT NULL,
+    zipcode character varying(255) NOT NULL,
+    telephone integer,
+    "mobilePhone" integer,
+    "fiscalNumber" integer NOT NULL,
+    "gpsLocalization" character varying(255),
+    "createdAt" timestamp with time zone NOT NULL,
+    "updatedAt" timestamp with time zone NOT NULL,
+    "OrganizationId" uuid,
+    "ExplorationTypeId" uuid
+);
+
+
+ALTER TABLE public."Explorations" OWNER TO postgres;
+
+--
+-- Name: Menus; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public."Menus" (
+    id uuid NOT NULL,
+    title character varying(255) NOT NULL,
+    description character varying(255),
+    image character varying(255),
+    active boolean DEFAULT true NOT NULL,
+    "createdAt" timestamp with time zone NOT NULL,
+    "updatedAt" timestamp with time zone NOT NULL,
+    "RestaurantId" uuid
+);
+
+
+ALTER TABLE public."Menus" OWNER TO postgres;
+
+--
+-- Name: OrderHistory; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public."OrderHistory" (
+    id uuid NOT NULL,
+    state character varying(255) NOT NULL,
+    "createdAt" timestamp with time zone NOT NULL,
+    "updatedAt" timestamp with time zone NOT NULL,
+    "OrderId" uuid
+);
+
+
+ALTER TABLE public."OrderHistory" OWNER TO postgres;
+
+--
+-- Name: OrderLines; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public."OrderLines" (
+    id uuid NOT NULL,
+    quantity integer NOT NULL,
+    total double precision,
+    "totalVAT" double precision,
+    "createdAt" timestamp with time zone NOT NULL,
+    "updatedAt" timestamp with time zone NOT NULL,
+    "OrderId" uuid,
+    "AnimalProductId" uuid,
+    "EggsBatchProductId" uuid
+);
+
+
+ALTER TABLE public."OrderLines" OWNER TO postgres;
+
+--
+-- Name: Orders; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public."Orders" (
+    id uuid NOT NULL,
+    total double precision DEFAULT '0'::double precision NOT NULL,
+    "totalVAT" double precision DEFAULT '0'::double precision NOT NULL,
+    address character varying(255),
+    locale character varying(255),
+    zipcode character varying(255),
+    observation character varying(255),
+    "fiscalNumber" character varying(255),
+    "createdAt" timestamp with time zone NOT NULL,
+    "updatedAt" timestamp with time zone NOT NULL,
+    "UserId" uuid
+);
+
+
+ALTER TABLE public."Orders" OWNER TO postgres;
+
+--
+-- Name: OrganizationTypes; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public."OrganizationTypes" (
+    id uuid NOT NULL,
+    name character varying(255) NOT NULL,
+    description character varying(255),
+    "createdAt" timestamp with time zone NOT NULL,
+    "updatedAt" timestamp with time zone NOT NULL
+);
+
+
+ALTER TABLE public."OrganizationTypes" OWNER TO postgres;
+
+--
+-- Name: Organizations; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public."Organizations" (
+    id uuid NOT NULL,
+    name character varying(255) NOT NULL,
+    address character varying(255) NOT NULL,
+    locale character varying(255) NOT NULL,
+    zipcode character varying(255) NOT NULL,
+    telephone integer,
+    "mobilePhone" integer,
+    "fiscalNumber" integer NOT NULL,
+    "createdAt" timestamp with time zone NOT NULL,
+    "updatedAt" timestamp with time zone NOT NULL,
+    "OrganizationTypeId" uuid,
+    "UserId" uuid
+);
+
+
+ALTER TABLE public."Organizations" OWNER TO postgres;
+
+--
+-- Name: ProductTypes; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public."ProductTypes" (
+    id uuid NOT NULL,
+    name character varying(255) NOT NULL,
+    description character varying(255),
+    "createdAt" timestamp with time zone NOT NULL,
+    "updatedAt" timestamp with time zone NOT NULL
+);
+
+
+ALTER TABLE public."ProductTypes" OWNER TO postgres;
+
+--
+-- Name: Products; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public."Products" (
+    id uuid NOT NULL,
+    name character varying(255) NOT NULL,
+    description character varying(255),
+    price double precision NOT NULL,
+    unit character varying(255) NOT NULL,
+    tax integer NOT NULL,
+    image character varying(255),
+    "createdAt" timestamp with time zone NOT NULL,
+    "updatedAt" timestamp with time zone NOT NULL,
+    "ProductTypeId" uuid,
+    "OrganizationId" uuid
+);
+
+
+ALTER TABLE public."Products" OWNER TO postgres;
+
+--
+-- Name: Races; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public."Races" (
+    id uuid NOT NULL,
+    name character varying(255) NOT NULL,
+    description character varying(255),
+    "createdAt" timestamp with time zone NOT NULL,
+    "updatedAt" timestamp with time zone NOT NULL
+);
+
+
+ALTER TABLE public."Races" OWNER TO postgres;
+
+--
+-- Name: Restaurants; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public."Restaurants" (
+    id uuid NOT NULL,
+    name character varying(255) NOT NULL,
+    description character varying(255) NOT NULL,
+    address character varying(255) NOT NULL,
+    locale character varying(255) NOT NULL,
+    zipcode character varying(255) NOT NULL,
+    telephone integer,
+    "mobilePhone" integer,
+    "fiscalNumber" integer NOT NULL,
+    "createdAt" timestamp with time zone NOT NULL,
+    "updatedAt" timestamp with time zone NOT NULL,
+    "UserId" uuid
+);
+
+
+ALTER TABLE public."Restaurants" OWNER TO postgres;
+
+--
+-- Name: Users; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public."Users" (
+    id uuid NOT NULL,
+    name character varying(255) NOT NULL,
+    email character varying(255) NOT NULL,
+    password character varying(255) NOT NULL,
+    active boolean DEFAULT true NOT NULL,
+    permission character varying(255)[] DEFAULT ARRAY['ADMIN'::character varying(255)] NOT NULL,
+    address character varying(255),
+    locale character varying(255),
+    zipcode character varying(255),
+    "fiscalNumber" integer,
+    telephone integer,
+    "mobilePhone" integer,
+    "createdAt" timestamp with time zone NOT NULL,
+    "updatedAt" timestamp with time zone NOT NULL
+);
+
+
+ALTER TABLE public."Users" OWNER TO postgres;
+
+--
+-- Data for Name: AnimalProducts; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public."AnimalProducts" (id, quantity, "quantityAvailable", weight, "createdAt", "updatedAt", "ProductId", "AnimalId") FROM stdin;
+20586541-ba98-4dfe-b90a-9895d2d0d9bc	1	1	500	2021-10-03 18:14:31.695+01	2021-10-03 18:24:46.684+01	c9f03c69-cfb9-45ad-a649-869648dc5f1e	8cebf000-b4fc-43cd-aff9-37e6fe5f249c
+890049fe-8ee3-441a-973c-a4bf9e6b2d2f	1	1	350	2021-10-03 18:25:17.551+01	2021-10-03 18:25:17.551+01	c9f03c69-cfb9-45ad-a649-869648dc5f1e	c3f51573-6504-4a97-b7b4-418023099481
+47ba80f1-68e4-4123-996c-ce8bd1a86b69	2	2	200	2021-10-03 18:26:19.339+01	2021-10-03 18:26:19.339+01	7a29c366-8662-49a4-93c0-d7ad73199f3c	8cebf000-b4fc-43cd-aff9-37e6fe5f249c
+\.
+
+
+--
+-- Data for Name: Animals; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public."Animals" (id, gender, "birthDate", weight, "slaughterDate", "slaughterWeight", "slaughterLocal", "createdAt", "updatedAt", "RaceId", "ExplorationId") FROM stdin;
+8cebf000-b4fc-43cd-aff9-37e6fe5f249c	M	2021-10-03	120	\N	\N	\N	2021-10-03 17:29:10.524+01	2021-10-03 17:29:10.524+01	e6caf994-88d3-4871-8d61-a61488736377	e22de982-3ba8-46c3-b86f-ee5e2d57bb51
+c3f51573-6504-4a97-b7b4-418023099481	M	2021-10-03	300	\N	\N	\N	2021-10-03 17:29:36.911+01	2021-10-03 17:29:36.911+01	e6caf994-88d3-4871-8d61-a61488736377	e22de982-3ba8-46c3-b86f-ee5e2d57bb51
+40b8f592-0470-42bc-80d4-b74d43ab14b1	F	2021-10-03	120	\N	\N	\N	2021-10-03 17:29:56.671+01	2021-10-03 17:29:56.671+01	a6a67ef5-9b55-49c1-ac56-7713b74edfbd	0321b342-f490-4c6d-a3f9-41438e6ffdc5
+d122787b-0168-43ba-91b2-1b121f3a41fb	F	2021-10-03	200	\N	\N	\N	2021-10-03 17:30:04.177+01	2021-10-03 17:30:04.177+01	1d8f6bda-1815-42c8-b8f0-8cb965893ce5	e22de982-3ba8-46c3-b86f-ee5e2d57bb51
+22d59044-76e1-4420-8d75-2cb37736f6f0	M	2021-10-03	200	\N	\N	\N	2021-10-03 17:29:29.007+01	2021-10-03 17:29:29.007+01	1d8f6bda-1815-42c8-b8f0-8cb965893ce5	e22de982-3ba8-46c3-b86f-ee5e2d57bb51
+\.
+
+
+--
+-- Data for Name: Carts; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public."Carts" (id, quantity, "createdAt", "updatedAt", "AnimalProductId", "EggsBatchProductId", "UserId") FROM stdin;
+\.
+
+
+--
+-- Data for Name: Certifications; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public."Certifications" (id, "certificationCode", "initialDate", "finalDate", description, "createdAt", "updatedAt", "ExplorationId") FROM stdin;
+bf748274-1da1-4697-9b68-717d236caba4	C001	2121-10-03	2022-10-02	Certificação condições sanitárias	2021-10-03 16:47:54.272+01	2021-10-03 16:47:54.272+01	e22de982-3ba8-46c3-b86f-ee5e2d57bb51
+\.
+
+
+--
+-- Data for Name: EggsBatchExplorations; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public."EggsBatchExplorations" (quantity, "createdAt", "updatedAt", "ExplorationId", "EggsBatchId") FROM stdin;
+\.
+
+
+--
+-- Data for Name: EggsBatchProducts; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public."EggsBatchProducts" (id, quantity, "quantityAvailable", divider, "createdAt", "updatedAt", "ProductId", "EggsBatchId") FROM stdin;
+\.
+
+
+--
+-- Data for Name: EggsBatches; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public."EggsBatches" (id, name, caliber, quantity, "quantityAvailable", "createdAt", "updatedAt", "RaceId") FROM stdin;
+\.
+
+
+--
+-- Data for Name: ExplorationTypes; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public."ExplorationTypes" (id, name, description, "createdAt", "updatedAt") FROM stdin;
+f5cb80b2-ac96-44eb-aa3b-7fadd1ec836a	Pequena Exploração		2021-10-03 16:44:39.242+01	2021-10-03 16:44:39.242+01
+d43596b9-293c-4bc1-920b-d254555e8732	Grande Exploração		2021-10-03 16:44:54.843+01	2021-10-03 16:44:54.843+01
+\.
+
+
+--
+-- Data for Name: Explorations; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public."Explorations" (id, name, address, locale, zipcode, telephone, "mobilePhone", "fiscalNumber", "gpsLocalization", "createdAt", "updatedAt", "OrganizationId", "ExplorationTypeId") FROM stdin;
+0321b342-f490-4c6d-a3f9-41438e6ffdc5	Aviario XXL - Figueiró 	Beco dos trevos 218	Figueiró	3233-123	932673543	932673543	123123123		2021-10-03 16:46:10.606+01	2021-10-03 16:46:10.606+01	f7c473c9-e709-4e99-b4c9-828a368e8fb8	d43596b9-293c-4bc1-920b-d254555e8732
+e22de982-3ba8-46c3-b86f-ee5e2d57bb51	Aviário Pequeno - Grandola	Rua do Timbão 178	Grandola	4930-504	1233333333	1233333333	321321321		2021-10-03 16:47:02.606+01	2021-10-03 16:47:02.606+01	f7c473c9-e709-4e99-b4c9-828a368e8fb8	f5cb80b2-ac96-44eb-aa3b-7fadd1ec836a
+\.
+
+
+--
+-- Data for Name: Menus; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public."Menus" (id, title, description, image, active, "createdAt", "updatedAt", "RestaurantId") FROM stdin;
+b662cab4-8951-4165-abff-3cf05c207e30	Bacalhau assado no forno	Bacalhau assado no forno de lenha	5b9b7b98-130b-4a83-af88-23e8af02fe8f.jpg	t	2021-10-03 16:50:33.9+01	2021-10-03 17:26:27.794+01	fc319b2d-9a37-4591-a074-23dea35e1bf0
+\.
+
+
+--
+-- Data for Name: OrderHistory; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public."OrderHistory" (id, state, "createdAt", "updatedAt", "OrderId") FROM stdin;
+\.
+
+
+--
+-- Data for Name: OrderLines; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public."OrderLines" (id, quantity, total, "totalVAT", "createdAt", "updatedAt", "OrderId", "AnimalProductId", "EggsBatchProductId") FROM stdin;
+\.
+
+
+--
+-- Data for Name: Orders; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public."Orders" (id, total, "totalVAT", address, locale, zipcode, observation, "fiscalNumber", "createdAt", "updatedAt", "UserId") FROM stdin;
+\.
+
+
+--
+-- Data for Name: OrganizationTypes; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public."OrganizationTypes" (id, name, description, "createdAt", "updatedAt") FROM stdin;
+31f99af6-c094-43b1-985c-e62b73dd6b11	Amiba	Associação e afiliados	2021-10-03 16:37:19.043+01	2021-10-03 16:37:19.043+01
+1c5376c0-81e1-4fd9-9129-18425aa7d0e6	Produtor		2021-10-03 16:37:30.653+01	2021-10-03 16:37:30.653+01
+e549334b-ef2f-4f6a-ad5b-2f94accf2bf1	Restaurante		2021-10-03 16:37:59.297+01	2021-10-03 16:37:59.297+01
+5a83c501-df68-47c8-855a-da9ebc9d36c6	Matadouro	Matadouro certificado	2021-10-03 16:38:27.416+01	2021-10-03 16:38:27.416+01
+\.
+
+
+--
+-- Data for Name: Organizations; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public."Organizations" (id, name, address, locale, zipcode, telephone, "mobilePhone", "fiscalNumber", "createdAt", "updatedAt", "OrganizationTypeId", "UserId") FROM stdin;
+645a6a63-d4fc-467c-b6e0-b9d40973c261	Amiba Aves	Rua das Flores 178	Vilar	4950-122	251251678	939476432	222246543	2021-10-03 16:40:28.739+01	2021-10-03 16:40:28.739+01	31f99af6-c094-43b1-985c-e62b73dd6b11	a2c0e744-c1e4-47be-807f-f660dfccdd3d
+f7c473c9-e709-4e99-b4c9-828a368e8fb8	Joaquim Ribeiro & Familia	Rua das abelhas	Abelheira, Viana do Castelo	4900-712	221132432	987553344	3423432	2021-10-03 16:42:24.114+01	2021-10-03 16:42:24.114+01	1c5376c0-81e1-4fd9-9129-18425aa7d0e6	7667101c-f40b-410a-ac8c-17375ee530a7
+99324b9c-2955-4b6c-a168-09e4e87fe162	Restaurante Fortaleza	Rua do Timbão 178	S. Pedro da Torre	4930-504	932673577	932673577	34234323	2021-10-03 16:43:26.387+01	2021-10-03 16:43:26.387+01	e549334b-ef2f-4f6a-ad5b-2f94accf2bf1	a6b37ca7-a685-4ac3-bf5a-e3419608c9be
+\.
+
+
+--
+-- Data for Name: ProductTypes; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public."ProductTypes" (id, name, description, "createdAt", "updatedAt") FROM stdin;
+1b7e3cd0-add5-4945-acd8-ff995addfa6f	Animais 	Animais vivos	2021-10-03 17:30:59.753+01	2021-10-03 17:30:59.753+01
+e9744d65-8552-4452-9648-f62259be2465	Carnes	Peças de carne	2021-10-03 17:31:25.324+01	2021-10-03 17:31:25.324+01
+8de72b98-c41a-410d-b0d6-9c44a7c1d03d	Derivados	Ovos e derivados	2021-10-03 17:31:36.921+01	2021-10-03 17:31:36.921+01
+\.
+
+
+--
+-- Data for Name: Products; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public."Products" (id, name, description, price, unit, tax, image, "createdAt", "updatedAt", "ProductTypeId", "OrganizationId") FROM stdin;
+7a29c366-8662-49a4-93c0-d7ad73199f3c	Galinhas pequenas	Galinhas pequenas para criar	4.2	UNID	6	8a864b50-c025-4e35-923e-a4fb1cf325ef.jpg	2021-10-03 17:35:01.071+01	2021-10-03 17:35:01.071+01	1b7e3cd0-add5-4945-acd8-ff995addfa6f	\N
+c9f03c69-cfb9-45ad-a649-869648dc5f1e	Pernas de Frango		6.99	KG	6	62185668-3b7f-4fd8-88ca-3bb900074bf4.jpg	2021-10-03 17:35:54.622+01	2021-10-03 17:35:54.622+01	e9744d65-8552-4452-9648-f62259be2465	\N
+daa5051b-ef7e-4d8e-98f1-4173e09fe8e4	Ovos Pequenos	Ovos Pequenos à duzia	2.79	UNID	6	1b8f6b5f-c7f1-4e09-852a-f2830a199d4d.jpg	2021-10-03 17:37:00.229+01	2021-10-03 17:37:00.229+01	8de72b98-c41a-410d-b0d6-9c44a7c1d03d	\N
+3dc8026e-6b39-4722-9ab6-083fefbcf180	Peito de Frango		6.25	KG	6		2021-10-03 18:25:54.555+01	2021-10-03 18:25:54.555+01	e9744d65-8552-4452-9648-f62259be2465	\N
+\.
+
+
+--
+-- Data for Name: Races; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public."Races" (id, name, description, "createdAt", "updatedAt") FROM stdin;
+1d8f6bda-1815-42c8-b8f0-8cb965893ce5	Amarela	Raça Amarela	2021-10-03 17:27:49.551+01	2021-10-03 17:27:49.551+01
+e6caf994-88d3-4871-8d61-a61488736377	Pedrês Portuguesa	Raça Pedrês Portuguesa	2021-10-03 17:28:06.893+01	2021-10-03 17:28:06.893+01
+a6a67ef5-9b55-49c1-ac56-7713b74edfbd	Preta Lusitânica	Raça Preta Lusitânica	2021-10-03 17:27:27.119+01	2021-10-03 17:28:53.229+01
+\.
+
+
+--
+-- Data for Name: Restaurants; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public."Restaurants" (id, name, description, address, locale, zipcode, telephone, "mobilePhone", "fiscalNumber", "createdAt", "updatedAt", "UserId") FROM stdin;
+fc319b2d-9a37-4591-a074-23dea35e1bf0	Restaurante Fortaleza Valença	Restaurante situado na fortaleza valenciana	Rua das pedras	Valença	4900-998	251654567	251654567	34234323	2021-10-03 16:49:46.091+01	2021-10-03 16:49:46.091+01	a6b37ca7-a685-4ac3-bf5a-e3419608c9be
+\.
+
+
+--
+-- Data for Name: Users; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public."Users" (id, name, email, password, active, permission, address, locale, zipcode, "fiscalNumber", telephone, "mobilePhone", "createdAt", "updatedAt") FROM stdin;
+8ac5a4c2-8624-4bfe-8f0b-9b1ea2fc5c19	Productor	productor@amiba.pt	$2b$10$mrT06W2KLUawIzIf.dF5sOjwypX6h64VNc6D1ntx.ruZq6q7Ipmge	t	{PRODUCTOR}	Rua do Monte	S.Pedro da Torre	4930-509	251768173	932673575	932673575	2021-10-03 16:29:01.072+01	2021-10-03 16:29:01.072+01
+a2c0e744-c1e4-47be-807f-f660dfccdd3d	Admin	admin@amiba.pt	$2b$10$lApWvkLycz7ar1ZSu9GPsuiQe9jmwccR/TikeEEkO3l5GFifwKDDq	t	{ADMIN}	Rua do Timbão	S.Pedro da Torre	4930-504	251768171	932673577	932673577	2021-10-03 00:21:51.532+01	2021-10-03 00:21:51.532+01
+a6b37ca7-a685-4ac3-bf5a-e3419608c9be	User	user@amiba.pt	$2b$10$3IVkdZMPhaOFrH.FDQkCX.zoNWfMZ3GLy3CTFNO57OcejNrT50Ujq	t	{USER}	Rua dos Crastos	S.Pedro da Torre	4930-507	251768172	932673576	932673576	2021-10-03 16:28:45.894+01	2021-10-03 16:28:45.894+01
+7667101c-f40b-410a-ac8c-17375ee530a7	Joaquim Ribeiro	jribeiro@jr.pt	$2b$10$LTUxSowjDvTBEgv3XQ7lQuF/u259.CovGZwmLI9tLPCVupHehEPfK	t	{PRODUCTOR}	\N	\N	\N	\N	\N	\N	2021-10-03 16:41:31.733+01	2021-10-03 16:41:31.733+01
+\.
+
+
+--
+-- Name: AnimalProducts AnimalProducts_ProductId_AnimalId_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."AnimalProducts"
+    ADD CONSTRAINT "AnimalProducts_ProductId_AnimalId_key" UNIQUE ("ProductId", "AnimalId");
+
+
+--
+-- Name: AnimalProducts AnimalProducts_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."AnimalProducts"
+    ADD CONSTRAINT "AnimalProducts_pkey" PRIMARY KEY (id);
+
+
+--
+-- Name: Animals Animals_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Animals"
+    ADD CONSTRAINT "Animals_pkey" PRIMARY KEY (id);
+
+
+--
+-- Name: Carts Carts_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Carts"
+    ADD CONSTRAINT "Carts_pkey" PRIMARY KEY (id);
+
+
+--
+-- Name: Certifications Certifications_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Certifications"
+    ADD CONSTRAINT "Certifications_pkey" PRIMARY KEY (id);
+
+
+--
+-- Name: EggsBatchExplorations EggsBatchExplorations_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."EggsBatchExplorations"
+    ADD CONSTRAINT "EggsBatchExplorations_pkey" PRIMARY KEY ("ExplorationId", "EggsBatchId");
+
+
+--
+-- Name: EggsBatchProducts EggsBatchProducts_ProductId_EggsBatchId_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."EggsBatchProducts"
+    ADD CONSTRAINT "EggsBatchProducts_ProductId_EggsBatchId_key" UNIQUE ("ProductId", "EggsBatchId");
+
+
+--
+-- Name: EggsBatchProducts EggsBatchProducts_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."EggsBatchProducts"
+    ADD CONSTRAINT "EggsBatchProducts_pkey" PRIMARY KEY (id);
+
+
+--
+-- Name: EggsBatches EggsBatches_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."EggsBatches"
+    ADD CONSTRAINT "EggsBatches_pkey" PRIMARY KEY (id);
+
+
+--
+-- Name: ExplorationTypes ExplorationTypes_name_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."ExplorationTypes"
+    ADD CONSTRAINT "ExplorationTypes_name_key" UNIQUE (name);
+
+
+--
+-- Name: ExplorationTypes ExplorationTypes_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."ExplorationTypes"
+    ADD CONSTRAINT "ExplorationTypes_pkey" PRIMARY KEY (id);
+
+
+--
+-- Name: Explorations Explorations_fiscalNumber_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Explorations"
+    ADD CONSTRAINT "Explorations_fiscalNumber_key" UNIQUE ("fiscalNumber");
+
+
+--
+-- Name: Explorations Explorations_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Explorations"
+    ADD CONSTRAINT "Explorations_pkey" PRIMARY KEY (id);
+
+
+--
+-- Name: Menus Menus_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Menus"
+    ADD CONSTRAINT "Menus_pkey" PRIMARY KEY (id);
+
+
+--
+-- Name: OrderHistory OrderHistory_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."OrderHistory"
+    ADD CONSTRAINT "OrderHistory_pkey" PRIMARY KEY (id);
+
+
+--
+-- Name: OrderHistory OrderHistory_state_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."OrderHistory"
+    ADD CONSTRAINT "OrderHistory_state_key" UNIQUE (state);
+
+
+--
+-- Name: OrderLines OrderLines_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."OrderLines"
+    ADD CONSTRAINT "OrderLines_pkey" PRIMARY KEY (id);
+
+
+--
+-- Name: Orders Orders_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Orders"
+    ADD CONSTRAINT "Orders_pkey" PRIMARY KEY (id);
+
+
+--
+-- Name: OrganizationTypes OrganizationTypes_name_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."OrganizationTypes"
+    ADD CONSTRAINT "OrganizationTypes_name_key" UNIQUE (name);
+
+
+--
+-- Name: OrganizationTypes OrganizationTypes_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."OrganizationTypes"
+    ADD CONSTRAINT "OrganizationTypes_pkey" PRIMARY KEY (id);
+
+
+--
+-- Name: Organizations Organizations_fiscalNumber_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Organizations"
+    ADD CONSTRAINT "Organizations_fiscalNumber_key" UNIQUE ("fiscalNumber");
+
+
+--
+-- Name: Organizations Organizations_mobilePhone_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Organizations"
+    ADD CONSTRAINT "Organizations_mobilePhone_key" UNIQUE ("mobilePhone");
+
+
+--
+-- Name: Organizations Organizations_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Organizations"
+    ADD CONSTRAINT "Organizations_pkey" PRIMARY KEY (id);
+
+
+--
+-- Name: Organizations Organizations_telephone_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Organizations"
+    ADD CONSTRAINT "Organizations_telephone_key" UNIQUE (telephone);
+
+
+--
+-- Name: ProductTypes ProductTypes_name_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."ProductTypes"
+    ADD CONSTRAINT "ProductTypes_name_key" UNIQUE (name);
+
+
+--
+-- Name: ProductTypes ProductTypes_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."ProductTypes"
+    ADD CONSTRAINT "ProductTypes_pkey" PRIMARY KEY (id);
+
+
+--
+-- Name: Products Products_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Products"
+    ADD CONSTRAINT "Products_pkey" PRIMARY KEY (id);
+
+
+--
+-- Name: Races Races_name_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Races"
+    ADD CONSTRAINT "Races_name_key" UNIQUE (name);
+
+
+--
+-- Name: Races Races_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Races"
+    ADD CONSTRAINT "Races_pkey" PRIMARY KEY (id);
+
+
+--
+-- Name: Restaurants Restaurants_fiscalNumber_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Restaurants"
+    ADD CONSTRAINT "Restaurants_fiscalNumber_key" UNIQUE ("fiscalNumber");
+
+
+--
+-- Name: Restaurants Restaurants_mobilePhone_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Restaurants"
+    ADD CONSTRAINT "Restaurants_mobilePhone_key" UNIQUE ("mobilePhone");
+
+
+--
+-- Name: Restaurants Restaurants_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Restaurants"
+    ADD CONSTRAINT "Restaurants_pkey" PRIMARY KEY (id);
+
+
+--
+-- Name: Restaurants Restaurants_telephone_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Restaurants"
+    ADD CONSTRAINT "Restaurants_telephone_key" UNIQUE (telephone);
+
+
+--
+-- Name: Users Users_email_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Users"
+    ADD CONSTRAINT "Users_email_key" UNIQUE (email);
+
+
+--
+-- Name: Users Users_fiscalNumber_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Users"
+    ADD CONSTRAINT "Users_fiscalNumber_key" UNIQUE ("fiscalNumber");
+
+
+--
+-- Name: Users Users_mobilePhone_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Users"
+    ADD CONSTRAINT "Users_mobilePhone_key" UNIQUE ("mobilePhone");
+
+
+--
+-- Name: Users Users_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Users"
+    ADD CONSTRAINT "Users_pkey" PRIMARY KEY (id);
+
+
+--
+-- Name: Users Users_telephone_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Users"
+    ADD CONSTRAINT "Users_telephone_key" UNIQUE (telephone);
+
+
+--
+-- Name: AnimalProducts tr_animalProducts_insert; Type: TRIGGER; Schema: public; Owner: postgres
+--
+
+CREATE TRIGGER "tr_animalProducts_insert" BEFORE INSERT ON public."AnimalProducts" FOR EACH ROW EXECUTE FUNCTION public.tr_fc_animalproducts_insert();
+
+
+--
+-- Name: AnimalProducts tr_animalProducts_update; Type: TRIGGER; Schema: public; Owner: postgres
+--
+
+CREATE TRIGGER "tr_animalProducts_update" BEFORE UPDATE ON public."AnimalProducts" FOR EACH ROW EXECUTE FUNCTION public.tr_fc_animalproducts_update();
+
+
+--
+-- Name: Animals tr_animals_insert; Type: TRIGGER; Schema: public; Owner: postgres
+--
+
+CREATE TRIGGER tr_animals_insert BEFORE INSERT ON public."Animals" FOR EACH ROW EXECUTE FUNCTION public.tr_fc_animals_insert();
+
+
+--
+-- Name: Animals tr_animals_update; Type: TRIGGER; Schema: public; Owner: postgres
+--
+
+CREATE TRIGGER tr_animals_update BEFORE UPDATE ON public."Animals" FOR EACH ROW EXECUTE FUNCTION public.tr_fc_animals_update();
+
+
+--
+-- Name: Certifications tr_certifications_update; Type: TRIGGER; Schema: public; Owner: postgres
+--
+
+CREATE TRIGGER tr_certifications_update BEFORE UPDATE ON public."Certifications" FOR EACH ROW EXECUTE FUNCTION public.tr_fc_certifications_update();
+
+
+--
+-- Name: Explorations tr_explorations_update; Type: TRIGGER; Schema: public; Owner: postgres
+--
+
+CREATE TRIGGER tr_explorations_update BEFORE UPDATE ON public."Explorations" FOR EACH ROW EXECUTE FUNCTION public.tr_fc_explorations_update();
+
+
+--
+-- Name: AnimalProducts AnimalProducts_AnimalId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."AnimalProducts"
+    ADD CONSTRAINT "AnimalProducts_AnimalId_fkey" FOREIGN KEY ("AnimalId") REFERENCES public."Animals"(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
+
+
+--
+-- Name: AnimalProducts AnimalProducts_ProductId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."AnimalProducts"
+    ADD CONSTRAINT "AnimalProducts_ProductId_fkey" FOREIGN KEY ("ProductId") REFERENCES public."Products"(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
+
+
+--
+-- Name: Animals Animals_ExplorationId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Animals"
+    ADD CONSTRAINT "Animals_ExplorationId_fkey" FOREIGN KEY ("ExplorationId") REFERENCES public."Explorations"(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
+
+
+--
+-- Name: Animals Animals_RaceId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Animals"
+    ADD CONSTRAINT "Animals_RaceId_fkey" FOREIGN KEY ("RaceId") REFERENCES public."Races"(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
+
+
+--
+-- Name: Carts Carts_AnimalProductId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Carts"
+    ADD CONSTRAINT "Carts_AnimalProductId_fkey" FOREIGN KEY ("AnimalProductId") REFERENCES public."AnimalProducts"(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
+
+
+--
+-- Name: Carts Carts_EggsBatchProductId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Carts"
+    ADD CONSTRAINT "Carts_EggsBatchProductId_fkey" FOREIGN KEY ("EggsBatchProductId") REFERENCES public."EggsBatchProducts"(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
+
+
+--
+-- Name: Carts Carts_UserId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Carts"
+    ADD CONSTRAINT "Carts_UserId_fkey" FOREIGN KEY ("UserId") REFERENCES public."Users"(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
+
+
+--
+-- Name: Certifications Certifications_ExplorationId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Certifications"
+    ADD CONSTRAINT "Certifications_ExplorationId_fkey" FOREIGN KEY ("ExplorationId") REFERENCES public."Explorations"(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
+
+
+--
+-- Name: EggsBatchExplorations EggsBatchExplorations_EggsBatchId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."EggsBatchExplorations"
+    ADD CONSTRAINT "EggsBatchExplorations_EggsBatchId_fkey" FOREIGN KEY ("EggsBatchId") REFERENCES public."EggsBatches"(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
+
+
+--
+-- Name: EggsBatchExplorations EggsBatchExplorations_ExplorationId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."EggsBatchExplorations"
+    ADD CONSTRAINT "EggsBatchExplorations_ExplorationId_fkey" FOREIGN KEY ("ExplorationId") REFERENCES public."Explorations"(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
+
+
+--
+-- Name: EggsBatchProducts EggsBatchProducts_EggsBatchId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."EggsBatchProducts"
+    ADD CONSTRAINT "EggsBatchProducts_EggsBatchId_fkey" FOREIGN KEY ("EggsBatchId") REFERENCES public."EggsBatches"(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
+
+
+--
+-- Name: EggsBatchProducts EggsBatchProducts_ProductId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."EggsBatchProducts"
+    ADD CONSTRAINT "EggsBatchProducts_ProductId_fkey" FOREIGN KEY ("ProductId") REFERENCES public."Products"(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
+
+
+--
+-- Name: EggsBatches EggsBatches_RaceId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."EggsBatches"
+    ADD CONSTRAINT "EggsBatches_RaceId_fkey" FOREIGN KEY ("RaceId") REFERENCES public."Races"(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
+
+
+--
+-- Name: Explorations Explorations_ExplorationTypeId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Explorations"
+    ADD CONSTRAINT "Explorations_ExplorationTypeId_fkey" FOREIGN KEY ("ExplorationTypeId") REFERENCES public."ExplorationTypes"(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
+
+
+--
+-- Name: Explorations Explorations_OrganizationId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Explorations"
+    ADD CONSTRAINT "Explorations_OrganizationId_fkey" FOREIGN KEY ("OrganizationId") REFERENCES public."Organizations"(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
+
+
+--
+-- Name: Menus Menus_RestaurantId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Menus"
+    ADD CONSTRAINT "Menus_RestaurantId_fkey" FOREIGN KEY ("RestaurantId") REFERENCES public."Restaurants"(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
+
+
+--
+-- Name: OrderHistory OrderHistory_OrderId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."OrderHistory"
+    ADD CONSTRAINT "OrderHistory_OrderId_fkey" FOREIGN KEY ("OrderId") REFERENCES public."Orders"(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
+
+
+--
+-- Name: OrderLines OrderLines_AnimalProductId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."OrderLines"
+    ADD CONSTRAINT "OrderLines_AnimalProductId_fkey" FOREIGN KEY ("AnimalProductId") REFERENCES public."AnimalProducts"(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
+
+
+--
+-- Name: OrderLines OrderLines_EggsBatchProductId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."OrderLines"
+    ADD CONSTRAINT "OrderLines_EggsBatchProductId_fkey" FOREIGN KEY ("EggsBatchProductId") REFERENCES public."EggsBatchProducts"(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
+
+
+--
+-- Name: OrderLines OrderLines_OrderId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."OrderLines"
+    ADD CONSTRAINT "OrderLines_OrderId_fkey" FOREIGN KEY ("OrderId") REFERENCES public."Orders"(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
+
+
+--
+-- Name: Orders Orders_UserId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Orders"
+    ADD CONSTRAINT "Orders_UserId_fkey" FOREIGN KEY ("UserId") REFERENCES public."Users"(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
+
+
+--
+-- Name: Organizations Organizations_OrganizationTypeId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Organizations"
+    ADD CONSTRAINT "Organizations_OrganizationTypeId_fkey" FOREIGN KEY ("OrganizationTypeId") REFERENCES public."OrganizationTypes"(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
+
+
+--
+-- Name: Organizations Organizations_UserId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Organizations"
+    ADD CONSTRAINT "Organizations_UserId_fkey" FOREIGN KEY ("UserId") REFERENCES public."Users"(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
+
+
+--
+-- Name: Products Products_OrganizationId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Products"
+    ADD CONSTRAINT "Products_OrganizationId_fkey" FOREIGN KEY ("OrganizationId") REFERENCES public."Organizations"(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
+
+
+--
+-- Name: Products Products_ProductTypeId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Products"
+    ADD CONSTRAINT "Products_ProductTypeId_fkey" FOREIGN KEY ("ProductTypeId") REFERENCES public."ProductTypes"(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
+
+
+--
+-- Name: Restaurants Restaurants_UserId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Restaurants"
+    ADD CONSTRAINT "Restaurants_UserId_fkey" FOREIGN KEY ("UserId") REFERENCES public."Users"(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
+
+
+--
+-- PostgreSQL database dump complete
+--
+

@@ -1,0 +1,4 @@
+cd C:\Program Files\PostgreSQL\13\bin 
+pg_dump -U postgres -d galinhas --data-only --disable-triggers > C:\GitHub\Projeto-Investigacao\_databaseBackups\backupData
+
+psql -U postgres -d galinhas -1 -f C:\GitHub\Projeto-Investigacao\_databaseBackups\backupData

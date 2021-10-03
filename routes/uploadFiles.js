@@ -11,7 +11,6 @@ router.get("/:folder/:file", async (req, res) => {
     try {
         const folder = req.params.folder + '/'
         const img = "../Projeto-Investigacao/public/uploads/" + folder + req.params.file
-        console.log(img)
         fs.access(img, fs.constants.F_OK, err => {
             return err
         })
@@ -44,9 +43,7 @@ router.post("/create", async (req, res) => {
         if (!allowedExtensions.test(extension)) throw "Unsupported extension!"
         if (size > 1024 * 1024 * 5) throw "File must be less than 5MB"
 
-        const md5 = file.md5
-
-        const fileNameSaved = md5 + uuid() + extension
+        const fileNameSaved =  uuid() + extension
 
         const URL = "/uploads/" + directory + '/' + fileNameSaved
         console.log(URL)

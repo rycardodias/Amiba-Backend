@@ -113,7 +113,7 @@ router.post('/create', removeCache(['/animalProducts', '/products/allAvailable']
 router.put('/update', removeCache(['/animalProducts', '/products/allAvailable']), async (req, res) => {
     const response = new ResponseModel()
     try {
-        const { id, ProductId, AnimalId, quantity, quantityAvailable, weight } = req.body
+        const { id, quantity } = req.body
 
 
         if (!id) {
@@ -122,14 +122,12 @@ router.put('/update', removeCache(['/animalProducts', '/products/allAvailable'])
         }
 
         const data = {
-            ProductId: ProductId,
-            AnimalId: AnimalId,
             quantity: quantity,
-            quantityAvailable: quantityAvailable,
-            weight: weight,
         }
 
         const request = await Model.update(data, { where: { id: id } })
+
+        console.log(request)
 
         if (request == 1) {
             response.data = success_row_update
