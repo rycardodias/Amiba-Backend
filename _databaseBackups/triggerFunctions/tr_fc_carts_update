@@ -1,0 +1,69 @@
+-- FUNCTION: public.tr_fc_carts_update()
+
+-- DROP FUNCTION public.tr_fc_carts_update();
+
+CREATE FUNCTION public.tr_fc_carts_update()
+    RETURNS trigger
+    LANGUAGE 'plpgsql'
+    COST 100
+    VOLATILE NOT LEAKPROOF
+AS $BODY$
+DECLARE
+	v_newQuantityAvailable integer default 0;
+	v_quantity integer default 0;
+	v_existing_quantity integer default 0;
+BEGIN	
+	IF (NEW."quantity" <1) THEN
+		RAISE EXCEPTION 'Quantity cannot be lower than 1';
+	END IF;
+	
+	IF(OLD."id"<>NEW."id") THEN
+		RAISE EXCEPTION 'Carts.id cannot be changed';
+	END IF;
+	IF(OLD."createdAt"<>NEW."createdAt") THEN
+		RAISE EXCEPTION 'Carts.createdAt cannot be changed';
+	END IF;
+	IF(OLD."AnimalProductId"<>NEW."AnimalProductId") THEN
+		RAISE EXCEPTION 'Carts.AnimalProductId cannot be changed';
+	END IF;
+	IF(OLD."EggsBatchProductId"<>NEW."EggsBatchProductId") THEN
+		RAISE EXCEPTION 'Carts.EggsBatchProductId cannot be changed';
+	END IF;
+	IF(OLD."UserId"<>NEW."UserId") THEN
+		RAISE EXCEPTION 'Carts.UserId cannot be changed';
+	END IF;
+	
+	IF(NEW."AnimalProductId" IS NOT NULL) THEN
+		SELECT "quantity"
+		  INTO v_quantity
+		  FROM public."AnimalProducts"
+		 WHERE "id" = NEW."AnimalProductId";
+	ELSIF(NEW."EggsBatchProductId" IS NOT NULL) THEN
+		SELECT "quantity"
+		  INTO v_quantity
+		  FROM public."EggsBatchProducts"
+		 WHERE "id" = NEW."EggsBatchProductId";
+	END IF;
+	
+	 v_newQuantityAvailable = (v_quantity - NEW."quantity");
+
+	 IF(v_newQuantityAvailable<0) THEN
+		RAISE EXCEPTION 'quantityAvailable cannot be lower than 0';
+	 END IF;
+	 
+	 IF(NEW."AnimalProductId" IS NOT NULL) THEN
+	 	UPDATE public."AnimalProducts"
+		   SET  "quantityAvailable" = v_newQuantityAvailable
+		 WHERE "id" = NEW."AnimalProductId";
+	 ELSIF(NEW."EggsBatchProductId" IS NOT NULL) THEN		 
+		UPDATE public."EggsBatchProducts"
+		   SET  "quantityAvailable"= v_newQuantityAvailable
+		 WHERE "id" = NEW."EggsBatchProductId";
+	END IF;
+	
+	RETURN NEW;
+END;
+$BODY$;
+
+ALTER FUNCTION public.tr_fc_carts_update()
+    OWNER TO postgres;
