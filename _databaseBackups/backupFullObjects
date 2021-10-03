@@ -580,9 +580,6 @@ BEGIN
 	IF((NEW."quantity"%NEW."divider")<>0) THEN
 		RAISE EXCEPTION 'quantity must have 0 remaining from division';
 	END IF;
-	IF (NEW."quantityAvailable"<>OLD."quantityAvailable") THEN
-		RAISE EXCEPTION 'quantityAvailable cannot be changed';
-	END IF;
 	IF (NEW."ProductId"<>OLD."ProductId") THEN
 		RAISE EXCEPTION 'ProductId cannot be changed';
 	END IF;
@@ -590,7 +587,10 @@ BEGIN
 		RAISE EXCEPTION 'EggsBatchId cannot be changed';
 	END IF;
 	
-	NEW."quantityAvailable" = OLD."quantityAvailable" + (NEW."quantity"- OLD."quantity");
+	/* É necessario para quando se faz o update da qtdAvailable através de script*/
+	IF (NEW."quantityAvailable" = OLD."quantityAvailable") THEN
+		NEW."quantityAvailable" = OLD."quantityAvailable" + (NEW."quantity"- OLD."quantity");
+	END IF;
 	
 	SELECT "quantityAvailable"
 	  INTO v_quantityAvailable
@@ -767,6 +767,8 @@ BEGIN
 		NEW."total"= NEW."quantity" * v_product_price::float;
 	ELSIF (v_product_unit = 'KG') THEN
 		NEW."total"=  NEW."quantity" * (v_animalProduct_weight::float(2)/1000) * v_product_price::float;
+	ELSIF(v_product_unit = 'DOZEN') THEN
+		NEW."total"= (NEW."quantity" * v_product_price::float) / 12;
 	END IF;
 
 	NEW."totalVAT"= NEW."total" * (v_product_tax::float/100);
@@ -888,6 +890,8 @@ BEGIN
 		NEW."total"= NEW."quantity" * v_product_price::float;
 	ELSIF (v_product_unit = 'KG') THEN
 		NEW."total"=  NEW."quantity" * (v_animalProduct_weight::float(2)/1000) * v_product_price::float;
+	ELSIF(v_product_unit = 'DOZEN') THEN
+		NEW."total"= (NEW."quantity" * v_product_price::float) / 12;
 	END IF;
 
 	NEW."totalVAT"= NEW."total" * (v_product_tax::float/100);
@@ -1380,6 +1384,7 @@ COPY public."EggsBatchExplorations" (quantity, "createdAt", "updatedAt", "Explor
 --
 
 COPY public."EggsBatchProducts" (id, quantity, "quantityAvailable", divider, "createdAt", "updatedAt", "ProductId", "EggsBatchId") FROM stdin;
+aa6b7e3f-686f-4ff3-9832-c35da0ac5c84	36	36	12	2021-10-03 23:39:17.368+01	2021-10-03 23:39:17.368+01	daa5051b-ef7e-4d8e-98f1-4173e09fe8e4	3101f26e-928f-4fec-8657-5b0a87421336
 \.
 
 
@@ -1388,7 +1393,7 @@ COPY public."EggsBatchProducts" (id, quantity, "quantityAvailable", divider, "cr
 --
 
 COPY public."EggsBatches" (id, name, caliber, quantity, "quantityAvailable", "createdAt", "updatedAt", "RaceId") FROM stdin;
-3101f26e-928f-4fec-8657-5b0a87421336	Lote 01	12	36	36	2021-10-03 21:58:59.777+01	2021-10-03 21:58:59.777+01	1d8f6bda-1815-42c8-b8f0-8cb965893ce5
+3101f26e-928f-4fec-8657-5b0a87421336	Lote 01	12	36	0	2021-10-03 21:58:59.777+01	2021-10-03 21:58:59.777+01	1d8f6bda-1815-42c8-b8f0-8cb965893ce5
 \.
 
 
@@ -1434,6 +1439,7 @@ COPY public."OrderHistory" (id, state, "createdAt", "updatedAt", "OrderId") FROM
 --
 
 COPY public."OrderLines" (id, quantity, total, "totalVAT", "createdAt", "updatedAt", "OrderId", "AnimalProductId", "EggsBatchProductId") FROM stdin;
+6d309684-2a03-4ebd-859a-0c790d40ae1c	12	2.7900000000000005	0.16740000000000002	2021-10-04 00:03:21.879+01	2021-10-04 00:03:21.879+01	f7ca5002-efdc-472b-bf01-d42acc90835f	\N	aa6b7e3f-686f-4ff3-9832-c35da0ac5c84
 \.
 
 
@@ -1443,6 +1449,9 @@ COPY public."OrderLines" (id, quantity, total, "totalVAT", "createdAt", "updated
 
 COPY public."Orders" (id, total, "totalVAT", address, locale, zipcode, observation, "fiscalNumber", "createdAt", "updatedAt", "UserId") FROM stdin;
 02440cdb-da72-4443-9420-8e771a73076b	0	0	\N	\N	\N	\N	\N	2021-10-03 23:30:54.567+01	2021-10-03 23:30:54.567+01	a2c0e744-c1e4-47be-807f-f660dfccdd3d
+af6ea929-ca14-430e-9d7d-c5888ff1bde1	0	0	\N	\N	\N	\N	\N	2021-10-03 23:51:46.236+01	2021-10-03 23:51:46.236+01	a2c0e744-c1e4-47be-807f-f660dfccdd3d
+4502b9e3-de79-45d9-9a8c-b230f5a6ab31	0	0	\N	\N	\N	\N	\N	2021-10-04 00:00:49.371+01	2021-10-04 00:00:49.371+01	a2c0e744-c1e4-47be-807f-f660dfccdd3d
+f7ca5002-efdc-472b-bf01-d42acc90835f	0	0	\N	\N	\N	\N	\N	2021-10-04 00:03:21.848+01	2021-10-04 00:03:21.848+01	a2c0e744-c1e4-47be-807f-f660dfccdd3d
 \.
 
 
@@ -1487,8 +1496,8 @@ e9744d65-8552-4452-9648-f62259be2465	Carnes	Peças de carne	2021-10-03 17:31:25.
 COPY public."Products" (id, name, description, price, unit, tax, image, "createdAt", "updatedAt", "ProductTypeId", "OrganizationId") FROM stdin;
 7a29c366-8662-49a4-93c0-d7ad73199f3c	Galinhas pequenas	Galinhas pequenas para criar	4.2	UNID	6	8a864b50-c025-4e35-923e-a4fb1cf325ef.jpg	2021-10-03 17:35:01.071+01	2021-10-03 17:35:01.071+01	1b7e3cd0-add5-4945-acd8-ff995addfa6f	\N
 c9f03c69-cfb9-45ad-a649-869648dc5f1e	Pernas de Frango		6.99	KG	6	62185668-3b7f-4fd8-88ca-3bb900074bf4.jpg	2021-10-03 17:35:54.622+01	2021-10-03 17:35:54.622+01	e9744d65-8552-4452-9648-f62259be2465	\N
-daa5051b-ef7e-4d8e-98f1-4173e09fe8e4	Ovos Pequenos	Ovos Pequenos à duzia	2.79	UNID	6	1b8f6b5f-c7f1-4e09-852a-f2830a199d4d.jpg	2021-10-03 17:37:00.229+01	2021-10-03 17:37:00.229+01	8de72b98-c41a-410d-b0d6-9c44a7c1d03d	\N
 3dc8026e-6b39-4722-9ab6-083fefbcf180	Peito de Frango		6.3	KG	6		2021-10-03 18:25:54.555+01	2021-10-03 18:25:54.555+01	e9744d65-8552-4452-9648-f62259be2465	\N
+daa5051b-ef7e-4d8e-98f1-4173e09fe8e4	Ovos Pequenos	Ovos Pequenos à duzia	2.79	DOZEN	6	1b8f6b5f-c7f1-4e09-852a-f2830a199d4d.jpg	2021-10-03 17:37:00.229+01	2021-10-03 17:37:00.229+01	8de72b98-c41a-410d-b0d6-9c44a7c1d03d	\N
 \.
 
 
