@@ -2,7 +2,7 @@
 
 -- DROP FUNCTION public.tr_fc_eggsbatchproducts_delete();
 
-CREATE FUNCTION public.tr_fc_eggsbatchproducts_delete()
+CREATE OR REPLACE FUNCTION public.tr_fc_eggsbatchproducts_delete()
     RETURNS trigger
     LANGUAGE 'plpgsql'
     COST 100
@@ -15,11 +15,11 @@ BEGIN
 	SELECT "quantityAvailable"
 	  INTO v_quantityAvailable
 	  FROM public."EggsBatches"
-	 WHERE "id" = NEW."EggsBatchId";
+	 WHERE "id" = OLD."EggsBatchId";
 	 
 	 UPDATE public."EggsBatches"
 	    SET "quantityAvailable" = v_quantityAvailable + OLD."quantity"
-	  WHERE "id" = NEW."EggsBatchId";
+	  WHERE "id" = OLD."EggsBatchId";
 	  
 	RETURN OLD;
 END;

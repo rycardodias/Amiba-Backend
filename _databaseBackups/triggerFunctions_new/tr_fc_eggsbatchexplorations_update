@@ -20,6 +20,14 @@ BEGIN
 	  INTO v_quantity, v_quantityAvailable
 	  FROM public."EggsBatches"
 	 WHERE "id" = NEW."EggsBatchId"; 
+
+	IF((v_quantity + (NEW."quantity" - OLD."quantity"))<0) THEN
+		RAISE EXCEPTION 'EggsBatches.quantity must be greater or equal than 0';
+	END IF;
+
+	IF((v_quantityAvailable + (NEW."quantity" - OLD."quantity"))<0) THEN
+		RAISE EXCEPTION 'EggsBatches.quantityAvailable must be greater or equal than 0';
+	END IF;
 	 
 	UPDATE public."EggsBatches"
 	   SET "quantity" = v_quantity + (NEW."quantity" - OLD."quantity"),
