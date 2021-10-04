@@ -8,10 +8,10 @@ const { error_missing_fields, error_invalid_fields, error_data_not_found, succes
     error_row_update, error_row_create, success_row_create } = require('../lib/ResponseMessages')
 const Product = require('../models/Product')
 
-router.get('/', cache(), async (req, res) => {
+router.get('/',  async (req, res) => {
     const response = new ResponseModel()
     try {
-        const request = await Model.findAll({ include: Product })
+        const request = await Model.findAll()
         if (request.length > 0) {
             response.data = request
             res.status(200).json(response)
@@ -34,7 +34,31 @@ router.get('/id/:id', async (req, res) => {
             response.error = error_missing_fields
             res.status(400).json(response)
         }
-        const request = await Model.findByPk(req.params.id, { include: Product })
+        const request = await Model.findByPk(req.params.id)
+
+        if (request) {
+            response.data = request
+            res.status(200).json(response)
+        } else {
+            response.error = error_data_not_found
+            res.status(404).json(response)
+        }
+    } catch (error) {
+        response.message = error_invalid_fields
+        response.error = error
+        return res.status(400).json(response)
+    }
+
+})
+
+router.get('/OrderId/:OrderId', async (req, res) => {
+    const response = new ResponseModel()
+    try {
+        if (!req.params.OrderId) {
+            response.error = error_missing_fields
+            res.status(400).json(response)
+        }
+        const request = await Model.findAll({ where: { OrderId: req.params.OrderId } })
 
         if (request) {
             response.data = request
@@ -54,7 +78,7 @@ router.get('/id/:id', async (req, res) => {
 router.post('/create', removeCache('/orderLines', '/orders', '/products/allAvailable'), async (req, res) => {
     const response = new ResponseModel()
     try {
-        const { OrderId, quantity,  AnimalProductId, EggsBatchProductId } = req.body
+        const { OrderId, quantity, AnimalProductId, EggsBatchProductId } = req.body
 
         //FIXME não esta a deixar criar um estes parametros, falta os id ||id
         // if (!(OrderId && quantity)) {

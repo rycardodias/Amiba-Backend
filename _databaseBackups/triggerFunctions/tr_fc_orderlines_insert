@@ -2,7 +2,7 @@
 
 -- DROP FUNCTION public.tr_fc_orderlines_insert();
 
-CREATE FUNCTION public.tr_fc_orderlines_insert()
+CREATE OR REPLACE FUNCTION public.tr_fc_orderlines_insert()
     RETURNS trigger
     LANGUAGE 'plpgsql'
     COST 100
@@ -17,6 +17,8 @@ DECLARE
 	v_product_unit varchar(255);
 	v_product_price float;
 	v_product_tax integer default 0;
+	v_total integer default 0;
+	v_totalVAT integer default 0;
 BEGIN
 	IF (NEW."AnimalProductId" IS NOT NULL AND NEW."EggsBatchProductId" IS NOT NULL) THEN
 		RAISE EXCEPTION 'Record cannot have AnimalProductId and EggsBatchProductId fields';
@@ -25,8 +27,8 @@ BEGIN
 		RAISE EXCEPTION 'Quantity cannot be lower than 1';
 	END IF;
 	
-	SELECT "UserId"
-	  INTO v_UserId
+	SELECT "UserId", "total", "totalVAT"
+	  INTO v_UserId, v_total, v_totalVAT
 	  FROM public."Orders"
 	 WHERE "Orders"."id" = NEW."OrderId";
 	 
@@ -93,6 +95,11 @@ BEGIN
 	END IF;
 
 	NEW."totalVAT"= NEW."total" * (v_product_tax::float/100);
+	
+	UPDATE public."Orders"
+	   SET "total" = v_total + NEW."total",
+	       "totalVAT" = v_totalVAT + NEW."totalVAT"
+	 WHERE "id" = NEW."OrderId";
 	
 	RETURN NEW;
 END;
