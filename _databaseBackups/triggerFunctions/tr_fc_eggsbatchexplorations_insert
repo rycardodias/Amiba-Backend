@@ -9,22 +9,11 @@ CREATE FUNCTION public.tr_fc_eggsbatchexplorations_insert()
     VOLATILE NOT LEAKPROOF
 AS $BODY$
 DECLARE
-	v_quantity integer default 0;
-	v_quantityAvailable integer default 0;
+
 BEGIN
 	IF(NEW."quantity"<1) THEN
 		RAISE EXCEPTION 'Quantity must be greater than 0';
 	END IF;
-	
-	SELECT COALESCE("quantity", 0), COALESCE("quantityAvailable", 0)
-	  INTO v_quantity, v_quantityAvailable
-	  FROM public."EggsBatches"
-	 WHERE "id" = NEW."EggsBatchId"; 
-	 
-	UPDATE public."EggsBatches"
-	   SET "quantity" = v_quantity + NEW."quantity",
-	       "quantityAvailable" = v_quantityAvailable + NEW."quantity"
-	 WHERE "id" = NEW."EggsBatchId";
 	
 	RETURN NEW;
 END;

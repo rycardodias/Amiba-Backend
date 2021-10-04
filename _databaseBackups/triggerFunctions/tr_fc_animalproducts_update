@@ -27,9 +27,6 @@ BEGIN
 	IF(OLD."AnimalId"<>NEW."AnimalId") THEN
 		RAISE EXCEPTION 'AnimalProducts.AnimalId cannot be changed';
 	END IF;
-	IF(OLD."weight"<>NEW."weight") THEN
-		RAISE EXCEPTION 'AnimalProducts.weight cannot be changed';
-	END IF;
 	
 	SELECT "unit"
 	  INTO v_unit

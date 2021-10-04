@@ -9,11 +9,12 @@ CREATE FUNCTION public.tr_fc_eggsbatchproducts_insert()
     VOLATILE NOT LEAKPROOF
 AS $BODY$
 DECLARE
-	v_quantity integer default 0;
-	v_quantityAvailable integer default 0;
+	v_quantity_EggsBatchExplorations integer default 0;
+	v_quantity_EggsBatchProducts integer default 0;
+	v_new_quantity_EggsBatchProducts integer default 0;
 BEGIN
 	IF (NEW."quantity" <1) THEN
-		RAISE EXCEPTION 'Quantity must be greater than 0';
+		RAISE EXCEPTION 'quantity must be greater than 0';
 	END IF;
 	IF (NEW."divider" <1) THEN
 		RAISE EXCEPTION 'divider must be greater than 0';
@@ -23,20 +24,24 @@ BEGIN
 		RAISE EXCEPTION 'quantity must have 0 remaining from division';
 	END IF;
 	
+	SELECT COALESCE(SUM("quantity"),0)
+	  INTO v_quantity_EggsBatchExplorations
+	  FROM public."EggsBatchExplorations"
+	 WHERE "EggsBatchId" = NEW."EggsBatchId";
+	 
+	SELECT COALESCE(SUM("quantity"),0)
+	  INTO v_quantity_EggsBatchProducts
+	  FROM public."EggsBatchProducts"
+	 WHERE "EggsBatchId" = NEW."EggsBatchId";
+	 
+	 v_new_quantity_EggsBatchProducts = v_quantity_EggsBatchProducts + NEW."quantity";
+	 
+	IF(v_new_quantity_EggsBatchProducts>v_quantity_EggsBatchExplorations) THEN
+		RAISE EXCEPTION 'quantity cannot be greater than EggsBatchExplorations.quantity available';
+	END IF;
+	
 	NEW."quantityAvailable" = NEW."quantity";
 	
-	SELECT "quantityAvailable"
-	  INTO v_quantityAvailable
-	  FROM public."EggsBatches"
-	 WHERE "id" = NEW."EggsBatchId";
-	 
-	 IF ((v_quantityAvailable - NEW."quantity") <0) THEN
-		RAISE EXCEPTION 'quantity required is greater than available';
-	END IF;
-	 
-	 UPDATE public."EggsBatches"
-	    SET "quantityAvailable" = v_quantityAvailable - NEW."quantity"
-	  WHERE "id" = NEW."EggsBatchId";
 	RETURN NEW;
 
 END;

@@ -9,17 +9,27 @@ CREATE FUNCTION public.tr_fc_eggsbatchproducts_update()
     VOLATILE NOT LEAKPROOF
 AS $BODY$
 DECLARE
-	v_quantity integer default 0;
-	v_quantityAvailable integer default 0;
+	v_quantity_EggsBatchExplorations integer default 0;
+	v_quantity_EggsBatchProducts integer default 0;
+	v_new_quantity_EggsBatchProducts integer default 0;
 BEGIN
 	IF (NEW."quantity" <1) THEN
-		RAISE EXCEPTION 'Quantity must be greater than 0';
+		RAISE EXCEPTION 'quantity must be greater than 0';
+	END IF;
+	IF (NEW."quantityAvailable" <0) THEN
+		RAISE EXCEPTION 'quantityAvailable must be greater than 0';
+	END IF;
+	IF (NEW."quantityAvailable" > NEW."quantity") THEN
+		RAISE EXCEPTION 'quantityAvailable cannot be greater than quantity';
 	END IF;
 	IF (NEW."divider" <1) THEN
 		RAISE EXCEPTION 'divider must be greater than 0';
 	END IF;
 	IF((NEW."quantity"%NEW."divider")<>0) THEN
 		RAISE EXCEPTION 'quantity must have 0 remaining from division';
+	END IF;
+	IF((NEW."quantityAvailable"%NEW."divider")<>0) THEN
+		RAISE EXCEPTION 'quantityAvailable must have 0 remaining from division';
 	END IF;
 	IF (NEW."ProductId"<>OLD."ProductId") THEN
 		RAISE EXCEPTION 'ProductId cannot be changed';
@@ -28,23 +38,28 @@ BEGIN
 		RAISE EXCEPTION 'EggsBatchId cannot be changed';
 	END IF;
 	
-	/* É necessario para quando se faz o update da qtdAvailable através de script*/
-	IF (NEW."quantityAvailable" = OLD."quantityAvailable") THEN
-		NEW."quantityAvailable" = OLD."quantityAvailable" + (NEW."quantity"- OLD."quantity");
+	SELECT COALESCE(SUM("quantity"),0)
+	  INTO v_quantity_EggsBatchExplorations
+	  FROM public."EggsBatchExplorations"
+	 WHERE "EggsBatchId" = NEW."EggsBatchId";
+	 
+	SELECT COALESCE(SUM("quantity"),0)
+	  INTO v_quantity_EggsBatchProducts
+	  FROM public."EggsBatchProducts"
+	 WHERE "EggsBatchId" = NEW."EggsBatchId";
+	 
+	 v_new_quantity_EggsBatchProducts = v_quantity_EggsBatchProducts + (NEW."quantity" - OLD."quantity");
+	 	 
+	IF(v_new_quantity_EggsBatchProducts>v_quantity_EggsBatchExplorations) THEN
+		RAISE EXCEPTION 'quantity cannot be greater than EggsBatchExplorations.quantity available';
 	END IF;
 	
-	SELECT "quantityAvailable"
-	  INTO v_quantityAvailable
-	  FROM public."EggsBatches"
-	 WHERE "id" = NEW."EggsBatchId";
-	 
-	 IF ((v_quantityAvailable + (OLD."quantity" - NEW."quantity")) <0) THEN
-		RAISE EXCEPTION 'quantity required is greater than available';
+	IF(NEW."quantityAvailable"=OLD."quantityAvailable") THEN
+		IF ((OLD."quantityAvailable" + (NEW."quantity" - OLD."quantity"))<0) THEN
+			RAISE EXCEPTION 'quantityAvailable must be greater or equal than 0';
+		END IF;
+		NEW."quantityAvailable" = OLD."quantityAvailable" + (NEW."quantity" - OLD."quantity");
 	END IF;
-	 
-	 UPDATE public."EggsBatches"
-	    SET "quantityAvailable" = v_quantityAvailable + (OLD."quantity" - NEW."quantity")
-	  WHERE "id" = NEW."EggsBatchId";
 	RETURN NEW;
 
 END;
