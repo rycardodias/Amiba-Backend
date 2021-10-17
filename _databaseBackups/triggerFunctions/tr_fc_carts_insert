@@ -37,34 +37,6 @@ BEGIN
 		RETURN OLD;
 	END IF;
 	
-	IF(NEW."AnimalProductId" IS NOT NULL) THEN
-		SELECT "quantity"
-		  INTO v_quantity
-		  FROM public."AnimalProducts"
-		 WHERE "id" = NEW."AnimalProductId";
-	ELSIF(NEW."EggsBatchProductId" IS NOT NULL) THEN
-		SELECT "quantity"
-		  INTO v_quantity
-		  FROM public."EggsBatchProducts"
-		 WHERE "id" = NEW."EggsBatchProductId";
-	END IF;
-	
-	 v_newQuantityAvailable = (v_quantity - NEW."quantity");
-
-	 IF(v_newQuantityAvailable<0) THEN
-		RAISE EXCEPTION 'quantityAvailable cannot be lower than 0';
-	 END IF;
-	 
-	 IF(NEW."AnimalProductId" IS NOT NULL) THEN
-	 	UPDATE public."AnimalProducts"
-		   SET  "quantityAvailable" = v_newQuantityAvailable
-		 WHERE "id" = NEW."AnimalProductId";
-	 ELSIF(NEW."EggsBatchProductId" IS NOT NULL) THEN		 
-		UPDATE public."EggsBatchProducts"
-		   SET  "quantityAvailable"= v_newQuantityAvailable
-		 WHERE "id" = NEW."EggsBatchProductId";
-	END IF;
-	
 	RETURN NEW;
 END;
 $BODY$;

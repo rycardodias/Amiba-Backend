@@ -115,7 +115,7 @@ router.post('/create', removeCache(['/orders']), async (req, res) => {
 router.put('/update', removeCache(['/orders']), async (req, res) => {
     const response = new ResponseModel()
     try {
-        const { id, UserId, total, totalVAT, address, locale, zipcode, observation, fiscalNumber } = req.body
+        const { id,  total, totalVAT, address, locale, zipcode, observation, fiscalNumber } = req.body
 
         if (!id) {
             response.error = error_missing_fields
@@ -123,7 +123,6 @@ router.put('/update', removeCache(['/orders']), async (req, res) => {
         }
 
         const data = {
-            UserId: UserId,
             total: total,
             totalVAT: totalVAT,
             address: address,
