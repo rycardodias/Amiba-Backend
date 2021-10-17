@@ -91,8 +91,8 @@ router.get('/UserId/Product/:UserId', async (req, res) => {
         const request = await Model.findAll({
             where: { UserId: UserId },
             include: [
-                { model: AnimalProduct,  include: Product },
-                { model: EggsBatchProduct,  include: Product }
+                { model: AnimalProduct, include: Product },
+                { model: EggsBatchProduct, include: Product }
             ]
         })
 
@@ -113,17 +113,18 @@ router.get('/UserId/Product/:UserId', async (req, res) => {
 router.post('/create', removeCache(['/carts', '/animalProducts', '/eggsBatchProducts', '/products/allAvailable']), async (req, res) => {
     const response = new ResponseModel()
     try {
-        const { UserId, AnimalProductId, EggsBatchProductId, quantity } = req.body
+        const { UserId, ProductId, AnimalId, EggsBatchId, quantity } = req.body
 
-        if (!(UserId && (AnimalProductId || EggsBatchProductId) && quantity)) {
+        if (!(UserId && ProductId && (AnimalId || EggsBatchId) && quantity)) {
             response.error = error_missing_fields
             return res.status(400).json(response)
         }
 
         const data = {
             UserId: UserId,
-            AnimalProductId: AnimalProductId,
-            EggsBatchProductId: EggsBatchProductId,
+            ProductId: ProductId,
+            AnimalId: AnimalId,
+            EggsBatchId: EggsBatchId,
             quantity: quantity
         }
 

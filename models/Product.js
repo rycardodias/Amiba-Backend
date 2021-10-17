@@ -51,7 +51,16 @@ const Product = db.define('Product', {
     },
     image: {
         type: DataTypes.STRING,
-    }
+    },
+    type: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+            notEmpty: {
+                msg: "type field is required",
+            }
+        },
+    },
 },
 )
 Product.belongsTo(ProductType, {
@@ -66,5 +75,5 @@ Product.belongsTo(Organization, {
 })
 Organization.hasMany(Product)
 
-// Product.sync({force: true})
+// Product.sync({alter: true})
 module.exports = Product

@@ -78,7 +78,7 @@ router.get('/OrderId/:OrderId', async (req, res) => {
 router.post('/create', removeCache('/orderLines', '/orders', '/products/allAvailable'), async (req, res) => {
     const response = new ResponseModel()
     try {
-        const { OrderId, quantity, AnimalProductId, EggsBatchProductId } = req.body
+        const { OrderId, quantity, ProductId, AnimalId, EggsBatchId } = req.body
 
         //FIXME não esta a deixar criar um estes parametros, falta os id ||id
         // if (!(OrderId && quantity)) {
@@ -89,8 +89,9 @@ router.post('/create', removeCache('/orderLines', '/orders', '/products/allAvail
         const data = {
             OrderId: OrderId,
             quantity: quantity,
-            AnimalProductId: AnimalProductId,
-            EggsBatchProductId: EggsBatchProductId,
+            ProductId: ProductId,
+            AnimalId: AnimalId,
+            EggsBatchId: EggsBatchId,
         }
 
         const request = await Model.create(data)
@@ -114,7 +115,7 @@ router.post('/create', removeCache('/orderLines', '/orders', '/products/allAvail
 router.put('/update', removeCache('/orderLines', '/orders', '/products/allAvailable'), async (req, res) => {
     const response = new ResponseModel()
     try {
-        const { id, OrderId, quantity, AnimalProductId, EggsBatchProductId } = req.body
+        const { id, OrderId, quantity, ProductId, AnimalId, EggsBatchId } = req.body
 
         if (!id) {
             response.error = error_missing_fields
@@ -124,8 +125,9 @@ router.put('/update', removeCache('/orderLines', '/orders', '/products/allAvaila
         const data = {
             OrderId: OrderId,
             quantity: quantity,
-            AnimalProductId: AnimalProductId,
-            EggsBatchProductId: EggsBatchProductId,
+            ProductId: ProductId,
+            AnimalId: AnimalId,
+            EggsBatchId: EggsBatchId,
         }
 
         const request = await Model.update(data, { where: { id: id } })

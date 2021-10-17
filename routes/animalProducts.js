@@ -28,15 +28,16 @@ router.get('/', cache(), async (req, res) => {
     }
 })
 
-router.get('/id/:id', async (req, res) => {
+router.get('/ProductId/:ProductId/AnimalId/:AnimalId', async (req, res) => {
     const response = new ResponseModel()
     try {
-        const { id } = req.params
-        if (!id) {
+
+        const { ProductId, AnimalId } = req.params
+        if (!(ProductId && AnimalId)) {
             response.error = error_missing_fields
             res.status(400).json(response)
         }
-        const request = await Model.findByPk(id, { include: Product })
+        const request = await Model.findOne({ where: { ProductId: ProductId, AnimalId: AnimalId }, include: Product })
 
         if (request) {
             response.data = request
@@ -113,10 +114,10 @@ router.post('/create', removeCache(['/animalProducts', '/products/allAvailable']
 router.put('/update', removeCache(['/animalProducts', '/products/allAvailable']), async (req, res) => {
     const response = new ResponseModel()
     try {
-        const { id, quantity } = req.body
+        const { ProductId, AnimalId, quantity } = req.body
 
 
-        if (!id) {
+        if (!(ProductId && AnimalId)) {
             response.error = error_missing_fields
             res.status(400).json(response)
         }
@@ -125,7 +126,7 @@ router.put('/update', removeCache(['/animalProducts', '/products/allAvailable'])
             quantity: quantity,
         }
 
-        const request = await Model.update(data, { where: { id: id } })
+        const request = await Model.update(data, { where: { ProductId: ProductId, AnimalId: AnimalId } })
 
         console.log(request)
 
@@ -147,12 +148,12 @@ router.put('/update', removeCache(['/animalProducts', '/products/allAvailable'])
 router.delete('/delete', removeCache(['/animalProducts', '/products/allAvailable']), async (req, res) => {
     const response = new ResponseModel()
     try {
-        const { id } = req.body
-        if (!id) {
+        const { ProductId, AnimalId } = req.body
+        if (!(ProductId && AnimalId)) {
             response.error = error_missing_fields
             return res.status(400).json(response)
         }
-        const request = await Model.destroy({ where: { id: id } })
+        const request = await Model.destroy({ where: { ProductId: ProductId, AnimalId: AnimalId } })
 
         if (request === 1) {
             response.data = success_row_delete

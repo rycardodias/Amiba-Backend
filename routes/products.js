@@ -60,6 +60,29 @@ router.get('/id/:id', async (req, res) => {
     }
 })
 
+router.get('/type/:type', async (req, res) => {
+    const response = new ResponseModel()
+    try {
+        if (!req.params.type) {
+            response.error = error_missing_fields
+            res.status(400).json(response)
+        }
+        const request = await Model.findAll({ where: { type: req.params.type }, include: [ProductType, Organization] })
+
+        if (request) {
+            response.data = request
+            res.status(200).json(response)
+        } else {
+            response.error = error_data_not_found
+            res.status(404).json(response)
+        }
+    } catch (error) {
+        response.message = error_invalid_fields
+        response.error = error
+        return res.status(400).json(response)
+    }
+})
+
 router.get('/allAvailable', async (req, res) => {
     const response = new ResponseModel()
     try {
@@ -194,14 +217,15 @@ router.get('/allAvailable/ProductTypeId/:ProductTypeId', async (req, res) => {
 router.post('/create', removeCache(['/products']), async (req, res) => {
     const response = new ResponseModel()
     try {
-        const { ProductTypeId, OrganizationId, tax, name, description, price, unit, image } = req.body
+        const { type, ProductTypeId, OrganizationId, tax, name, description, price, unit, image } = req.body
 
-        if (!(ProductTypeId && tax && name && price && unit)) {
+        if (!(type && ProductTypeId && tax && name && price && unit)) {
             response.error = error_missing_fields
             return res.status(400).json(response)
         }
 
         const data = {
+            type: type,
             ProductTypeId: ProductTypeId,
             OrganizationId: OrganizationId,
             tax: tax,

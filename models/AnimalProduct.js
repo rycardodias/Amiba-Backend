@@ -4,11 +4,6 @@ const Product = require('./Product');
 const Animal = require('./Animal');
 
 const AnimalProduct = db.define('AnimalProduct', {
-    id: {
-        type: DataTypes.UUID,
-        primaryKey: true,
-        defaultValue: DataTypes.UUIDV4
-    },
     quantity: {
         type: DataTypes.INTEGER,
         allowNull: false,
@@ -42,6 +37,6 @@ AnimalProduct.belongsTo(Animal, {
 })
 Animal.hasMany(AnimalProduct)
 
-// AnimalProduct.sync({alter: true})
+// AnimalProduct.sync({force: true})
 
 module.exports = AnimalProduct

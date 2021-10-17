@@ -28,6 +28,7 @@ router.get('/', cache(), async (req, res) => {
 
 })
 
+//FIXME isto precisa de FIX
 router.get('/id/:ExplorationId/:EggsBatchId', async (req, res) => {
     const response = new ResponseModel()
     try {
