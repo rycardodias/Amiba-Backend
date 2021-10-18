@@ -113,18 +113,17 @@ router.get('/UserId/Product/:UserId', async (req, res) => {
 router.post('/create', removeCache(['/carts', '/animalProducts', '/eggsBatchProducts', '/products/allAvailable']), async (req, res) => {
     const response = new ResponseModel()
     try {
-        const { UserId, ProductId, AnimalId, EggsBatchId, quantity } = req.body
+        const { UserId, AnimalProductId, EggsBatchProductId, quantity } = req.body
 
-        if (!(UserId && ProductId && (AnimalId || EggsBatchId) && quantity)) {
+        if (!(UserId && (AnimalProductId || EggsBatchProductId) && quantity)) {
             response.error = error_missing_fields
             return res.status(400).json(response)
         }
 
         const data = {
             UserId: UserId,
-            ProductId: ProductId,
-            AnimalId: AnimalId,
-            EggsBatchId: EggsBatchId,
+            AnimalProductId: AnimalProductId,
+            EggsBatchProductId: EggsBatchProductId,
             quantity: quantity
         }
 
@@ -148,9 +147,9 @@ router.post('/create', removeCache(['/carts', '/animalProducts', '/eggsBatchProd
 router.put('/update', removeCache(['/carts', '/animalProducts', '/eggsBatchProducts', '/products/allAvailable']), async (req, res) => {
     const response = new ResponseModel()
     try {
-        const { id, quantity } = req.body
+        const { ProductId, AnimalId, EggsBatchId, quantity } = req.body
 
-        if (!id) {
+        if (!(ProductId && (AnimalId || EggsBatchId))) {
             response.error = error_missing_fields
             res.status(400).json(response)
         }
@@ -159,7 +158,7 @@ router.put('/update', removeCache(['/carts', '/animalProducts', '/eggsBatchProdu
             quantity: quantity
         }
 
-        const request = await Model.update(data, { where: { id: id } })
+        const request = await Model.update(data, { where: { ProductId: ProductId } })
 
         if (request == 1) {
             response.data = success_row_update
