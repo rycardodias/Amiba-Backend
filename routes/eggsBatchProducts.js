@@ -90,10 +90,10 @@ router.post('/create', removeCache(['/eggsBatchProducts', , '/products/allAvaila
 router.put('/update', removeCache(['/eggsBatchProducts', '/products/allAvailable']), async (req, res) => {
     const response = new ResponseModel()
     try {
-        const { ProductId, EggsBatchId, quantity } = req.body
+        const { id, quantity } = req.body
 
 
-        if (!(ProductId && EggsBatchId)) {
+        if (!id) {
             response.error = error_missing_fields
             res.status(400).json(response)
         }
@@ -102,7 +102,7 @@ router.put('/update', removeCache(['/eggsBatchProducts', '/products/allAvailable
             quantity: quantity
         }
 
-        const request = await Model.update(data, { where: { ProductId: ProductId, EggsBatchId: EggsBatchId } })
+        const request = await Model.update(data, { where: { id: id } })
 
         if (request == 1) {
             response.data = success_row_update
@@ -122,12 +122,12 @@ router.put('/update', removeCache(['/eggsBatchProducts', '/products/allAvailable
 router.delete('/delete', removeCache(['/eggsBatchProducts', '/products/allAvailable']), async (req, res) => {
     const response = new ResponseModel()
     try {
-        const { ProductId, EggsBatchId } = req.body
-        if (!(ProductId && EggsBatchId)) {
+        const { id } = req.body
+        if (!id) {
             response.error = error_missing_fields
             return res.status(400).json(response)
         }
-        const request = await Model.destroy({ where: { ProductId: ProductId, EggsBatchId: EggsBatchId } })
+        const request = await Model.destroy({ where: { id: id } })
 
         if (request === 1) {
             response.data = success_row_delete

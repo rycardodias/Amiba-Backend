@@ -114,10 +114,10 @@ router.post('/create', removeCache(['/animalProducts', '/products/allAvailable']
 router.put('/update', removeCache(['/animalProducts', '/products/allAvailable']), async (req, res) => {
     const response = new ResponseModel()
     try {
-        const { ProductId, AnimalId, quantity } = req.body
+        const { id, quantity } = req.body
 
 
-        if (!(ProductId && AnimalId)) {
+        if (!id) {
             response.error = error_missing_fields
             res.status(400).json(response)
         }
@@ -126,7 +126,7 @@ router.put('/update', removeCache(['/animalProducts', '/products/allAvailable'])
             quantity: quantity,
         }
 
-        const request = await Model.update(data, { where: { ProductId: ProductId, AnimalId: AnimalId } })
+        const request = await Model.update(data, { where: { id: id } })
 
         console.log(request)
 
@@ -148,12 +148,12 @@ router.put('/update', removeCache(['/animalProducts', '/products/allAvailable'])
 router.delete('/delete', removeCache(['/animalProducts', '/products/allAvailable']), async (req, res) => {
     const response = new ResponseModel()
     try {
-        const { ProductId, AnimalId } = req.body
-        if (!(ProductId && AnimalId)) {
+        const { id } = req.body
+        if (!id) {
             response.error = error_missing_fields
             return res.status(400).json(response)
         }
-        const request = await Model.destroy({ where: { ProductId: ProductId, AnimalId: AnimalId } })
+        const request = await Model.destroy({ where: { id: id } })
 
         if (request === 1) {
             response.data = success_row_delete

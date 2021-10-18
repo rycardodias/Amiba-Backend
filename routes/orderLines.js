@@ -8,7 +8,7 @@ const { error_missing_fields, error_invalid_fields, error_data_not_found, succes
     error_row_update, error_row_create, success_row_create } = require('../lib/ResponseMessages')
 const Product = require('../models/Product')
 
-router.get('/',  async (req, res) => {
+router.get('/', async (req, res) => {
     const response = new ResponseModel()
     try {
         const request = await Model.findAll()
@@ -78,7 +78,7 @@ router.get('/OrderId/:OrderId', async (req, res) => {
 router.post('/create', removeCache('/orderLines', '/orders', '/products/allAvailable'), async (req, res) => {
     const response = new ResponseModel()
     try {
-        const { OrderId, quantity, ProductId, AnimalId, EggsBatchId } = req.body
+        const { OrderId, quantity, AnimalProductId, EggsBatchProductId } = req.body
 
         //FIXME não esta a deixar criar um estes parametros, falta os id ||id
         // if (!(OrderId && quantity)) {
@@ -89,9 +89,8 @@ router.post('/create', removeCache('/orderLines', '/orders', '/products/allAvail
         const data = {
             OrderId: OrderId,
             quantity: quantity,
-            ProductId: ProductId,
-            AnimalId: AnimalId,
-            EggsBatchId: EggsBatchId,
+            AnimalProductId: AnimalProductId,
+            EggsBatchProductId: EggsBatchProductId,
         }
 
         const request = await Model.create(data)
@@ -115,7 +114,7 @@ router.post('/create', removeCache('/orderLines', '/orders', '/products/allAvail
 router.put('/update', removeCache('/orderLines', '/orders', '/products/allAvailable'), async (req, res) => {
     const response = new ResponseModel()
     try {
-        const { id, OrderId, quantity, ProductId, AnimalId, EggsBatchId } = req.body
+        const { id, OrderId, quantity, AnimalProductId, EggsBatchProductId } = req.body
 
         if (!id) {
             response.error = error_missing_fields
@@ -125,9 +124,8 @@ router.put('/update', removeCache('/orderLines', '/orders', '/products/allAvaila
         const data = {
             OrderId: OrderId,
             quantity: quantity,
-            ProductId: ProductId,
-            AnimalId: AnimalId,
-            EggsBatchId: EggsBatchId,
+            AnimalProductId: AnimalProductId,
+            EggsBatchProductId: EggsBatchProductId,
         }
 
         const request = await Model.update(data, { where: { id: id } })
