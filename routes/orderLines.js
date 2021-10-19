@@ -7,6 +7,8 @@ const ResponseModel = require('../lib/ResponseModel')
 const { error_missing_fields, error_invalid_fields, error_data_not_found, success_row_delete, error_row_delete, success_row_update,
     error_row_update, error_row_create, success_row_create } = require('../lib/ResponseMessages')
 const Product = require('../models/Product')
+const AnimalProduct = require('../models/AnimalProduct')
+const EggsBatchProduct = require('../models/EggsBatchProduct')
 
 router.get('/', async (req, res) => {
     const response = new ResponseModel()
@@ -58,7 +60,14 @@ router.get('/OrderId/:OrderId', async (req, res) => {
             response.error = error_missing_fields
             res.status(400).json(response)
         }
-        const request = await Model.findAll({ where: { OrderId: req.params.OrderId } })
+        const request = await Model.findAll({
+            where: { OrderId: req.params.OrderId },
+            include: [
+                { model: AnimalProduct, include: Product },
+                { model: EggsBatchProduct, include: Product }
+            ]
+        })
+
 
         if (request) {
             response.data = request
