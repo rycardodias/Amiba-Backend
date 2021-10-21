@@ -1,7 +1,7 @@
 const express = require('express')
-// const cors = require("cors");
-// const cookieSession = require('cookie-session')
-// const fileUpload = require('express-fileupload')
+const cors = require("cors");
+const cookieSession = require('cookie-session')
+const fileUpload = require('express-fileupload')
 const dotenv = require('dotenv');
 dotenv.config()
 
@@ -14,18 +14,18 @@ app.use(
   // })
 );
 
-// app.use(
-//   cookieSession({
-//     signed: false,
-//     secure: false,
-//   }
-//   )
-// )
+app.use(
+  cookieSession({
+    signed: false,
+    secure: false,
+  }
+  )
+)
 
-// app.use(fileUpload({
-//   limits: { fileSize: 1024 * 1024 * 5 },
-//   abortOnLimit: true,
-// }))
+app.use(fileUpload({
+  limits: { fileSize: 1024 * 1024 * 5 },
+  abortOnLimit: true,
+}))
 
 
 app.get('/', (req, res) => res.send('INDEX - AMIBA WEBSERVICES'));
