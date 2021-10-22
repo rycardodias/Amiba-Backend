@@ -10,10 +10,10 @@ const app = express();
 app.use(express.json());
 app.use(
   cors(
-    // {
-  //   origin: 'http://localhost:3000/',
-  //   optionsSuccessStatus: 200,
-  // }
+    {
+    origin: 'http://localhost:3000/',
+    optionsSuccessStatus: 200,
+  }
   )
 );
 
@@ -49,7 +49,7 @@ app.use('/products', require('./routes/products'))
 app.use('/orderLines', require('./routes/orderLines'))
 app.use('/races', require('./routes/races'))
 app.use('/eggsBatchs', require('./routes/eggsBatchs'))
-app.use('/eggsBatchExplorations', require('./routes/eggsBatchExplorations'))
+// app.use('/eggsBatchExplorations', require('./routes/eggsBatchExplorations'))
 app.use('/animals', require('./routes/animals'))
 app.use('/animalProducts', require('./routes/animalProducts'))
 app.use('/eggsBatchProducts', require('./routes/eggsBatchProducts'))
