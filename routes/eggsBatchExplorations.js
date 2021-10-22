@@ -9,28 +9,28 @@ const { error_missing_fields, error_invalid_fields, error_data_not_found, succes
     error_row_update, error_row_create, success_row_create } = require('../lib/ResponseMessages')
 const Exploration = require('../models/Exploration')
 
-router.get('/', async(req, res) => {
-    res.status(200).json('ola')
-})
-
-// router.get('/', cache(), async (req, res) => {
-//     const response = new ResponseModel()
-//     try {
-//         const request = await Model.findAll({ include: Exploration })
-//         if (request.length > 0) {
-//             response.data = request
-//             res.status(200).json(response)
-//         } else {
-//             response.error = error_data_not_found
-//             res.status(404).json(response)
-//         }
-//     } catch (error) {
-//         response.message = error_data_not_found
-//         response.error = error
-//         return res.status(400).json(response)
-//     }
-
+// router.get('/', async(req, res) => {
+//     res.status(200).json('ola')
 // })
+
+router.get('/', cache(), async (req, res) => {
+    const response = new ResponseModel()
+    try {
+        const request = await Model.findAll({ include: Exploration })
+        if (request.length > 0) {
+            response.data = request
+            res.status(200).json(response)
+        } else {
+            response.error = error_data_not_found
+            res.status(404).json(response)
+        }
+    } catch (error) {
+        response.message = error_data_not_found
+        response.error = error
+        return res.status(400).json(response)
+    }
+
+})
 
 // //FIXME isto precisa de FIX
 // // router.get('/id/:ExplorationId/:EggsBatchId', async (req, res) => {
