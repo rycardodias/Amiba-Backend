@@ -1,11 +1,16 @@
 const express = require('express')
 const cors = require("cors");
+const bodyParser = require("body-parser")
 const cookieSession = require('cookie-session')
 const fileUpload = require('express-fileupload')
 const dotenv = require('dotenv');
 dotenv.config()
 
 const app = express();
+
+app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.json());
+
 app.use(express.json());
 app.use(
   cors(
