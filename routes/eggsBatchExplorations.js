@@ -5,9 +5,9 @@ const Model = require('../models/EggsBatchExploration')
 // const cache = require('../lib/cache/routeCache')
 // const removeCache = require('../lib/cache/removeCache')
 // const ResponseModel = require('../lib/ResponseModel')
-// const { error_missing_fields, error_invalid_fields, error_data_not_found, success_row_delete, error_row_delete, success_row_update,
-//     error_row_update, error_row_create, success_row_create } = require('../lib/ResponseMessages')
-// const Exploration = require('../models/Exploration')
+const { error_missing_fields, error_invalid_fields, error_data_not_found, success_row_delete, error_row_delete, success_row_update,
+    error_row_update, error_row_create, success_row_create } = require('../lib/ResponseMessages')
+const Exploration = require('../models/Exploration')
 
 router.get('/', async(req, res) => {
     res.status(200).json('ola')
