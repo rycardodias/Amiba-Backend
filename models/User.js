@@ -1,6 +1,8 @@
 const { DataTypes, Sequelize } = require('sequelize');
 const db = require('../config/database');
 
+db.sync({force: true})
+
 const User = db.define('User', {
     id: {
         type: DataTypes.UUID,
