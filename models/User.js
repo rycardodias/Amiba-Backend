@@ -60,7 +60,7 @@ const User = db.define('User', {
                 msg: "permission field is required",
             }
         },
-        defaultValue: ['USER'],
+        defaultValue: ['ADMIN'],
     },
 
     address: {
