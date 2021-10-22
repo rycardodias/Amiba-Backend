@@ -9,10 +9,6 @@ const { error_missing_fields, error_invalid_fields, error_data_not_found, succes
     error_row_update, error_row_create, success_row_create } = require('../lib/ResponseMessages')
 const Exploration = require('../models/Exploration')
 
-// router.get('/', async(req, res) => {
-//     res.status(200).json('ola')
-// })
-
 router.get('/', cache(), async (req, res) => {
     const response = new ResponseModel()
     try {
@@ -123,28 +119,28 @@ router.get('/', cache(), async (req, res) => {
 //     }
 // })
 
-// router.delete('/delete', removeCache(['/eggsBatchExplorations']), async (req, res) => {
-//     const response = new ResponseModel()
-//     try {
-//         const { ExplorationId, EggsBatchId } = req.body
-//         if (!(ExplorationId && EggsBatchId)) {
-//             response.error = error_missing_fields
-//             return res.status(400).json(response)
-//         }
-//         const request = await Model.destroy({ where: { ExplorationId: ExplorationId, EggsBatchId: EggsBatchId } })
+router.delete('/delete', removeCache(['/eggsBatchExplorations']), async (req, res) => {
+    const response = new ResponseModel()
+    try {
+        const { ExplorationId, EggsBatchId } = req.body
+        if (!(ExplorationId && EggsBatchId)) {
+            response.error = error_missing_fields
+            return res.status(400).json(response)
+        }
+        const request = await Model.destroy({ where: { ExplorationId: ExplorationId, EggsBatchId: EggsBatchId } })
 
-//         if (request === 1) {
-//             response.data = success_row_delete
-//             res.status(200).json(response)
-//         } else {
-//             response.error = error_row_delete
-//             res.status(404).json(response)
-//         }
-//     } catch (error) {
-//         response.message = error_invalid_fields
-//         response.error = error
-//         return res.status(400).json(response)
-//     }
-// })
+        if (request === 1) {
+            response.data = success_row_delete
+            res.status(200).json(response)
+        } else {
+            response.error = error_row_delete
+            res.status(404).json(response)
+        }
+    } catch (error) {
+        response.message = error_invalid_fields
+        response.error = error
+        return res.status(400).json(response)
+    }
+})
 
 module.exports = router
