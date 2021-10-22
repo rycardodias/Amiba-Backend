@@ -54,38 +54,38 @@ router.get('/', cache(), async (req, res) => {
 
 // // })
 
-// router.post('/create', removeCache(['/eggsBatchExplorations']), async (req, res) => {
-//     const response = new ResponseModel()
-//     try {
-//         const { ExplorationId, EggsBatchId, quantity } = req.body
+router.post('/create', removeCache(['/eggsBatchExplorations']), async (req, res) => {
+    const response = new ResponseModel()
+    try {
+        const { ExplorationId, EggsBatchId, quantity } = req.body
 
-//         if (!(ExplorationId && EggsBatchId && quantity)) {
-//             response.error = error_missing_fields
-//             return res.status(400).json(response)
-//         }
+        if (!(ExplorationId && EggsBatchId && quantity)) {
+            response.error = error_missing_fields
+            return res.status(400).json(response)
+        }
 
-//         const data = {
-//             ExplorationId: ExplorationId,
-//             EggsBatchId: EggsBatchId,
-//             quantity: quantity,
-//         }
+        const data = {
+            ExplorationId: ExplorationId,
+            EggsBatchId: EggsBatchId,
+            quantity: quantity,
+        }
 
-//         const request = await Model.create(data)
+        const request = await Model.create(data)
 
-//         if (request) {
-//             response.message = success_row_create
-//             response.data = request
-//             res.status(200).json(response)
-//         } else {
-//             response.error = error_row_create
-//             res.status(404).json(response)
-//         }
-//     } catch (error) {
-//         response.message = error_invalid_fields
-//         response.error = error
-//         return res.status(400).json(response)
-//     }
-// })
+        if (request) {
+            response.message = success_row_create
+            response.data = request
+            res.status(200).json(response)
+        } else {
+            response.error = error_row_create
+            res.status(404).json(response)
+        }
+    } catch (error) {
+        response.message = error_invalid_fields
+        response.error = error
+        return res.status(400).json(response)
+    }
+})
 
 router.put('/update', removeCache(['/eggsBatchExplorations']), async (req, res) => {
     const response = new ResponseModel()
