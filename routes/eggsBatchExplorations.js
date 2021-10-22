@@ -1,6 +1,7 @@
 const express = require('express')
 const router = express.Router()
-const Model = require('../models/eggsBatchExploration')
+
+const Model = require('../models/User')
 // const cache = require('../lib/cache/routeCache')
 // const removeCache = require('../lib/cache/removeCache')
 // const ResponseModel = require('../lib/ResponseModel')
@@ -8,6 +9,9 @@ const Model = require('../models/eggsBatchExploration')
 //     error_row_update, error_row_create, success_row_create } = require('../lib/ResponseMessages')
 // const Exploration = require('../models/Exploration')
 
+router.get('/', async(req, res) => {
+    res.status(200).json('ola')
+})
 
 // router.get('/', cache(), async (req, res) => {
 //     const response = new ResponseModel()
