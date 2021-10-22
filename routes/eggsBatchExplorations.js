@@ -29,30 +29,30 @@ router.get('/', cache(), async (req, res) => {
 })
 
 //FIXME isto precisa de FIX
-router.get('/id/:ExplorationId/:EggsBatchId', async (req, res) => {
-    const response = new ResponseModel()
-    try {
-        const { ExplorationId, EggsBatchId } = req.params
-        if (!(ExplorationId && EggsBatchId)) {
-            response.error = error_missing_fields
-            res.status(400).json(response)
-        }
-        const request = await Model.findOne({ where: { ExplorationId: ExplorationId, EggsBatchId: EggsBatchId }, include: Exploration })
+// router.get('/id/:ExplorationId/:EggsBatchId', async (req, res) => {
+//     const response = new ResponseModel()
+//     try {
+//         const { ExplorationId, EggsBatchId } = req.params
+//         if (!(ExplorationId && EggsBatchId)) {
+//             response.error = error_missing_fields
+//             res.status(400).json(response)
+//         }
+//         const request = await Model.findOne({ where: { ExplorationId: ExplorationId, EggsBatchId: EggsBatchId }, include: Exploration })
 
-        if (request) {
-            response.data = request
-            res.status(200).json(response)
-        } else {
-            response.error = error_data_not_found
-            res.status(404).json(response)
-        }
-    } catch (error) {
-        response.message = error_invalid_fields
-        response.error = error
-        return res.status(400).json(response)
-    }
+//         if (request) {
+//             response.data = request
+//             res.status(200).json(response)
+//         } else {
+//             response.error = error_data_not_found
+//             res.status(404).json(response)
+//         }
+//     } catch (error) {
+//         response.message = error_invalid_fields
+//         response.error = error
+//         return res.status(400).json(response)
+//     }
 
-})
+// })
 
 router.post('/create', removeCache(['/eggsBatchExplorations']), async (req, res) => {
     const response = new ResponseModel()
