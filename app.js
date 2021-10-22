@@ -17,18 +17,18 @@ app.use(
   )
 );
 
-// app.use(
-//   cookieSession({
-//     signed: false,
-//     secure: false,
-//   }
-//   )
-// )
+app.use(
+  cookieSession({
+    signed: false,
+    secure: false,
+  }
+  )
+)
 
-// app.use(fileUpload({
-//   limits: { fileSize: 1024 * 1024 * 5 },
-//   abortOnLimit: true,
-// }))
+app.use(fileUpload({
+  limits: { fileSize: 1024 * 1024 * 5 },
+  abortOnLimit: true,
+}))
 
 
 app.get('/', (req, res) => res.send('INDEX - AMIBA WEBSERVICES'));
