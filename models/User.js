@@ -3,18 +3,6 @@ const db = require('../config/database');
 
 // db.sync({force: true})
 
-const q1 = db.query("CREATE FUNCTION public.tr_fc_animalproducts_insert() RETURNS trigger LANGUAGE \'plpgsql\' COST 100 VOLATILE NOT LEAKPROOF AS $BODY$ DECLARE	v_unit varchar(50); BEGIN " +
-    " IF(NEW.\"quantity\" < 1) THEN RAISE EXCEPTION \'Quantity cannot be lower than 1\'; END IF; SELECT \"unit\" INTO v_unit FROM public.\"Products\" WHERE \"Products\".\"id\" = NEW.\"ProductId\"; " +
-
-    " IF(v_unit = \'KG\' AND NEW.\"weight\" < 1) THEN RAISE EXCEPTION \'Products in KG must have weight\'; END IF; NEW.\"quantityAvailable\" = NEW.\"quantity\"; RETURN NEW; END; $BODY$; " +
-
-    " ALTER FUNCTION public.tr_fc_animalproducts_insert() OWNER TO postgres; ")
-
-const q2 = db.query("CREATE TRIGGER \"tr_animalProducts_insert\"BEFORE INSERT ON public.\"AnimalProducts\" FOR EACH ROW " +
-    " EXECUTE FUNCTION public.tr_fc_animalproducts_insert();")
-
-console.log('resultado', q1, q2)
-
 const User = db.define('User', {
     id: {
         type: DataTypes.UUID,
