@@ -14,7 +14,8 @@ const { Op } = require("sequelize");
 const Animal = require('../models/Animal')
 const Exploration = require('../models/Exploration')
 const Organization = require('../models/Organization')
-
+const EggsBatch = require('../models/EggsBatch')
+const EggsBatchExploration = require('../models/EggsBatchExploration')
 
 router.get('/', cache(), async (req, res) => {
     const response = new ResponseModel()
@@ -112,7 +113,13 @@ router.get('/UserId/Product/:UserId', async (req, res) => {
                             }]
                         }]
                 },
-                { model: EggsBatchProduct, include: [Product] }
+                {
+                    model: EggsBatchProduct, include: [
+                        Product,
+                        {
+                            model: EggsBatch, include: EggsBatchExploration
+                        }]
+                }
             ]
         })
 
