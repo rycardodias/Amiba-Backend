@@ -165,7 +165,7 @@ router.get('/allAvailable/id/:id', async (req, res) => {
             ],
         })
 
-        if (request.length > 0) {
+        if (request) {
             response.message = success_data_exits
             response.data = request
             res.status(200).json(response)
@@ -212,7 +212,7 @@ router.get('/allAvailable/ProductTypeId/:ProductTypeId', async (req, res) => {
                     }
                 ]
             })
-            if (request.length > 0) {
+            if (request) {
                 response.message = success_data_exits
                 response.data = request
                 res.status(200).json(response)
