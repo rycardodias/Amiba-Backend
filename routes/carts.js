@@ -12,6 +12,7 @@ const AnimalProduct = require('../models/AnimalProduct')
 const EggsBatchProduct = require('../models/EggsBatchProduct')
 const { Op } = require("sequelize");
 const Animal = require('../models/Animal')
+const Exploration = require('../models/Exploration')
 
 
 router.get('/', cache(), async (req, res) => {
@@ -101,7 +102,11 @@ router.get('/UserId/Product/:UserId', async (req, res) => {
         const request = await Model.findAll({
             where: { UserId: UserId },
             include: [
-                { model: AnimalProduct, include: [Product, Animal] },
+                {
+                    model: AnimalProduct, include: [
+                        Product,
+                        { model: Animal, include: Exploration }]
+                },
                 { model: EggsBatchProduct, include: [Product] }
             ]
         })
