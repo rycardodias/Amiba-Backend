@@ -117,7 +117,8 @@ router.get('/UserId/Product/:UserId', async (req, res) => {
                     model: EggsBatchProduct, include: [
                         Product,
                         {
-                            model: EggsBatch, include: EggsBatchExploration
+                            model: EggsBatch, 
+                            // include: EggsBatchExploration
                         }]
                 }
             ]
