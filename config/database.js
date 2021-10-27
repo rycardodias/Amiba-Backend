@@ -7,10 +7,11 @@ module.exports = new Sequelize(process.env.DATABASE, process.env.USER, process.e
   dialect: 'postgres',
   protocol: 'postgres',
   dialectOptions: {
-    ssl: {
-      // require: true,
-      rejectUnauthorized: false,
-      // native: true
-    }
+    //TODO ativar isto para heroku
+    // ssl: {
+    //   // require: true,
+    //   rejectUnauthorized: false,
+    //   // native: true
+    // }
   },
 });

@@ -11,9 +11,9 @@ app.use(express.json());
 app.use(
   cors(
     {
-    origin: 'http://localhost:3000',
-    optionsSuccessStatus: 200,
-  }
+      origin: 'http://localhost:3000',
+      optionsSuccessStatus: 200,
+    }
   )
 );
 
@@ -55,5 +55,7 @@ app.use('/animalProducts', require('./routes/animalProducts'))
 app.use('/eggsBatchProducts', require('./routes/eggsBatchProducts'))
 app.use('/carts', require('./routes/carts'))
 app.use('/uploadFiles', require('./routes/uploadFiles'))
+
+app.use('/devTools', require('./routes/xDevTools'))
 
 module.exports = app
