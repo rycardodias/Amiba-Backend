@@ -41,7 +41,7 @@ router.get('/ProductId/:ProductId/EggsBatchId/:EggsBatchId', async (req, res) =>
         }
         const request = await Model.findOne({ where: { ProductId: ProductId, EggsBatchId: EggsBatchId }, include: Product })
 
-        if (request.length > 0) {
+        if (request) {
             response.message = success_data_exits
             response.data = request
             res.status(200).json(response)
@@ -73,6 +73,7 @@ router.post('/create', removeCache(['/eggsBatchProducts', , '/products/allAvaila
             ProductId: ProductId,
             EggsBatchId: EggsBatchId,
             quantity: quantity,
+            quantityAvailable: quantity, //FIXME remover isto no fim
             divider: divider,
         }
 
