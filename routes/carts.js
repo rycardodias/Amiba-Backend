@@ -13,6 +13,7 @@ const EggsBatchProduct = require('../models/EggsBatchProduct')
 const { Op } = require("sequelize");
 const Animal = require('../models/Animal')
 const Exploration = require('../models/Exploration')
+const Organization = require('../models/Organization')
 
 
 router.get('/', cache(), async (req, res) => {
@@ -105,7 +106,11 @@ router.get('/UserId/Product/:UserId', async (req, res) => {
                 {
                     model: AnimalProduct, include: [
                         Product,
-                        { model: Animal, include: Exploration }]
+                        {
+                            model: Animal, include: [{
+                                model: Exploration, include: Organization
+                            }]
+                        }]
                 },
                 { model: EggsBatchProduct, include: [Product] }
             ]
