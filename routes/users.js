@@ -54,7 +54,8 @@ router.get('/id/:id', async (req, res) => {
             res.status(400).json(response)
         }
         const request = await Model.findByPk(req.params.id)
-        if (request.length > 0) {
+        
+        if (request) {
             response.message = success_data_exits
             response.data = request
             res.status(200).json(response)

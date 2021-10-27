@@ -42,7 +42,7 @@ router.get('/ProductId/:ProductId/AnimalId/:AnimalId', async (req, res) => {
         }
         const request = await Model.findOne({ where: { ProductId: ProductId, AnimalId: AnimalId }, include: Product })
 
-        if (request.length > 0) {
+        if (request) {
             response.message = success_data_exits
             response.data = request
             res.status(200).json(response)
