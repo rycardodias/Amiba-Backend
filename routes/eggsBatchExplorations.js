@@ -73,6 +73,7 @@ router.post('/create', removeCache(['/eggsBatchExplorations']), async (req, res)
             ExplorationId: ExplorationId,
             EggsBatchId: EggsBatchId,
             quantity: quantity,
+            quantityAvailable: quantity //FIXME alterar no fim
         }
 
         const request = await Model.create(data)
