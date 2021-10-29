@@ -59,10 +59,9 @@ router.get('/id/:id', async (req, res) => {
 router.post('/create', removeCache(['/menus']), async (req, res) => {
     const response = new ResponseModel()
     try {
-        const { RestaurantId, title, description, image } = req.body
+        const { RestaurantId, name, description, image, active } = req.body
 
-
-        if (!(RestaurantId && title)) {
+        if (!(RestaurantId && name && active)) {
             response.message = error_missing_fields
             response.error = error_missing_fields
             return res.status(400).json(response)
@@ -70,9 +69,10 @@ router.post('/create', removeCache(['/menus']), async (req, res) => {
 
         const data = {
             RestaurantId: RestaurantId,
-            title: title,
+            name: name,
             description: description,
             image: image,
+            active: active
         }
 
         const request = await Model.create(data)
@@ -95,7 +95,7 @@ router.post('/create', removeCache(['/menus']), async (req, res) => {
 router.put('/update', removeCache(['/menus']), async (req, res) => {
     const response = new ResponseModel()
     try {
-        const { id, RestaurantId, title, description, image } = req.body
+        const { id, RestaurantId, name, description, image } = req.body
 
         if (!id) {
             response.message = error_missing_fields
@@ -105,7 +105,7 @@ router.put('/update', removeCache(['/menus']), async (req, res) => {
 
         const data = {
             RestaurantId: RestaurantId,
-            title: title,
+            name: name,
             description: description,
             image: image,
         }

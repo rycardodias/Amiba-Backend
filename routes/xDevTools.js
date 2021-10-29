@@ -7,8 +7,27 @@ router.get('/requiredFields/:table', async (req, res) => {
     const response = new ResponseModel()
 
     const data = {
+        'animal': [],
+        'animalProducts': [],
+        'carts': [],
+        'certifications': [],
+        'eggsBatchs': [],
+        'eggsBatchExplorations': [],
+        'eggsBatchProducts': [],
+        'explorations': [],
+        'explorationTypes': [],
+        'menus': ['id', 'name', 'active'],
+        'orders': [],
+        'orderHistory': [],
+        'orderLines': [],
+        'organizations': [],
+        'organizationTypes': [],
+        'products': [],
+        'productTypes': [],
+        'races': [],
         'restaurants': ['UserId', 'name', 'description', 'address', 'locale', 'zipcode', 'fiscalNumber'],
-        'users': ['id', 'name'] //TODO acabar
+        'users': ['id', 'name'], //TODO acabar,
+        
     }
 
     var keys = Object.keys(data);

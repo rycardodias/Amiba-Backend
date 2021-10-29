@@ -8,7 +8,7 @@ const Menu = db.define('Menu', {
         primaryKey: true,
         defaultValue: DataTypes.UUIDV4
     },
-    title: {
+    name: {
         type: DataTypes.STRING,
         allowNull: false,
         validate: {
@@ -37,5 +37,5 @@ Menu.belongsTo(Restaurant, {
 })
 Restaurant.hasMany(Menu)
 
-
+Menu.sync({ force: true })
 module.exports = Menu
