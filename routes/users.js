@@ -182,17 +182,19 @@ router.put('/update/password', async (req, res) => {
 
         const idToken = jwt.verify(token, "MySecret").id
 
-        const res = await Model.findByPk(id)
-        const matchPasswords = bcrypt.compareSync(oldPassword, res.password)
-
-        if (idToken != id && !matchPasswords) {
+        if (idToken != id) {
             response.message = error_invalid_token
             response.error = error_invalid_token
             res.status(400).json(response)
         }
 
+        // const res = await Model.findByPk(id)
+        //     .then((data) => res.status(200).json(data))
+        //     .catch((error) => res.status(200).json("erro", error))
+        //FIXME não está a validar password antiga
+
         const data = {
-            password: newPassword
+            password: bcrypt.hashSync(newPassword, 10)
         }
 
         const request = await Model.update(data, {
