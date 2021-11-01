@@ -37,5 +37,5 @@ Menu.belongsTo(Restaurant, {
 })
 Restaurant.hasMany(Menu)
 
-Menu.sync({ force: true })
+// Menu.sync({ force: true })
 module.exports = Menu
