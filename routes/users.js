@@ -182,8 +182,8 @@ router.put('/update/password', async (req, res) => {
 
         const idToken = jwt.verify(token, "MySecret").id
         const res = await Model.findByPk(id)
-        console.log(res)
-        const matchPasswords = bcrypt.compareSync(oldPassword, res.id)
+        console.log(res.password)
+        const matchPasswords = bcrypt.compareSync(oldPassword, res.password)
         console.log(matchPasswords)
         if (idToken != id) {
             response.message = error_invalid_token
