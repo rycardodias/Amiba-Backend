@@ -169,7 +169,7 @@ router.put('/update', removeCache(['/users/me', '/users']), async (req, res) => 
     }
 })
 
-router.update('/update/password', async (req, res) => {
+router.put('/update/password', async (req, res) => {
     const response = new ResponseModel()
     try {
         const { id, token, oldPassword, newPassword } = req.body
