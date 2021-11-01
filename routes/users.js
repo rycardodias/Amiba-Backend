@@ -54,7 +54,7 @@ router.get('/id/:id', async (req, res) => {
             res.status(400).json(response)
         }
         const request = await Model.findByPk(req.params.id)
-        
+
         if (request) {
             response.message = success_data_exits
             response.data = request
@@ -162,6 +162,51 @@ router.put('/update', removeCache(['/users/me', '/users']), async (req, res) => 
             response.error = request[0]
             res.status(404).json(response)
         }
+    } catch (error) {
+        response.message = error_invalid_fields
+        response.error = error
+        return res.status(400).json(response)
+    }
+})
+
+router.update('/update/password', async (req, res) => {
+    const response = new ResponseModel()
+    try {
+        const { id, token, password, newPassword } = req.body
+
+        if (!(id && token && password && newPassword)) {
+            response.message = error_missing_fields
+            response.error = error_missing_fields
+            res.status(400).json(response)
+        }
+
+        const idToken = jwt.verify(token, "MySecret").id
+
+        if (idToken != id) {
+            response.message = error_invalid_token
+            response.error = error_invalid_token
+            res.status(400).json(response)
+        }
+
+        const data = {
+            password: newPassword
+        }
+
+        const request = await Model.update(data, {
+            where: { id: userId },
+            returning: true
+        })
+
+        if (request[0] === 1) {
+            response.message = success_row_update
+            response.data = request[1][0].dataValues
+            res.status(200).json(response)
+        } else {
+            response.message = error_row_update
+            response.error = request[0]
+            res.status(404).json(response)
+        }
+
     } catch (error) {
         response.message = error_invalid_fields
         response.error = error
