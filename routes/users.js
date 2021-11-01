@@ -172,9 +172,9 @@ router.put('/update', removeCache(['/users/me', '/users']), async (req, res) => 
 router.update('/update/password', async (req, res) => {
     const response = new ResponseModel()
     try {
-        const { id, token, password, newPassword } = req.body
+        const { id, token, oldPassword, newPassword } = req.body
 
-        if (!(id && token && password && newPassword)) {
+        if (!(id && token && oldPassword && newPassword)) {
             response.message = error_missing_fields
             response.error = error_missing_fields
             res.status(400).json(response)
@@ -297,7 +297,7 @@ router.get('/me/:token', async (req, res) => {
 
     try {
         const userID = jwt.verify(req.session.token || req.params.token, "MySecret");
-        const request = await Model.findByPk(userID.id, { attributes: ['id', 'name', 'permission', 'password'] })
+        const request = await Model.findByPk(userID.id, { attributes: ['id', 'name', 'permission'] })
 
         if (request) {
             response.message = success_token_valid
