@@ -56,6 +56,36 @@ router.get('/id/:id', async (req, res) => {
     }
 })
 
+router.get('/UserId/:UserId', async (req, res) => {
+    const response = new ResponseModel()
+    try {
+        if (!req.params.UserId) {
+            response.message = error_missing_fields
+            response.error = error_missing_fields
+            res.status(400).json(response)
+        }
+        const request = await Model.findAll({
+            include: [
+                { model: Organization, where: { UserId: req.params.UserId } }, ExplorationType]
+        })
+
+
+        if (request.length > 0) {
+            response.message = success_data_exits
+            response.data = request
+            res.status(200).json(response)
+        } else {
+            response.message = error_data_not_found
+            response.error = error_data_not_found
+            res.status(404).json(response)
+        }
+    } catch (error) {
+        response.message = error_data_not_found
+        response.error = error
+        return res.status(400).json(response)
+    }
+})
+
 router.post('/create', removeCache(['/explorations']), async (req, res) => {
     const response = new ResponseModel()
     try {

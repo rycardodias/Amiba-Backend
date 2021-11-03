@@ -15,19 +15,19 @@ router.get('/requiredFields/:table', async (req, res) => {
         'eggsBatchExplorations': [],
         'eggsBatchProducts': [],
         'explorations': [],
-        'explorationTypes': [],
+        'explorationTypes': ['id', 'name'],
         'menus': ['id', 'name', 'active'],
         'orders': [],
         'orderHistory': [],
         'orderLines': [],
-        'organizations': [],
-        'organizationTypes': [],
+        'organizations': ['id', 'name', 'address', 'locale', 'zipcode', 'fiscalNumber'],
+        'organizationTypes': ['id', 'name'],
         'products': [],
-        'productTypes': [],
+        'productTypes': ['id', 'name'],
         'races': [],
-        'restaurants': ['UserId', 'name', 'description', 'address', 'locale', 'zipcode', 'fiscalNumber'],
+        'restaurants': ['id', 'UserId', 'name', 'description', 'address', 'locale', 'zipcode', 'fiscalNumber'],
         'users': ['id', 'name'], //TODO acabar,
-        
+
     }
 
     var keys = Object.keys(data);
@@ -37,10 +37,10 @@ router.get('/requiredFields/:table', async (req, res) => {
 
         var prop = data[req.params.table];
     }
-    
+
     response.message = 'Chaves obrigatórias'
-    response.data = prop //[req.params.table]
-        res.status(200).json(response)
+    response.data = prop
+    res.status(200).json(response)
 })
 
 module.exports = router

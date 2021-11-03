@@ -56,12 +56,40 @@ router.get('/id/:id', async (req, res) => {
 
 })
 
-router.post('/create', removeCache(['/menus']), async (req, res) => {
+router.get('/UserId/:UserId', async (req, res) => {
     const response = new ResponseModel()
+    try {
+        if (!req.params.UserId) {
+            response.message = error_missing_fields
+            response.error = error_missing_fields
+            res.status(400).json(response)
+        }
+        const request = await Model.findAll({ include: { model: Restaurant, where: {UserId: req.params.UserId} } })
+
+        if (request) {
+            response.message = success_data_exits
+            response.data = request
+            res.status(200).json(response)
+        } else {
+            response.message = error_data_not_found
+            response.error = error_data_not_found
+            res.status(404).json(response)
+        }
+    } catch (error) {
+        response.message = error_data_not_found
+        response.error = error
+        return res.status(400).json(response)
+    }
+
+})
+
+router.post('/create', async (req, res) => {
+    const response = new ResponseModel()
+
     try {
         const { RestaurantId, name, description, image, active } = req.body
 
-        if (!(RestaurantId && name && active)) {
+        if (!(RestaurantId && name)) {
             response.message = error_missing_fields
             response.error = error_missing_fields
             return res.status(400).json(response)
@@ -95,7 +123,7 @@ router.post('/create', removeCache(['/menus']), async (req, res) => {
 router.put('/update', removeCache(['/menus']), async (req, res) => {
     const response = new ResponseModel()
     try {
-        const { id, RestaurantId, name, description, image } = req.body
+        const { id, RestaurantId, name, description, image, active } = req.body
 
         if (!id) {
             response.message = error_missing_fields
@@ -108,6 +136,7 @@ router.put('/update', removeCache(['/menus']), async (req, res) => {
             name: name,
             description: description,
             image: image,
+            active: active
         }
 
         const request = await Model.update(data, {

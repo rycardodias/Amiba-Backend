@@ -14,7 +14,11 @@ const { error_missing_fields, error_invalid_fields, error_data_not_found, succes
 router.get('/', cache(), async (req, res) => {
     const response = new ResponseModel()
     try {
-        const request = await Model.findAll({ include: [OrganizationType, User] })
+        const request = await Model.findAll({
+            include: [
+                { model: OrganizationType, attributes: ['id', 'name'] },
+                { model: User, attributes: ['id', 'name'] }]
+        })
         if (request.length > 0) {
             response.message = success_data_exits
             response.data = request
@@ -40,7 +44,39 @@ router.get('/id/:id', async (req, res) => {
             response.error = error_missing_fields
             res.status(400).json(response)
         }
-        const request = await Model.findByPk(req.params.id, { include: [OrganizationType, User] })
+        const request = await Model.findByPk(req.params.id, {
+            include: [
+                { model: OrganizationType, attributes: ['id', 'name'] },
+                { model: User, attributes: ['id', 'name'] }]
+        })
+
+        if (request) {
+            response.message = success_data_exits
+            response.data = request
+            res.status(200).json(response)
+        } else {
+            response.message = error_data_not_found
+            response.error = error_data_not_found
+            res.status(404).json(response)
+        }
+    } catch (error) {
+        response.message = error_data_not_found
+        response.error = error
+        return res.status(400).json(response)
+    }
+
+})
+
+router.get('/UserId/:UserId', async (req, res) => {
+    const response = new ResponseModel()
+    try {
+        if (!req.params.UserId) {
+            response.message = error_missing_fields
+            response.error = error_missing_fields
+            res.status(400).json(response)
+        }
+
+        const request = await Model.findAll({ where: { UserId: req.params.UserId } })
 
         if (request) {
             response.message = success_data_exits
@@ -101,7 +137,7 @@ router.post('/create', removeCache(['/organizations']), async (req, res) => {
 })
 
 
-router.put('/update', removeCache(['/organizations']), async (req, res) => {
+router.put('/update', async (req, res) => {
     const response = new ResponseModel()
     try {
         const { id, OrganizationTypeId, UserId, name, address, locale, zipcode, telephone, mobilePhone, fiscalNumber } = req.body
