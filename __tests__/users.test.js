@@ -5,10 +5,7 @@ const randomWord = Math.random().toString(36).substring(7)
 const randomNumber = Math.floor(100000000 + Math.random() * 900000000)
 
 describe('POST /users/create', () => {
-
-  describe('given all data', () => {
     it('should send a 200 status', async () => {
-      
       const response = await request(app).post('/users/create').send({
         email: randomWord + "@amiba.pt",
         password: "$2b$10$wLXRIhLuCkAL1KptowoKu.QZunSpKgfAKos6.BpeyFUk7emiM6aP.",
@@ -20,13 +17,13 @@ describe('POST /users/create', () => {
         telephone: randomNumber,
         mobilePhone: randomNumber
       })
+      
       expect('Content-Type, /json/')
       expect(response.statusCode).toBe(200)
+      expect(response.body).toHaveProperty('message')
       expect(response.body).toHaveProperty('data')
     })
-  })
 
-  describe('given invalid parameters', () => {
     it('should send a 400 status', async () => {
       const response = await request(app).post('/users/create').send({
         email: "",
@@ -35,9 +32,8 @@ describe('POST /users/create', () => {
       expect(response.statusCode).toBe(400)
       expect(response.body).toHaveProperty('error')
     })
-  })
 
-  describe('given repeted data', () => {
+  describe('invalid - existing data', () => {
     it('should send a 400 status', async () => {
       
       const response = await request(app).post('/users/create').send({
@@ -56,7 +52,6 @@ describe('POST /users/create', () => {
       expect(response.body).toHaveProperty('error')
     })
   })
-
 })
 
 

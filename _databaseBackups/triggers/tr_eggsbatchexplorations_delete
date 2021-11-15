@@ -1,6 +1,6 @@
 -- Trigger: tr_eggsbatchexplorations_delete
 
-DROP TRIGGER tr_eggsbatchexplorations_delete ON public."EggsBatchExplorations";
+--DROP TRIGGER tr_eggsbatchexplorations_delete ON public."EggsBatchExplorations";
 
 CREATE TRIGGER tr_eggsbatchexplorations_delete
     BEFORE DELETE 

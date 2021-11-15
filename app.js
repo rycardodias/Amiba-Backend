@@ -6,14 +6,14 @@ const dotenv = require('dotenv')
 dotenv.config()
 
 const app = express();
-
 app.use(express.json());
 app.use(
   cors(
-    // {
-    //   origin: 'http://localhost:3000',
-    //   optionsSuccessStatus: 200,
-    // }
+    {
+      // credentials: true,
+      // origin: 'http://localhost:3000',
+      //   optionsSuccessStatus: 200,
+    }
   )
 );
 

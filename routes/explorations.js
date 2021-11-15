@@ -86,7 +86,7 @@ router.get('/UserId/:UserId', async (req, res) => {
     }
 })
 
-router.post('/create', removeCache(['/explorations']), async (req, res) => {
+router.post('/create',  async (req, res) => {
     const response = new ResponseModel()
     try {
         const { OrganizationId, ExplorationTypeId, name, address, locale, zipcode, telephone, mobilePhone, fiscalNumber, gpsLocalization } = req.body
