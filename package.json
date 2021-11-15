@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js",
-    "test": "jest --watchAll --no-cache"
+    "test": "jest --watchAll --no-cache --detectOpenHandles"
   },
   "jest": {
     "testEnvironment": "node",

@@ -8,7 +8,6 @@ const { error_missing_fields, error_invalid_fields, error_data_not_found, succes
     error_row_update, error_row_create, success_row_create, success_data_exits } = require('../lib/ResponseMessages')
 
 router.get('/', async (req, res) => {
-    console.log(req.session.token)
     const response = new ResponseModel()
     try {
         const request = await Model.findAll()
