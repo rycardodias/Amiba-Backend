@@ -22,9 +22,4 @@ const Race = db.define('Race', {
     },
 })
 
-
-Race.beforeCreate(user => {
-    console.log("teste create", user)
-})
-
 module.exports = Race

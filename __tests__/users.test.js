@@ -7,7 +7,7 @@ describe('POST /users/create', () => {
   const randomNumber = Math.floor(100000000 + Math.random() * 900000000)
 
   it('valid - new user', async () => {
-    return await request(app).post('/users/create')
+     await request(app).post('/users/create')
       .send({
         email: randomWord + "@amiba.pt",
         password: "$2b$10$wLXRIhLuCkAL1KptowoKu.QZunSpKgfAKos6.BpeyFUk7emiM6aP.",

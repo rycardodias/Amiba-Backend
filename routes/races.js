@@ -56,9 +56,7 @@ router.get('/id/:id', async (req, res) => {
 })
 
 
-
-
-router.post('/create', removeCache(['/races']), async (req, res) => {
+router.post('/create', async (req, res) => {
     const response = new ResponseModel()
     try {
         const { name, description } = req.body
@@ -75,14 +73,13 @@ router.post('/create', removeCache(['/races']), async (req, res) => {
         }
 
         const request = await Model.create(data)
-
         if (request) {
             response.message = success_row_create
             response.data = request
-            res.status(200).json(response)
+            res.status(201).json(response)
         } else {
             response.error = error_row_create
-            res.status(404).json(response)
+            res.status(200).json(response)
         }
     } catch (error) {
         response.message = error_invalid_fields
@@ -91,7 +88,7 @@ router.post('/create', removeCache(['/races']), async (req, res) => {
     }
 })
 
-router.put('/update', removeCache(['/races', '/animals']), async (req, res) => {
+router.put('/update', async (req, res) => {
     const response = new ResponseModel()
     try {
         const { id, name, description } = req.body
@@ -99,7 +96,7 @@ router.put('/update', removeCache(['/races', '/animals']), async (req, res) => {
         if (!id) {
             response.message = error_missing_fields
             response.error = error_missing_fields
-            res.status(400).json(response)
+            return res.status(400).json(response)
         }
 
         const data = {
