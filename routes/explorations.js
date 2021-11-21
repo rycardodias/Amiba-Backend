@@ -10,7 +10,7 @@ const ResponseModel = require('../lib/ResponseModel')
 const { error_missing_fields, error_invalid_fields, error_data_not_found, success_row_delete, error_row_delete, success_row_update,
     error_row_update, error_row_create, success_row_create, success_data_exits } = require('../lib/ResponseMessages')
 
-router.get('/', cache(), async (req, res) => {
+router.get('/', async (req, res) => {
     const response = new ResponseModel()
     try {
         const request = await Model.findAll({ include: [Organization, ExplorationType] })

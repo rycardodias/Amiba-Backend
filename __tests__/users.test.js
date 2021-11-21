@@ -6,8 +6,9 @@ describe('POST /users/create', () => {
   const randomWord = Math.random().toString(36).substring(7)
   const randomNumber = Math.floor(100000000 + Math.random() * 900000000)
 
+
   it('valid - new user', async () => {
-     await request(app).post('/users/create')
+    await request(app).post('/users/create')
       .send({
         email: randomWord + "@amiba.pt",
         password: "$2b$10$wLXRIhLuCkAL1KptowoKu.QZunSpKgfAKos6.BpeyFUk7emiM6aP.",
@@ -22,6 +23,7 @@ describe('POST /users/create', () => {
         expect(response.statusCode).toBe(201)
         expect(response.body).toHaveProperty('message')
         expect(response.body).toHaveProperty('data')
+
       })
   })
 
@@ -70,8 +72,16 @@ describe("GET /users/", () => {
 })
 
 describe("GET /users/id/", () => {
+
   it('valid - existing uuid', async () => {
-    await request(app).get('/users/id/f49bff1d-cde0-4f7f-9ce3-8531dfb13ba5')
+    let newUser
+
+    await request(app).get('/users')
+      .then((response) => {
+        newUser = response.body.data[0].id
+      })
+
+    await request(app).get('/users/id/' + newUser)
       .then((response) => {
         expect('Content-Type, /json/')
         expect(response.statusCode).toBe(200)

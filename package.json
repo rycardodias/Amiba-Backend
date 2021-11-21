@@ -29,7 +29,7 @@
     "jsonwebtoken": "^8.5.1",
     "memory-cache": "^0.2.0",
     "path": "^0.12.7",
-    "pg": "^8.5.1",
+    "pg": "^8.7.1",
     "pg-hstore": "^2.3.3",
     "resize-img": "^2.0.0",
     "sequelize": "^6.6.2",

@@ -20,7 +20,7 @@ router.get('/', async (req, res) => {
         } else {
             response.message = error_data_not_found
             response.error = error_data_not_found
-            res.status(204).json(response)
+            res.status(200).json(response)
         }
     } catch (error) {
         response.message = error_data_not_found
