@@ -17,7 +17,7 @@ const Organization = require('../models/Organization')
 const EggsBatch = require('../models/EggsBatch')
 const EggsBatchExploration = require('../models/EggsBatchExploration')
 
-router.get('/', cache(), async (req, res) => {
+router.get('/',  async (req, res) => {
     const response = new ResponseModel()
     try {
         const request = await Model.findAll({})

@@ -2,7 +2,6 @@ const express = require('express')
 const router = express.Router()
 
 const Model = require('../models/Animal')
-const Race = require('../models/Race')
 const Exploration = require('../models/Exploration')
 const cache = require('../lib/cache/routeCache')
 const removeCache = require('../lib/cache/removeCache')
@@ -10,10 +9,10 @@ const ResponseModel = require('../lib/ResponseModel')
 const { error_missing_fields, error_invalid_fields, error_data_not_found, success_row_delete, error_row_delete, success_row_update,
     error_row_update, error_row_create, success_row_create, success_data_exits } = require('../lib/ResponseMessages')
 
-router.get('/', cache(), async (req, res) => {
+router.get('/',  async (req, res) => {
     const response = new ResponseModel()
     try {
-        const request = await Model.findAll({ include: [Exploration, Race] })
+        const request = await Model.findAll({ include: [Exploration] })
         if (request.length > 0) {
             response.message = success_data_exits
             response.data = request
@@ -39,7 +38,7 @@ router.get('/id/:id', async (req, res) => {
             response.error = error_missing_fields
             res.status(400).json(response)
         }
-        const request = await Model.findByPk(req.params.id, { include: [Exploration, Race] })
+        const request = await Model.findByPk(req.params.id, { include: [Exploration] })
 
         if (request) {
             response.message = success_data_exits
@@ -58,12 +57,12 @@ router.get('/id/:id', async (req, res) => {
 
 })
 
-router.post('/create', removeCache(['/animals']), async (req, res) => {
+router.post('/create',  async (req, res) => {
     const response = new ResponseModel()
     try {
-        const { ExplorationId, RaceId, gender, birthDate, weight, slaughterDate, slaughterWeight, slaughterLocal } = req.body
+        const { ExplorationId, race, gender, birthDate, weight, slaughterDate, slaughterWeight, slaughterLocal } = req.body
 
-        if (!(ExplorationId && RaceId && gender && birthDate && weight)) {
+        if (!(ExplorationId && race && gender && birthDate && weight)) {
             response.message = error_missing_fields
             response.error = error_missing_fields
             return res.status(400).json(response)
@@ -71,7 +70,7 @@ router.post('/create', removeCache(['/animals']), async (req, res) => {
 
         const data = {
             ExplorationId: ExplorationId,
-            RaceId: RaceId,
+            race: race,
             gender: gender,
             birthDate: birthDate,
             weight: weight,

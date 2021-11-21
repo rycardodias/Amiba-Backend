@@ -9,7 +9,7 @@ const removeCache = require('../lib/cache/removeCache')
 const Product = require('../models/Product')
 
 
-router.get('/', cache(), async (req, res) => {
+router.get('/',  async (req, res) => {
     const response = new ResponseModel()
     try {
         const request = await Model.findAll({ include: Product })

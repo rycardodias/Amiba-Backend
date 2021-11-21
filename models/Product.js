@@ -1,6 +1,5 @@
 const { DataTypes, Sequelize, UUIDV4 } = require('sequelize');
 const db = require('../config/database');
-const ProductType = require('./ProductType');
 const Organization = require('./Organization');
 
 
@@ -9,6 +8,15 @@ const Product = db.define('Product', {
         type: DataTypes.UUID,
         primaryKey: true,
         defaultValue: DataTypes.UUIDV4
+    },
+    type: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+            notEmpty: {
+                msg: "type field is required",
+            }
+        },
     },
     name: {
         type: DataTypes.STRING,
@@ -52,22 +60,8 @@ const Product = db.define('Product', {
     image: {
         type: DataTypes.STRING,
     },
-    type: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        validate: {
-            notEmpty: {
-                msg: "type field is required",
-            }
-        },
-    },
-},
+}
 )
-Product.belongsTo(ProductType, {
-    onDelete: 'RESTRICT',
-    onUpdate: 'RESTRICT'
-})
-ProductType.hasMany(Product)
 
 Product.belongsTo(Organization, {
     onDelete: 'RESTRICT',

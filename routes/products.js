@@ -2,12 +2,9 @@ const express = require('express')
 const router = express.Router()
 
 const Model = require('../models/Product')
-const cache = require('../lib/cache/routeCache')
-const removeCache = require('../lib/cache/removeCache')
 const ResponseModel = require('../lib/ResponseModel')
 const { error_missing_fields, error_invalid_fields, error_data_not_found, success_row_delete, error_row_delete, success_row_update,
     error_row_update, error_row_create, success_row_create, success_data_exits } = require('../lib/ResponseMessages')
-const ProductType = require('../models/ProductType')
 const Organization = require('../models/Organization')
 const AnimalProduct = require('../models/AnimalProduct')
 const EggsBatchProduct = require('../models/EggsBatchProduct')
@@ -18,10 +15,10 @@ const Exploration = require('../models/Exploration')
 const db = require('../config/database');
 const { Sequelize } = require('../config/database')
 
-router.get('/', cache(), async (req, res) => {
+router.get('/', async (req, res) => {
     const response = new ResponseModel()
     try {
-        const request = await Model.findAll({ include: [ProductType, Organization] })
+        const request = await Model.findAll({ include: [Organization] })
         if (request.length > 0) {
             response.message = success_data_exits
             response.data = request
@@ -47,7 +44,7 @@ router.get('/id/:id', async (req, res) => {
             response.error = error_missing_fields
             res.status(400).json(response)
         }
-        const request = await Model.findByPk(req.params.id, { include: [ProductType, Organization] })
+        const request = await Model.findByPk(req.params.id, { include: [Organization] })
 
         if (request) {
             response.message = success_data_exits
@@ -73,7 +70,7 @@ router.get('/type/:type', async (req, res) => {
             response.error = error_missing_fields
             res.status(400).json(response)
         }
-        const request = await Model.findAll({ where: { type: req.params.type }, include: [ProductType, Organization] })
+        const request = await Model.findAll({ where: { type: req.params.type }, include: [Organization] })
 
         if (request.length > 0) {
             response.message = success_data_exits
@@ -148,10 +145,6 @@ router.get('/allAvailable/id/:id', async (req, res) => {
 
             include: [
                 {
-                    model: ProductType,
-                    attributes: ['name', 'description']
-                },
-                {
                     model: AnimalProduct,
                     required: false,
                     where: { quantityAvailable: { [Op.gt]: 0 } }
@@ -181,21 +174,17 @@ router.get('/allAvailable/id/:id', async (req, res) => {
     }
 })
 
-router.get('/allAvailable/ProductTypeId/:ProductTypeId', async (req, res) => {
+router.get('/allAvailable/type/:type', async (req, res) => {
     const response = new ResponseModel()
     try {
-        if (!req.params.ProductTypeId) {
+        if (!req.params.type) {
             response.error = "error_missing_fields"
             res.status(400).json(response)
         }
         const request = await Model.findAll
             ({
-                where: { ProductTypeId: req.params.ProductTypeId },
+                where: { type: req.params.type },
                 include: [
-                    {
-                        model: ProductType,
-                        attributes: ['name', 'description']
-                    },
                     {
                         model: AnimalProduct,
                         where: { quantityAvailable: { [Op.gt]: 0 } }, attributes: ['quantityAvailable'],
@@ -212,28 +201,28 @@ router.get('/allAvailable/ProductTypeId/:ProductTypeId', async (req, res) => {
                     }
                 ]
             })
-            if (request) {
-                response.message = success_data_exits
-                response.data = request
-                res.status(200).json(response)
-            } else {
-                response.message = error_data_not_found
-                response.error = error_data_not_found
-                res.status(404).json(response)
-            }
-        } catch (error) {
+        if (request) {
+            response.message = success_data_exits
+            response.data = request
+            res.status(200).json(response)
+        } else {
             response.message = error_data_not_found
-            response.error = error
-            return res.status(400).json(response)
+            response.error = error_data_not_found
+            res.status(404).json(response)
         }
+    } catch (error) {
+        response.message = error_data_not_found
+        response.error = error
+        return res.status(400).json(response)
+    }
 })
 
-router.post('/create', removeCache(['/products']), async (req, res) => {
+router.post('/create', async (req, res) => {
     const response = new ResponseModel()
     try {
-        const { type, ProductTypeId, OrganizationId, tax, name, description, price, unit, image } = req.body
+        const { type, OrganizationId, tax, name, description, price, unit, image } = req.body
 
-        if (!(type && ProductTypeId && tax && name && price && unit)) {
+        if (!(type && tax && name && price && unit)) {
             response.message = error_missing_fields
             response.error = error_missing_fields
             return res.status(400).json(response)
@@ -241,7 +230,6 @@ router.post('/create', removeCache(['/products']), async (req, res) => {
 
         const data = {
             type: type,
-            ProductTypeId: ProductTypeId,
             OrganizationId: OrganizationId,
             tax: tax,
             name: name,
@@ -269,10 +257,10 @@ router.post('/create', removeCache(['/products']), async (req, res) => {
 })
 
 
-router.put('/update', removeCache(['/products', '/products/allAvailable']), async (req, res) => {
+router.put('/update', async (req, res) => {
     const response = new ResponseModel()
     try {
-        const { id, ProductTypeId, tax, name, description, price, image } = req.body
+        const { id, type, tax, name, description, price, image } = req.body
 
         if (!id) {
             response.message = error_missing_fields
@@ -281,7 +269,7 @@ router.put('/update', removeCache(['/products', '/products/allAvailable']), asyn
         }
 
         const data = {
-            ProductTypeId: ProductTypeId,
+            type: type,
             tax: tax,
             name: name,
             description: description,
@@ -310,7 +298,7 @@ router.put('/update', removeCache(['/products', '/products/allAvailable']), asyn
     }
 })
 
-router.delete('/delete', removeCache(['/products', '/products/allAvailable']), async (req, res) => {
+router.delete('/delete', async (req, res) => {
     const response = new ResponseModel()
     try {
         const { id } = req.body

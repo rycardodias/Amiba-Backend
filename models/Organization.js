@@ -1,6 +1,5 @@
 const { DataTypes, Sequelize, UUID } = require('sequelize');
 const db = require('../config/database')
-const OrganizationType = require('./OrganizationType');
 const User = require('./User');
 
 const Organization = db.define('Organization', {
@@ -8,6 +7,15 @@ const Organization = db.define('Organization', {
         type: DataTypes.UUID,
         primaryKey: true,
         defaultValue: DataTypes.UUIDV4
+    },
+    type: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+            notEmpty: {
+                msg: "type field is required",
+            }
+        }
     },
     name: {
         type: DataTypes.STRING,
@@ -66,11 +74,6 @@ const Organization = db.define('Organization', {
     },
 },
 )
-Organization.belongsTo(OrganizationType, {
-    onDelete: 'RESTRICT',
-    onUpdate: 'RESTRICT'
-})
-OrganizationType.hasMany(Organization)
 
 Organization.belongsTo(User, {
     onDelete: 'RESTRICT',

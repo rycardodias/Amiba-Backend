@@ -1,9 +1,6 @@
 const { DataTypes, Sequelize } = require('sequelize');
 const db = require('../config/database');
-
-// db.sync({force: true})
 const Exploration = require('./Exploration');
-const Race = require('./Race');
 
 const Animal = db.define('Animal', {
     id: {
@@ -13,6 +10,15 @@ const Animal = db.define('Animal', {
         validate: {
             notEmpty: {
                 msg: "id field is required",
+            }
+        }
+    },
+    race: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+            notEmpty: {
+                msg: "race field is required",
             }
         }
     },
@@ -48,12 +54,6 @@ const Animal = db.define('Animal', {
     },
 },
 )
-
-Animal.belongsTo(Race, {
-    onDelete: 'RESTRICT',
-    onUpdate: 'RESTRICT'
-})
-Race.hasMany(Animal)
 
 Animal.belongsTo(Exploration, {
     onDelete: 'RESTRICT',

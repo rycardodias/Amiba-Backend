@@ -1,6 +1,5 @@
 const { DataTypes, Sequelize } = require('sequelize');
 const db = require('../config/database');
-const Race = require('./Race');
 
 const EggsBatch = db.define('EggsBatch', {
     id: {
@@ -28,11 +27,6 @@ const EggsBatch = db.define('EggsBatch', {
     },
 },
 )
-EggsBatch.belongsTo(Race, {
-    onDelete: 'RESTRICT',
-    onUpdate: 'RESTRICT'
-})
-Race.hasMany(EggsBatch)
 
 // EggsBatch.sync({ force: true })
 module.exports = EggsBatch

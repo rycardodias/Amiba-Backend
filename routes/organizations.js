@@ -1,22 +1,18 @@
 const express = require('express')
 const router = express.Router()
 const Model = require('../models/Organization')
-const OrganizationType = require('../models/OrganizationType')
 const User = require('../models/User')
-const cache = require('../lib/cache/routeCache')
-const removeCache = require('../lib/cache/removeCache')
 const ResponseModel = require('../lib/ResponseModel')
 const { error_missing_fields, error_invalid_fields, error_data_not_found, success_row_delete, error_row_delete, success_row_update,
     error_row_update, error_row_create, success_row_create, success_data_exits } = require('../lib/ResponseMessages')
 
 
 
-router.get('/', cache(), async (req, res) => {
+router.get('/',  async (req, res) => {
     const response = new ResponseModel()
     try {
         const request = await Model.findAll({
             include: [
-                { model: OrganizationType, attributes: ['id', 'name'] },
                 { model: User, attributes: ['id', 'name'] }]
         })
         if (request.length > 0) {
@@ -46,7 +42,6 @@ router.get('/id/:id', async (req, res) => {
         }
         const request = await Model.findByPk(req.params.id, {
             include: [
-                { model: OrganizationType, attributes: ['id', 'name'] },
                 { model: User, attributes: ['id', 'name'] }]
         })
 
@@ -95,20 +90,20 @@ router.get('/UserId/:UserId', async (req, res) => {
 
 })
 
-router.post('/create', removeCache(['/organizations']), async (req, res) => {
+router.post('/create',  async (req, res) => {
     const response = new ResponseModel()
     try {
-        const { OrganizationTypeId, UserId, name, address, locale, zipcode, telephone, mobilePhone, fiscalNumber } = req.body
+        const { type, UserId, name, address, locale, zipcode, telephone, mobilePhone, fiscalNumber } = req.body
 
 
-        if (!(OrganizationTypeId && UserId && name && address && locale && zipcode && fiscalNumber)) {
+        if (!(type && UserId && name && address && locale && zipcode && fiscalNumber)) {
             response.message = error_missing_fields
             response.error = error_missing_fields
             return res.status(400).json(response)
         }
 
         const data = {
-            OrganizationTypeId: OrganizationTypeId,
+            type: type,
             UserId: UserId,
             name: name,
             address: address,
@@ -140,7 +135,7 @@ router.post('/create', removeCache(['/organizations']), async (req, res) => {
 router.put('/update', async (req, res) => {
     const response = new ResponseModel()
     try {
-        const { id, OrganizationTypeId, UserId, name, address, locale, zipcode, telephone, mobilePhone, fiscalNumber } = req.body
+        const { id, type, UserId, name, address, locale, zipcode, telephone, mobilePhone, fiscalNumber } = req.body
 
         if (!id) {
             response.message = error_missing_fields
@@ -149,7 +144,7 @@ router.put('/update', async (req, res) => {
         }
 
         const data = {
-            OrganizationTypeId: OrganizationTypeId,
+            type: type,
             UserId: UserId,
             name: name,
             address: address,
@@ -181,7 +176,7 @@ router.put('/update', async (req, res) => {
     }
 })
 
-router.delete('/delete', removeCache(['/organizations']), async (req, res) => {
+router.delete('/delete',  async (req, res) => {
     const response = new ResponseModel()
     try {
         const { id } = req.body

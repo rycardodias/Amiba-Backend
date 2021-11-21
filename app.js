@@ -3,8 +3,10 @@ const cors = require("cors")
 const cookieSession = require('cookie-session')
 const fileUpload = require('express-fileupload')
 const dotenv = require('dotenv')
-// const db = require('./config/database')
+const db = require('./config/database')
 dotenv.config()
+
+db.sync({ force: true })
 
 // db.authenticate()
 //    .then(()=> console.log('Connection has been established successfully.'))
@@ -36,23 +38,20 @@ app.use(fileUpload({
 }))
 
 
+
 app.get('/', (req, res) => res.send('INDEX - AMIBA WEBSERVICES'));
 
 //routes
 app.use('/users', require('./routes/users'))
-app.use('/organizationTypes', require('./routes/organizationTypes'))
 app.use('/organizations', require('./routes/organizations'))
 app.use('/restaurants', require('./routes/restaurants'))
 app.use('/menus', require('./routes/menus'))
 app.use('/orders', require('./routes/orders'))
 app.use('/orderHistory', require('./routes/orderHistory'))
-app.use('/explorationTypes', require('./routes/explorationTypes'))
 app.use('/explorations', require('./routes/explorations'))
 app.use('/certifications', require('./routes/certifications'))
-app.use('/productTypes', require('./routes/productTypes'))
 app.use('/products', require('./routes/products'))
 app.use('/orderLines', require('./routes/orderLines'))
-app.use('/races', require('./routes/races'))
 app.use('/eggsBatchs', require('./routes/eggsBatchs'))
 app.use('/eggsBatchExplorations', require('./routes/eggsBatchExplorations'))
 app.use('/animals', require('./routes/animals'))

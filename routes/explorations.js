@@ -2,10 +2,7 @@ const express = require('express')
 const router = express.Router()
 
 const Model = require('../models/Exploration')
-const ExplorationType = require('../models/ExplorationType')
 const Organization = require('../models/Organization')
-const cache = require('../lib/cache/routeCache')
-const removeCache = require('../lib/cache/removeCache')
 const ResponseModel = require('../lib/ResponseModel')
 const { error_missing_fields, error_invalid_fields, error_data_not_found, success_row_delete, error_row_delete, success_row_update,
     error_row_update, error_row_create, success_row_create, success_data_exits } = require('../lib/ResponseMessages')
@@ -13,7 +10,7 @@ const { error_missing_fields, error_invalid_fields, error_data_not_found, succes
 router.get('/', async (req, res) => {
     const response = new ResponseModel()
     try {
-        const request = await Model.findAll({ include: [Organization, ExplorationType] })
+        const request = await Model.findAll({ include: [Organization] })
         if (request.length > 0) {
             response.message = success_data_exits
             response.data = request
@@ -38,7 +35,7 @@ router.get('/id/:id', async (req, res) => {
             response.error = error_missing_fields
             res.status(400).json(response)
         }
-        const request = await Model.findByPk(req.params.id, { include: [Organization, ExplorationType] })
+        const request = await Model.findByPk(req.params.id, { include: [Organization] })
 
         if (request) {
             response.message = success_data_exits
@@ -66,7 +63,7 @@ router.get('/UserId/:UserId', async (req, res) => {
         }
         const request = await Model.findAll({
             include: [
-                { model: Organization, where: { UserId: req.params.UserId } }, ExplorationType]
+                { model: Organization, where: { UserId: req.params.UserId } }]
         })
 
 
@@ -89,9 +86,9 @@ router.get('/UserId/:UserId', async (req, res) => {
 router.post('/create',  async (req, res) => {
     const response = new ResponseModel()
     try {
-        const { OrganizationId, ExplorationTypeId, name, address, locale, zipcode, telephone, mobilePhone, fiscalNumber, gpsLocalization } = req.body
+        const { OrganizationId, type, name, address, locale, zipcode, telephone, mobilePhone, fiscalNumber, gpsLocalization } = req.body
 
-        if (!(OrganizationId && ExplorationTypeId && name && address && locale && zipcode && fiscalNumber)) {
+        if (!(OrganizationId && type && name && address && locale && zipcode && fiscalNumber)) {
             response.message = error_missing_fields
             response.error = error_missing_fields
             return res.status(400).json(response)
@@ -99,7 +96,7 @@ router.post('/create',  async (req, res) => {
 
         const data = {
             OrganizationId: OrganizationId,
-            ExplorationTypeId: ExplorationTypeId,
+            type: type,
             name: name,
             address: address,
             locale: locale,
@@ -127,10 +124,10 @@ router.post('/create',  async (req, res) => {
     }
 })
 
-router.put('/update', removeCache(['/explorations']), async (req, res) => {
+router.put('/update',  async (req, res) => {
     const response = new ResponseModel()
     try {
-        const { id, ExplorationTypeId, name, address, locale, zipcode, telephone, mobilePhone, fiscalNumber, gpsLocalization } = req.body
+        const { id, type, name, address, locale, zipcode, telephone, mobilePhone, fiscalNumber, gpsLocalization } = req.body
 
 
         if (!id) {
@@ -140,7 +137,7 @@ router.put('/update', removeCache(['/explorations']), async (req, res) => {
         }
 
         const data = {
-            ExplorationTypeId: ExplorationTypeId,
+            type: type,
             name: name,
             address: address,
             locale: locale,
@@ -172,7 +169,7 @@ router.put('/update', removeCache(['/explorations']), async (req, res) => {
     }
 })
 
-router.delete('/delete', removeCache(['/explorations']), async (req, res) => {
+router.delete('/delete',  async (req, res) => {
     const response = new ResponseModel()
     try {
         const { id } = req.body

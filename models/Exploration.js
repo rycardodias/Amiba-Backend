@@ -1,6 +1,5 @@
 const { DataTypes } = require('sequelize')
 const db = require('../config/database')
-const ExplorationType = require('./ExplorationType')
 const Organization = require('./Organization')
 
 const Exploration = db.define('Exploration', {
@@ -8,6 +7,15 @@ const Exploration = db.define('Exploration', {
         type: DataTypes.UUID,
         primaryKey: true,
         defaultValue: DataTypes.UUIDV4
+    },
+    type: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+            notEmpty: {
+                msg: "type field is required",
+            }
+        }
     },
     name: {
         type: DataTypes.STRING,
@@ -72,21 +80,5 @@ Exploration.belongsTo(Organization, {
     onUpdate: 'RESTRICT'
 })
 Organization.hasMany(Exploration)
-
-Exploration.belongsTo(ExplorationType, {
-    onDelete: 'RESTRICT',
-    onUpdate: 'RESTRICT'
-})
-ExplorationType.hasMany(Exploration)
-
-// Exploration.sync({ alter: true })
-//     .then(() => {
-//         db.query("ALTER TABLE \"Explorations\" DROP CONSTRAINT \"Explorations_ExplorationTypeId_fkey\", " +
-//             " ADD CONSTRAINT \"Explorations_ExplorationTypeId_fkey\" FOREIGN KEY(\"ExplorationTypeId\") REFERENCES \"ExplorationTypes\" " +
-//             "ON UPDATE NO ACTION;")
-//         db.query("ALTER TABLE \"Explorations\" DROP CONSTRAINT \"Explorations_OrganizationId_fkey\", " +
-//             " ADD CONSTRAINT \"Explorations_OrganizationId_fkey\" FOREIGN KEY(\"OrganizationId\") REFERENCES \"Organizations\" " +
-//             "ON UPDATE NO ACTION;")
-//     })
 
 module.exports = Exploration

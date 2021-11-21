@@ -4,14 +4,11 @@ const Model = require('../models/EggsBatch')
 const ResponseModel = require('../lib/ResponseModel')
 const { error_missing_fields, error_invalid_fields, error_data_not_found, success_row_delete, error_row_delete, success_row_update,
     error_row_update, error_row_create, success_row_create, success_data_exits } = require('../lib/ResponseMessages')
-const Race = require('../models/Race')
-const cache = require('../lib/cache/routeCache')
-const removeCache = require('../lib/cache/removeCache')
 
 router.get('/', async (req, res) => {
     const response = new ResponseModel()
     try {
-        const request = await Model.findAll({ include: Race })
+        const request = await Model.findAll()
         if (request.length > 0) {
             response.message = success_data_exits
             response.data = request
@@ -37,7 +34,7 @@ router.get('/id/:id', async (req, res) => {
             response.error = error_missing_fields
             res.status(400).json(response)
         }
-        const request = await Model.findByPk(req.params.id, { include: Race })
+        const request = await Model.findByPk(req.params.id)
 
         if (request) {
             response.message = success_data_exits
@@ -56,13 +53,13 @@ router.get('/id/:id', async (req, res) => {
 
 })
 
-router.post('/create', removeCache(['/eggsBatchs']), async (req, res) => {
+router.post('/create', async (req, res) => {
     const response = new ResponseModel()
     try {
-        const { name, caliber, RaceId } = req.body
+        const { name, caliber, race } = req.body
 
 
-        if (!(name && caliber && RaceId)) {
+        if (!(name && caliber && race)) {
             response.message = error_missing_fields
             response.error = error_missing_fields
             return res.status(400).json(response)
@@ -71,7 +68,7 @@ router.post('/create', removeCache(['/eggsBatchs']), async (req, res) => {
         const data = {
             name: name,
             caliber: caliber,
-            RaceId: RaceId
+            race: race
         }
 
         const request = await Model.create(data)
@@ -91,7 +88,7 @@ router.post('/create', removeCache(['/eggsBatchs']), async (req, res) => {
     }
 })
 
-router.put('/update', removeCache(['/eggsBatchs']), async (req, res) => {
+router.put('/update', async (req, res) => {
     const response = new ResponseModel()
     try {
         const { id, name, } = req.body
@@ -126,7 +123,7 @@ router.put('/update', removeCache(['/eggsBatchs']), async (req, res) => {
     }
 })
 
-router.delete('/delete', removeCache(['/eggsBatchs']), async (req, res) => {
+router.delete('/delete',  async (req, res) => {
     const response = new ResponseModel()
     try {
         const { id } = req.body
