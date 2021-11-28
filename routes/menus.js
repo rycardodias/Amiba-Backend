@@ -1,7 +1,5 @@
 const express = require('express')
 const router = express.Router()
-const cache = require('../lib/cache/routeCache')
-const removeCache = require('../lib/cache/removeCache')
 const Model = require('../models/Menu')
 const Restaurant = require('../models/Restaurant')
 const ResponseModel = require('../lib/ResponseModel')
@@ -120,7 +118,7 @@ router.post('/create', async (req, res) => {
     }
 })
 
-router.put('/update', removeCache(['/menus']), async (req, res) => {
+router.put('/update',  async (req, res) => {
     const response = new ResponseModel()
     try {
         const { id, RestaurantId, name, description, image, active } = req.body
@@ -160,7 +158,7 @@ router.put('/update', removeCache(['/menus']), async (req, res) => {
     }
 })
 
-router.delete('/delete', removeCache(['/menus']), async (req, res) => {
+router.delete('/delete', async (req, res) => {
     const response = new ResponseModel()
     try {
         const { id } = req.body

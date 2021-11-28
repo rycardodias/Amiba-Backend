@@ -4,8 +4,6 @@ const Model = require('../models/EggsBatchProduct')
 const ResponseModel = require('../lib/ResponseModel')
 const { error_missing_fields, error_invalid_fields, error_data_not_found, success_row_delete, error_row_delete, success_row_update,
     error_row_update, error_row_create, success_row_create, success_data_exits } = require('../lib/ResponseMessages')
-const cache = require('../lib/cache/routeCache')
-const removeCache = require('../lib/cache/removeCache')
 const Product = require('../models/Product')
 
 
@@ -58,7 +56,7 @@ router.get('/ProductId/:ProductId/EggsBatchId/:EggsBatchId', async (req, res) =>
 
 })
 
-router.post('/create', removeCache(['/eggsBatchProducts', , '/products/allAvailable']), async (req, res) => {
+router.post('/create', async (req, res) => {
     const response = new ResponseModel()
     try {
         const { ProductId, EggsBatchId, quantity, divider } = req.body
@@ -94,7 +92,7 @@ router.post('/create', removeCache(['/eggsBatchProducts', , '/products/allAvaila
     }
 })
 
-router.put('/update', removeCache(['/eggsBatchProducts', '/products/allAvailable']), async (req, res) => {
+router.put('/update',async (req, res) => {
     const response = new ResponseModel()
     try {
         const { id, quantity } = req.body
@@ -132,7 +130,7 @@ router.put('/update', removeCache(['/eggsBatchProducts', '/products/allAvailable
 })
 
 
-router.delete('/delete', removeCache(['/eggsBatchProducts', '/products/allAvailable']), async (req, res) => {
+router.delete('/delete', async (req, res) => {
     const response = new ResponseModel()
     try {
         const { id } = req.body

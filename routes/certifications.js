@@ -3,13 +3,11 @@ const router = express.Router()
 
 const Model = require('../models/Certification')
 const Exploration = require('../models/Exploration')
-const cache = require('../lib/cache/routeCache')
-const removeCache = require('../lib/cache/removeCache')
 const ResponseModel = require('../lib/ResponseModel')
 const { error_missing_fields, error_invalid_fields, error_data_not_found, success_row_delete, error_row_delete, success_row_update,
     error_row_update, error_row_create, success_row_create, success_data_exits } = require('../lib/ResponseMessages')
 
-router.get('/',  async (req, res) => {
+router.get('/', async (req, res) => {
     const response = new ResponseModel()
     try {
         const request = await Model.findAll({ include: Exploration })
@@ -56,7 +54,7 @@ router.get('/id/:id', async (req, res) => {
     }
 })
 
-router.post('/create', removeCache(['/certifications']), async (req, res) => {
+router.post('/create', async (req, res) => {
     const response = new ResponseModel()
     try {
         const { ExplorationId, certificationCode, initialDate, finalDate, description } = req.body
@@ -92,7 +90,7 @@ router.post('/create', removeCache(['/certifications']), async (req, res) => {
     }
 })
 
-router.put('/update', removeCache(['/certifications']), async (req, res) => {
+router.put('/update', async (req, res) => {
     const response = new ResponseModel()
     try {
         const { id, description } = req.body
@@ -128,7 +126,7 @@ router.put('/update', removeCache(['/certifications']), async (req, res) => {
     }
 })
 
-router.delete('/delete', removeCache(['/certifications']), async (req, res) => {
+router.delete('/delete', async (req, res) => {
     const response = new ResponseModel()
     try {
         const { id } = req.body

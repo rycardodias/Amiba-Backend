@@ -13,6 +13,16 @@ const Animal = db.define('Animal', {
             }
         }
     },
+    identifier: {
+        type: DataTypes.STRING,
+        unique: true,
+        allowNull: false,
+        validate: {
+            notEmpty: {
+                msg: "identifier field is required",
+            }
+        }
+    },
     race: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -52,6 +62,10 @@ const Animal = db.define('Animal', {
     slaughterLocal: {
         type: DataTypes.STRING,
     },
+    breeder: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false
+    }
 },
 )
 
@@ -60,5 +74,5 @@ Animal.belongsTo(Exploration, {
     onUpdate: 'RESTRICT'
 })
 Exploration.hasMany(Animal)
-
+// Animal.sync({ force: true })
 module.exports = Animal

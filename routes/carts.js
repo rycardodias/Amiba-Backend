@@ -2,8 +2,6 @@ const express = require('express')
 const router = express.Router()
 
 const Model = require('../models/Cart')
-const cache = require('../lib/cache/routeCache')
-const removeCache = require('../lib/cache/removeCache')
 const ResponseModel = require('../lib/ResponseModel')
 const { error_missing_fields, error_invalid_fields, error_data_not_found, success_row_delete, error_row_delete, success_row_update,
     error_row_update, error_row_create, success_row_create, success_data_exits } = require('../lib/ResponseMessages')
@@ -140,7 +138,7 @@ router.get('/UserId/Product/:UserId', async (req, res) => {
     }
 })
 
-router.post('/create', removeCache(['/carts', '/animalProducts', '/eggsBatchProducts', '/products/allAvailable']), async (req, res) => {
+router.post('/create', async (req, res) => {
     const response = new ResponseModel()
     try {
         const { UserId, AnimalProductId, EggsBatchProductId, quantity } = req.body
@@ -175,7 +173,7 @@ router.post('/create', removeCache(['/carts', '/animalProducts', '/eggsBatchProd
     }
 })
 
-router.put('/update', removeCache(['/carts', '/animalProducts', '/eggsBatchProducts', '/products/allAvailable']), async (req, res) => {
+router.put('/update',  async (req, res) => {
     const response = new ResponseModel()
     try {
         const { ProductId, AnimalId, EggsBatchId, quantity } = req.body
@@ -211,7 +209,7 @@ router.put('/update', removeCache(['/carts', '/animalProducts', '/eggsBatchProdu
     }
 })
 
-router.delete('/delete', removeCache(['/carts', '/animalProducts', '/eggsBatchProducts', '/products/allAvailable']), async (req, res) => {
+router.delete('/delete',  async (req, res) => {
     const response = new ResponseModel()
     try {
         const { id } = req.body

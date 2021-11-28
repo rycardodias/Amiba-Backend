@@ -3,13 +3,11 @@ const router = express.Router()
 
 const Model = require('../models/Animal')
 const Exploration = require('../models/Exploration')
-const cache = require('../lib/cache/routeCache')
-const removeCache = require('../lib/cache/removeCache')
 const ResponseModel = require('../lib/ResponseModel')
 const { error_missing_fields, error_invalid_fields, error_data_not_found, success_row_delete, error_row_delete, success_row_update,
     error_row_update, error_row_create, success_row_create, success_data_exits } = require('../lib/ResponseMessages')
 
-router.get('/',  async (req, res) => {
+router.get('/', async (req, res) => {
     const response = new ResponseModel()
     try {
         const request = await Model.findAll({ include: [Exploration] })
@@ -57,12 +55,12 @@ router.get('/id/:id', async (req, res) => {
 
 })
 
-router.post('/create',  async (req, res) => {
+router.post('/create', async (req, res) => {
     const response = new ResponseModel()
     try {
-        const { ExplorationId, race, gender, birthDate, weight, slaughterDate, slaughterWeight, slaughterLocal } = req.body
+        const { ExplorationId, identifier, race, gender, birthDate, weight, slaughterDate, slaughterWeight, slaughterLocal } = req.body
 
-        if (!(ExplorationId && race && gender && birthDate && weight)) {
+        if (!(ExplorationId && identifier && race && gender && birthDate && weight)) {
             response.message = error_missing_fields
             response.error = error_missing_fields
             return res.status(400).json(response)
@@ -70,6 +68,7 @@ router.post('/create',  async (req, res) => {
 
         const data = {
             ExplorationId: ExplorationId,
+            identifier: identifier,
             race: race,
             gender: gender,
             birthDate: birthDate,
@@ -96,10 +95,10 @@ router.post('/create',  async (req, res) => {
     }
 })
 
-router.put('/update', removeCache(['/animals']), async (req, res) => {
+router.put('/update', async (req, res) => {
     const response = new ResponseModel()
     try {
-        const { id, slaughterDate, slaughterWeight, slaughterLocal } = req.body
+        const { id, slaughterDate, slaughterWeight, slaughterLocal, breeder } = req.body
 
         if (!id) {
             response.message = error_missing_fields
@@ -110,7 +109,8 @@ router.put('/update', removeCache(['/animals']), async (req, res) => {
         const data = {
             slaughterDate: slaughterDate,
             slaughterWeight: slaughterWeight,
-            slaughterLocal: slaughterLocal
+            slaughterLocal: slaughterLocal,
+            breeder: breeder,
         }
 
         const request = await Model.update(data, {
@@ -134,7 +134,7 @@ router.put('/update', removeCache(['/animals']), async (req, res) => {
     }
 })
 
-router.delete('/delete', removeCache(['/animals']), async (req, res) => {
+router.delete('/delete',  async (req, res) => {
     const response = new ResponseModel()
     try {
         const { id } = req.body

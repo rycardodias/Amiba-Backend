@@ -1,7 +1,5 @@
 const express = require('express')
 const router = express.Router()
-const cache = require('../lib/cache/routeCache')
-const removeCache = require('../lib/cache/removeCache')
 const Model = require('../models/Restaurant')
 const User = require('../models/User')
 
@@ -85,7 +83,7 @@ router.get('/UserId/:UserId', async (req, res) => {
 })
 
 
-router.post('/create', removeCache(['/restaurants']), async (req, res) => {
+router.post('/create',  async (req, res) => {
     const response = new ResponseModel()
     try {
         const { UserId, name, description, address, locale, zipcode, fiscalNumber, telephone, mobilePhone } = req.body
@@ -127,7 +125,7 @@ router.post('/create', removeCache(['/restaurants']), async (req, res) => {
 })
 
 
-router.put('/update', removeCache(['/restaurants', '/menus']), async (req, res) => {
+router.put('/update',  async (req, res) => {
     const response = new ResponseModel()
     try {
         const { id, UserId, name, description, address, locale, zipcode, fiscalNumber, telephone, mobilePhone } = req.body
@@ -172,7 +170,7 @@ router.put('/update', removeCache(['/restaurants', '/menus']), async (req, res) 
 })
 
 
-router.delete('/delete', removeCache(['/restaurants']), async (req, res) => {
+router.delete('/delete', async (req, res) => {
     const response = new ResponseModel()
     try {
         const { id } = req.body
