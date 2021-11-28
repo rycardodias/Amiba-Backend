@@ -6,7 +6,7 @@ const dotenv = require('dotenv')
 const db = require('./config/database')
 dotenv.config()
 
-db.sync({ force: true })
+// db.sync({ force: true })
 
 // db.authenticate()
 //    .then(()=> console.log('Connection has been established successfully.'))

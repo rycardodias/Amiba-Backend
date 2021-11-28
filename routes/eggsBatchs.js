@@ -56,19 +56,11 @@ router.get('/id/:id', async (req, res) => {
 router.post('/create', async (req, res) => {
     const response = new ResponseModel()
     try {
-        const { name, caliber, race } = req.body
+        const { name } = req.body
 
-
-        if (!(name && caliber && race)) {
-            response.message = error_missing_fields
-            response.error = error_missing_fields
-            return res.status(400).json(response)
-        }
 
         const data = {
             name: name,
-            caliber: caliber,
-            race: race
         }
 
         const request = await Model.create(data)
@@ -91,7 +83,7 @@ router.post('/create', async (req, res) => {
 router.put('/update', async (req, res) => {
     const response = new ResponseModel()
     try {
-        const { id, name, } = req.body
+        const { id, name } = req.body
 
         if (!id) {
             response.message = error_missing_fields
@@ -123,10 +115,11 @@ router.put('/update', async (req, res) => {
     }
 })
 
-router.delete('/delete',  async (req, res) => {
+router.delete('/delete', async (req, res) => {
     const response = new ResponseModel()
     try {
         const { id } = req.body
+
         if (!id) {
             response.message = error_missing_fields
             response.error = error_missing_fields

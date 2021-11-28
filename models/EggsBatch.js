@@ -9,21 +9,6 @@ const EggsBatch = db.define('EggsBatch', {
     },
     name: {
         type: DataTypes.STRING,
-        allowNull: false,
-        validate: {
-            notEmpty: {
-                msg: "name field is required",
-            }
-        }
-    },
-    caliber: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        validate: {
-            notEmpty: {
-                msg: "caliber field is required",
-            }
-        }
     },
 },
 )
