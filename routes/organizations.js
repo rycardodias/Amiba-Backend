@@ -8,7 +8,7 @@ const { error_missing_fields, error_invalid_fields, error_data_not_found, succes
 
 
 
-router.get('/',  async (req, res) => {
+router.get('/', async (req, res) => {
     const response = new ResponseModel()
     try {
         const request = await Model.findAll({
@@ -90,7 +90,7 @@ router.get('/UserId/:UserId', async (req, res) => {
 
 })
 
-router.post('/create',  async (req, res) => {
+router.post('/create', async (req, res) => {
     const response = new ResponseModel()
     try {
         const { type, UserId, name, address, locale, zipcode, telephone, mobilePhone, fiscalNumber } = req.body
@@ -99,6 +99,7 @@ router.post('/create',  async (req, res) => {
         if (!(type && UserId && name && address && locale && zipcode && fiscalNumber)) {
             response.message = error_missing_fields
             response.error = error_missing_fields
+
             return res.status(400).json(response)
         }
 
@@ -109,10 +110,11 @@ router.post('/create',  async (req, res) => {
             address: address,
             locale: locale,
             zipcode: zipcode,
-            telephone: telephone,
-            mobilePhone: mobilePhone,
+            telephone: parseInt(telephone) > 0 ? telephone : undefined,
+            mobilePhone: parseInt(mobilePhone) > 0 ? mobilePhone : undefined,
             fiscalNumber: fiscalNumber
         }
+        console.log(data)
 
         const request = await Model.create(data)
 
@@ -150,8 +152,8 @@ router.put('/update', async (req, res) => {
             address: address,
             locale: locale,
             zipcode: zipcode,
-            telephone: telephone,
-            mobilePhone: mobilePhone,
+            telephone: parseInt(telephone) > 0 ? telephone : undefined,
+            mobilePhone: parseInt(mobilePhone) > 0 ? mobilePhone : undefined,
             fiscalNumber: fiscalNumber
         }
 
@@ -176,7 +178,7 @@ router.put('/update', async (req, res) => {
     }
 })
 
-router.delete('/delete',  async (req, res) => {
+router.delete('/delete', async (req, res) => {
     const response = new ResponseModel()
     try {
         const { id } = req.body

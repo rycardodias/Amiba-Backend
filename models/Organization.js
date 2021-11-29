@@ -55,11 +55,11 @@ const Organization = db.define('Organization', {
     },
     telephone: {
         type: DataTypes.INTEGER,
-        unique: true
+        allowNull: true,
     },
     mobilePhone: {
         type: DataTypes.INTEGER,
-        unique: true
+        allowNull: true,
     },
     fiscalNumber: {
         type: DataTypes.INTEGER,
@@ -80,14 +80,5 @@ Organization.belongsTo(User, {
     onUpdate: 'RESTRICT'
 })
 User.hasMany(Organization)
-
-// Organization.sync({ alter: true })
-//     .then(() => {
-//         db.query("ALTER TABLE \"Organizations\" DROP CONSTRAINT \"Organizations_OrganizationTypeId_fkey\", " +
-//             " ADD CONSTRAINT \"Organizations_OrganizationTypeId_fkey\" FOREIGN KEY(\"OrganizationTypeId\") REFERENCES \"OrganizationTypes\" ON UPDATE NO ACTION;")
-//         db.query("ALTER TABLE \"Organizations\" DROP CONSTRAINT \"Organizations_UserId_fkey\", " +
-//             " ADD CONSTRAINT \"Organizations_UserId_fkey\" FOREIGN KEY(\"UserId\") REFERENCES \"Users\" ON UPDATE NO ACTION;")
-
-//     })
-
+// Organization.sync({ force: true })
 module.exports = Organization

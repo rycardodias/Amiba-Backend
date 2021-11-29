@@ -101,8 +101,8 @@ router.post('/create',  async (req, res) => {
             address: address,
             locale: locale,
             zipcode: zipcode,
-            telephone: telephone,
-            mobilePhone: mobilePhone,
+            telephone: parseInt(telephone) > 0 ? telephone : undefined,
+            mobilePhone: parseInt(mobilePhone) > 0 ? mobilePhone : undefined,
             fiscalNumber: fiscalNumber,
             gpsLocalization: gpsLocalization
         }
@@ -142,8 +142,8 @@ router.put('/update',  async (req, res) => {
             address: address,
             locale: locale,
             zipcode: zipcode,
-            telephone: telephone,
-            mobilePhone: mobilePhone,
+            telephone: parseInt(telephone) > 0 ? telephone : undefined,
+            mobilePhone: parseInt(mobilePhone) > 0 ? mobilePhone : undefined,
             fiscalNumber: fiscalNumber,
             gpsLocalization: gpsLocalization
         }

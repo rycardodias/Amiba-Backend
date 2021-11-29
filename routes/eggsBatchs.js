@@ -58,7 +58,6 @@ router.post('/create', async (req, res) => {
     try {
         const { name } = req.body
 
-
         const data = {
             name: name,
         }

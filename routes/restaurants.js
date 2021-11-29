@@ -102,8 +102,8 @@ router.post('/create',  async (req, res) => {
             locale: locale,
             zipcode: zipcode,
             fiscalNumber: fiscalNumber,
-            telephone: telephone,
-            mobilePhone: mobilePhone
+            telephone: parseInt(telephone) > 0 ? telephone : undefined,
+            mobilePhone: parseInt(mobilePhone) > 0 ? mobilePhone : undefined,
         }
 
         const request = await Model.create(data)
@@ -144,8 +144,8 @@ router.put('/update',  async (req, res) => {
             locale: locale,
             zipcode: zipcode,
             fiscalNumber: fiscalNumber,
-            telephone: telephone,
-            mobilePhone: mobilePhone
+            telephone: parseInt(telephone) > 0 ? telephone : undefined,
+            mobilePhone: parseInt(mobilePhone) > 0 ? mobilePhone : undefined,
         }
 
         const request = await Model.update(data, {
