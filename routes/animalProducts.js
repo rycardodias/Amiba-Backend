@@ -98,8 +98,7 @@ router.post('/create', async (req, res) => {
             ProductId: ProductId,
             AnimalId: AnimalId,
             quantity: quantity,
-            quantityAvailable: quantity, //FIXME eliminar
-            weight: weight,
+            weight: weight || undefined,
         }
 
         const request = await Model.create(data)

@@ -7,7 +7,7 @@ const { error_missing_fields, error_invalid_fields, error_data_not_found, succes
 const Product = require('../models/Product')
 
 
-router.get('/',  async (req, res) => {
+router.get('/', async (req, res) => {
     const response = new ResponseModel()
     try {
         const request = await Model.findAll({ include: Product })
@@ -59,9 +59,9 @@ router.get('/ProductId/:ProductId/EggsBatchId/:EggsBatchId', async (req, res) =>
 router.post('/create', async (req, res) => {
     const response = new ResponseModel()
     try {
-        const { ProductId, EggsBatchId, quantity, divider } = req.body
+        const { ProductId, EggsBatchId, quantity } = req.body
 
-        if (!(ProductId && EggsBatchId && quantity && divider)) {
+        if (!(ProductId && EggsBatchId && quantity)) {
             response.message = error_missing_fields
             response.error = error_missing_fields
             return res.status(400).json(response)
@@ -70,9 +70,7 @@ router.post('/create', async (req, res) => {
         const data = {
             ProductId: ProductId,
             EggsBatchId: EggsBatchId,
-            quantity: quantity,
-            quantityAvailable: quantity, //FIXME remover isto no fim
-            divider: divider,
+            quantity: quantity
         }
 
         const request = await Model.create(data)
@@ -92,7 +90,7 @@ router.post('/create', async (req, res) => {
     }
 })
 
-router.put('/update',async (req, res) => {
+router.put('/update', async (req, res) => {
     const response = new ResponseModel()
     try {
         const { id, quantity } = req.body

@@ -22,12 +22,6 @@ BEGIN
 	IF (NEW."quantityAvailable" > NEW."quantity") THEN
 		RAISE EXCEPTION 'quantityAvailable cannot be greater than quantity';
 	END IF;
-	IF (NEW."divider" <1) THEN
-		RAISE EXCEPTION 'divider must be greater than 0';
-	END IF;
-	IF((NEW."quantity"%NEW."divider")<>0) THEN
-		RAISE EXCEPTION 'quantity must have 0 remaining from division';
-	END IF;
 	IF((NEW."quantityAvailable"%NEW."divider")<>0) THEN
 		RAISE EXCEPTION 'quantityAvailable must have 0 remaining from division';
 	END IF;

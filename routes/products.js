@@ -220,9 +220,9 @@ router.get('/allAvailable/type/:type', async (req, res) => {
 router.post('/create', async (req, res) => {
     const response = new ResponseModel()
     try {
-        const { type, OrganizationId, tax, name, description, price, unit, image } = req.body
+        const { type, OrganizationId, tax, name, description, image } = req.body
 
-        if (!(type && tax && name && price && unit)) {
+        if (!(type && tax && name)) {
             response.message = error_missing_fields
             response.error = error_missing_fields
             return res.status(400).json(response)
@@ -234,8 +234,6 @@ router.post('/create', async (req, res) => {
             tax: tax,
             name: name,
             description: description,
-            price: price,
-            unit: unit,
             image: image,
         }
 
@@ -260,7 +258,7 @@ router.post('/create', async (req, res) => {
 router.put('/update', async (req, res) => {
     const response = new ResponseModel()
     try {
-        const { id, type, tax, name, description, price, image } = req.body
+        const { id, type, tax, name, description, image } = req.body
 
         if (!id) {
             response.message = error_missing_fields
@@ -273,7 +271,6 @@ router.put('/update', async (req, res) => {
             tax: tax,
             name: name,
             description: description,
-            price: price,
             image: image,
         }
 

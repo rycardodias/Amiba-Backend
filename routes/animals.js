@@ -1,11 +1,14 @@
 const express = require('express')
 const router = express.Router()
+const { Op } = require("sequelize");
 
 const Model = require('../models/Animal')
 const Exploration = require('../models/Exploration')
+const Certification = require('../models/Certification')
 const ResponseModel = require('../lib/ResponseModel')
 const { error_missing_fields, error_invalid_fields, error_data_not_found, success_row_delete, error_row_delete, success_row_update,
     error_row_update, error_row_create, success_row_create, success_data_exits } = require('../lib/ResponseMessages')
+const { formatDateYYYYMMDD } = require('../lib/FormatDates')
 
 router.get('/', async (req, res) => {
     const response = new ResponseModel()
@@ -54,11 +57,61 @@ router.get('/id/:id', async (req, res) => {
     }
 
 })
+const { Sequelize } = require('../config/database')
+
+router.get('/ExplorationId/:ExplorationId/certificated', async (req, res) => {
+    const response = new ResponseModel()
+    try {
+        if (!req.params.ExplorationId) {
+            response.message = error_missing_fields
+            response.error = error_missing_fields
+            res.status(400).json(response)
+        }
+
+        var minimumAge = new Date(new Date());
+        minimumAge.setMonth(new Date().getMonth() - process.env.ANIMALS_MIN_AGE);
+
+        const request = await Model.findAndCountAll({
+            where:
+                Sequelize.literal(`"Exploration"."id" = '${req.params.ExplorationId}' ` +
+                    `AND "Animal"."birthDate" >= "Exploration->Certifications"."initialDate" ` +
+                    `AND "Animal"."birthDate" <= '${formatDateYYYYMMDD(minimumAge)}'`),
+            include: [{
+                model: Exploration,
+                attributes: ['id', 'name'],
+                required: true,
+                include: {
+                    model: Certification,
+                    required: true,
+                    attributes: ['id', 'initialDate', 'finalDate'],
+                    where: {
+                        finalDate: { [Op.gte]: new Date() },
+                    }
+                },
+            }]
+        })
+
+        if (request.count > 0) {
+            response.message = success_data_exits
+            response.data = request.rows
+            res.status(200).json(response)
+        } else {
+            response.message = error_data_not_found
+            response.error = error_data_not_found
+            res.status(404).json(response)
+        }
+    } catch (error) {
+        response.message = error_data_not_found
+        response.error = error
+        return res.status(400).json(response)
+    }
+
+})
 
 router.post('/create', async (req, res) => {
     const response = new ResponseModel()
     try {
-        const { ExplorationId, identifier, race, gender, birthDate, weight, slaughterDate, slaughterWeight, slaughterLocal } = req.body
+        const { ExplorationId, identifier, race, gender, birthDate, weight } = req.body
 
         if (!(ExplorationId && identifier && race && gender && birthDate && weight)) {
             response.message = error_missing_fields
@@ -72,10 +125,7 @@ router.post('/create', async (req, res) => {
             race: race,
             gender: gender,
             birthDate: birthDate,
-            weight: weight,
-            slaughterDate: slaughterDate,
-            slaughterWeight: slaughterWeight,
-            slaughterLocal: slaughterLocal
+            weight: weight
         }
 
         const request = await Model.create(data)
@@ -134,7 +184,7 @@ router.put('/update', async (req, res) => {
     }
 })
 
-router.delete('/delete',  async (req, res) => {
+router.delete('/delete', async (req, res) => {
     const response = new ResponseModel()
     try {
         const { id } = req.body

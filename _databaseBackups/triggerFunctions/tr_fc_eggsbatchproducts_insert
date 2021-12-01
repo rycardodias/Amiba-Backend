@@ -16,13 +16,6 @@ BEGIN
 	IF (NEW."quantity" <1) THEN
 		RAISE EXCEPTION 'quantity must be greater than 0';
 	END IF;
-	IF (NEW."divider" <1) THEN
-		RAISE EXCEPTION 'divider must be greater than 0';
-	END IF;
-	
-	IF((NEW."quantity"%NEW."divider")<>0) THEN
-		RAISE EXCEPTION 'quantity must have 0 remaining from division';
-	END IF;
 	
 	SELECT COALESCE(SUM("quantity"),0)
 	  INTO v_quantity_EggsBatchExplorations

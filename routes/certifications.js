@@ -93,7 +93,7 @@ router.post('/create', async (req, res) => {
 router.put('/update', async (req, res) => {
     const response = new ResponseModel()
     try {
-        const { id, description } = req.body
+        const { id, description, finalDate } = req.body
 
         if (!id) {
             response.message = error_missing_fields
@@ -102,7 +102,8 @@ router.put('/update', async (req, res) => {
         }
 
         const data = {
-            description: description
+            description: description,
+            finalDate: finalDate
         }
 
         const request = await Model.update(data, {

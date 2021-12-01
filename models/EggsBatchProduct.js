@@ -21,15 +21,6 @@ const EggsBatchProduct = db.define('EggsBatchProduct', {
     quantityAvailable: {
         type: DataTypes.INTEGER,
     },
-    divider: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        validate: {
-            notEmpty: {
-                msg: "divider field is required",
-            }
-        }
-    },
 },
 )
 

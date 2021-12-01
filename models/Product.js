@@ -1,4 +1,4 @@
-const { DataTypes, Sequelize, UUIDV4 } = require('sequelize');
+const { DataTypes } = require('sequelize');
 const db = require('../config/database');
 const Organization = require('./Organization');
 
@@ -30,24 +30,24 @@ const Product = db.define('Product', {
     description: {
         type: DataTypes.STRING,
     },
-    price: {
-        type: DataTypes.FLOAT,
-        allowNull: false,
-        validate: {
-            notEmpty: {
-                msg: "price field is required",
-            }
-        },
-    },
-    unit: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        validate: {
-            notEmpty: {
-                msg: "unit field is required"
-            }
-        }
-    },
+    // price: {
+    //     type: DataTypes.FLOAT,
+    //     allowNull: false,
+    //     validate: {
+    //         notEmpty: {
+    //             msg: "price field is required",
+    //         }
+    //     },
+    // },
+    // unit: {
+    //     type: DataTypes.STRING,
+    //     allowNull: false,
+    //     validate: {
+    //         notEmpty: {
+    //             msg: "unit field is required"
+    //         }
+    //     }
+    // },
     tax: {
         type: DataTypes.INTEGER,
         allowNull: false,
@@ -69,5 +69,5 @@ Product.belongsTo(Organization, {
 })
 Organization.hasMany(Product)
 
-// Product.sync({alter: true})
+// Product.sync({force: true})
 module.exports = Product
