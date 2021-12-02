@@ -13,7 +13,6 @@ const Animal = require('../models/Animal')
 const Exploration = require('../models/Exploration')
 const Organization = require('../models/Organization')
 const EggsBatch = require('../models/EggsBatch')
-const EggsBatchExploration = require('../models/EggsBatchExploration')
 
 router.get('/',  async (req, res) => {
     const response = new ResponseModel()
