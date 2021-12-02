@@ -5,12 +5,14 @@ const ResponseModel = require('../lib/ResponseModel')
 const { error_missing_fields, error_invalid_fields, error_data_not_found, success_row_delete, error_row_delete, success_row_update,
     error_row_update, error_row_create, success_row_create, success_data_exits } = require('../lib/ResponseMessages')
 const Product = require('../models/Product')
+const Exploration = require('../models/Exploration')
+const EggsBatch = require('../models/EggsBatch')
 
 
 router.get('/', async (req, res) => {
     const response = new ResponseModel()
     try {
-        const request = await Model.findAll({ include: Product })
+        const request = await Model.findAll({ include: [Product, EggsBatch] })
         if (request.length > 0) {
             response.message = success_data_exits
             response.data = request
@@ -37,7 +39,7 @@ router.get('/ProductId/:ProductId/EggsBatchId/:EggsBatchId', async (req, res) =>
             response.error = error_missing_fields
             res.status(400).json(response)
         }
-        const request = await Model.findOne({ where: { ProductId: ProductId, EggsBatchId: EggsBatchId }, include: Product })
+        const request = await Model.findOne({ where: { ProductId: ProductId, EggsBatchId: EggsBatchId }, include: [Product, EggsBatch] })
 
         if (request) {
             response.message = success_data_exits
