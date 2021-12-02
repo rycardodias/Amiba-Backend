@@ -11,6 +11,26 @@ const EggsBatch = db.define('EggsBatch', {
     name: {
         type: DataTypes.STRING,
     },
+    quantity: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        defaultValue: 0,
+        validate: {
+            notEmpty: {
+                msg: "quantity field is required",
+            }
+        },
+    },
+    quantityAvailable: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        defaultValue: 0,
+        validate: {
+            notEmpty: {
+                msg: "quantity field is required",
+            }
+        },
+    },
 },
 )
 
