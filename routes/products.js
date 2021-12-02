@@ -88,6 +88,50 @@ router.get('/type/:type', async (req, res) => {
     }
 })
 
+router.get('/ExplorationId/:ExplorationId/type/:type', async (req, res) => {
+    const response = new ResponseModel()
+    try {
+        const { type, ExplorationId } = req.params
+        if (!(type && ExplorationId)) {
+            response.message = error_missing_fields
+            response.error = error_missing_fields
+            res.status(400).json(response)
+        }
+        const request = await Model.findAll({
+            where: {
+                type: type
+            },
+            include: [{
+                model: Organization,
+                required: true,
+                attributes: ['id'],
+                include: [{
+                    model: Exploration,
+                    required: true,
+                    attributes: ['id', 'OrganizationId'],
+                    where: {
+                        id: req.params.ExplorationId
+                    }
+                }],
+            }],
+        })
+
+        if (request.length > 0) {
+            response.message = success_data_exits
+            response.data = request
+            res.status(200).json(response)
+        } else {
+            response.message = error_data_not_found
+            response.error = error_data_not_found
+            res.status(404).json(response)
+        }
+    } catch (error) {
+        response.message = error_data_not_found
+        response.error = error
+        return res.status(400).json(response)
+    }
+})
+
 router.get('/allAvailable', async (req, res) => {
     const response = new ResponseModel()
     try {
@@ -220,9 +264,9 @@ router.get('/allAvailable/type/:type', async (req, res) => {
 router.post('/create', async (req, res) => {
     const response = new ResponseModel()
     try {
-        const { type, OrganizationId, tax, name, description, image } = req.body
+        const { type, OrganizationId, tax, name, description, image, price, unit } = req.body
 
-        if (!(type && tax && name)) {
+        if (!(type && tax && name && price && unit)) {
             response.message = error_missing_fields
             response.error = error_missing_fields
             return res.status(400).json(response)
@@ -235,6 +279,8 @@ router.post('/create', async (req, res) => {
             name: name,
             description: description,
             image: image,
+            price: price,
+            unit: unit
         }
 
         const request = await Model.create(data)
@@ -258,7 +304,7 @@ router.post('/create', async (req, res) => {
 router.put('/update', async (req, res) => {
     const response = new ResponseModel()
     try {
-        const { id, type, tax, name, description, image } = req.body
+        const { id, type, tax, name, description, image, price } = req.body
 
         if (!id) {
             response.message = error_missing_fields
@@ -272,6 +318,7 @@ router.put('/update', async (req, res) => {
             name: name,
             description: description,
             image: image,
+            price: price,
         }
 
         const request = await Model.update(data, {

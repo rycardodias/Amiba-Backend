@@ -57,7 +57,8 @@ router.get('/id/:id', async (req, res) => {
     }
 
 })
-const { Sequelize } = require('../config/database')
+const { Sequelize } = require('../config/database');
+const { animalMinAge } = require('../lib/parameters');
 
 router.get('/ExplorationId/:ExplorationId/certificated', async (req, res) => {
     const response = new ResponseModel()
@@ -69,13 +70,13 @@ router.get('/ExplorationId/:ExplorationId/certificated', async (req, res) => {
         }
 
         var minimumAge = new Date(new Date());
-        minimumAge.setMonth(new Date().getMonth() - process.env.ANIMALS_MIN_AGE);
+        minimumAge.setMonth(new Date().getMonth() - animalMinAge);
 
         const request = await Model.findAndCountAll({
             where:
-                Sequelize.literal(`"Exploration"."id" = '${req.params.ExplorationId}' ` +
-                    `AND "Animal"."birthDate" >= "Exploration->Certifications"."initialDate" ` +
-                    `AND "Animal"."birthDate" <= '${formatDateYYYYMMDD(minimumAge)}'`),
+                Sequelize.literal(`"Exploration"."id" = '${req.params.ExplorationId}' `
+                    + `AND "Animal"."birthDate" >= "Exploration->Certifications"."initialDate" `
+                    + `AND "Animal"."birthDate" <= '${formatDateYYYYMMDD(minimumAge)}'`),
             include: [{
                 model: Exploration,
                 attributes: ['id', 'name'],

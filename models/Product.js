@@ -30,24 +30,24 @@ const Product = db.define('Product', {
     description: {
         type: DataTypes.STRING,
     },
-    // price: {
-    //     type: DataTypes.FLOAT,
-    //     allowNull: false,
-    //     validate: {
-    //         notEmpty: {
-    //             msg: "price field is required",
-    //         }
-    //     },
-    // },
-    // unit: {
-    //     type: DataTypes.STRING,
-    //     allowNull: false,
-    //     validate: {
-    //         notEmpty: {
-    //             msg: "unit field is required"
-    //         }
-    //     }
-    // },
+    price: {
+        type: DataTypes.FLOAT,
+        allowNull: false,
+        validate: {
+            notEmpty: {
+                msg: "price field is required",
+            }
+        },
+    },
+    unit: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+            notEmpty: {
+                msg: "unit field is required"
+            }
+        }
+    },
     tax: {
         type: DataTypes.INTEGER,
         allowNull: false,
