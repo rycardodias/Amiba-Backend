@@ -17,6 +17,9 @@ const EggsBatchLine = db.define('EggsBatchLine', {
             }
         },
     },
+    quantityAvailable: {
+        type: DataTypes.INTEGER,
+    },
 },
 )
 
