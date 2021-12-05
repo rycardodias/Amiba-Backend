@@ -39,26 +39,26 @@ app.use(fileUpload({
 
 
 
-app.get('/', (req, res) => res.send('INDEX - AMIBA WEBSERVICES'));
+app.get(`${process.env.BASEPATH}`, (req, res) => res.send('INDEX - AMIBA WEBSERVICES'));
 
 //routes
-app.use('/users', require('./routes/users'))
-app.use('/organizations', require('./routes/organizations'))
-app.use('/restaurants', require('./routes/restaurants'))
-app.use('/menus', require('./routes/menus'))
-app.use('/orders', require('./routes/orders'))
-app.use('/orderHistory', require('./routes/orderHistory'))
-app.use('/explorations', require('./routes/explorations'))
-app.use('/certifications', require('./routes/certifications'))
-app.use('/products', require('./routes/products'))
-app.use('/orderLines', require('./routes/orderLines'))
-app.use('/eggsBatchs', require('./routes/eggsBatchs'))
-app.use('/eggsBatchsLines', require('./routes/eggsBatchsLines'))
-app.use('/animals', require('./routes/animals'))
-app.use('/animalProducts', require('./routes/animalProducts'))
-app.use('/eggsBatchProducts', require('./routes/eggsBatchProducts'))
-app.use('/carts', require('./routes/carts'))
-app.use('/uploadFiles', require('./routes/uploadFiles'))
+app.use(`${process.env.BASEPATH}/users`, require('./routes/users'))
+app.use(`${process.env.BASEPATH}/organizations`, require('./routes/organizations'))
+app.use(`${process.env.BASEPATH}/restaurants`, require('./routes/restaurants'))
+app.use(`${process.env.BASEPATH}/menus`, require('./routes/menus'))
+app.use(`${process.env.BASEPATH}/orders`, require('./routes/orders'))
+app.use(`${process.env.BASEPATH}/orderHistory`, require('./routes/orderHistory'))
+app.use(`${process.env.BASEPATH}/explorations`, require('./routes/explorations'))
+app.use(`${process.env.BASEPATH}/certifications`, require('./routes/certifications'))
+app.use(`${process.env.BASEPATH}/products`, require('./routes/products'))
+app.use(`${process.env.BASEPATH}/orderLines`, require('./routes/orderLines'))
+app.use(`${process.env.BASEPATH}/eggsBatchs`, require('./routes/eggsBatchs'))
+app.use(`${process.env.BASEPATH}/eggsBatchsLines`, require('./routes/eggsBatchsLines'))
+app.use(`${process.env.BASEPATH}/animals`, require('./routes/animals'))
+app.use(`${process.env.BASEPATH}/animalProducts`, require('./routes/animalProducts'))
+app.use(`${process.env.BASEPATH}/eggsBatchProducts`, require('./routes/eggsBatchProducts'))
+app.use(`${process.env.BASEPATH}/carts`, require('./routes/carts'))
+app.use(`${process.env.BASEPATH}/uploadFiles`, require('./routes/uploadFiles'))
 
 app.use('/devTools', require('./routes/xDevTools'))
 
