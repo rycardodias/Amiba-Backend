@@ -60,6 +60,6 @@ app.use(`${process.env.BASEPATH}/eggsBatchProducts`, require('./routes/eggsBatch
 app.use(`${process.env.BASEPATH}/carts`, require('./routes/carts'))
 app.use(`${process.env.BASEPATH}/uploadFiles`, require('./routes/uploadFiles'))
 
-app.use('/devTools', require('./routes/xDevTools'))
+app.use(`${process.env.BASEPATH}/devTools`, require('./routes/xDevTools'))
 
 module.exports = app
