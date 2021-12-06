@@ -81,4 +81,6 @@ Exploration.belongsTo(Organization, {
 })
 Organization.hasMany(Exploration)
 
+// Exploration.sync({alter: true})
+
 module.exports = Exploration

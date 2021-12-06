@@ -40,5 +40,5 @@ EggsBatch.belongsTo(Exploration, {
 })
 Exploration.hasMany(EggsBatch)
 
-// EggsBatch.sync({ force: true })
+// EggsBatch.sync({ alter: true })
 module.exports = EggsBatch

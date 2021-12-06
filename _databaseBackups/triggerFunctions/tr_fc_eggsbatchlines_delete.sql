@@ -14,14 +14,10 @@ BEGIN
 	IF (OLD."quantity" <> OLD."quantityAvailable") THEN
 		RAISE EXCEPTION 'quantity <> quantityAvailable';
 	END IF;
-	
-	SELECT "EggsBatches"."quantity"
-	  INTO v_quantity
-	  FROM "EggsBatches"
-	 WHERE "EggsBatches"."id" = OLD."EggsBatchId";
 	 
 	UPDATE "EggsBatches"
-	   SET "quantity" = (v_quantity - OLD."quantity")
+	   SET "quantity" = "quantity" - OLD."quantity",
+	   	   "quantityAvailable" = "quantityAvailable" - OLD."quantityAvailable"
 	 WHERE "EggsBatches"."id" = OLD."EggsBatchId";
 	
 	RETURN OLD;

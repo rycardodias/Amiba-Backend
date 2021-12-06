@@ -29,8 +29,7 @@ BEGIN
 		 	OR "Carts"."EggsBatchProductId" = NEW."EggsBatchProductId");
 	
 	IF(v_existing_quantity IS NOT NULL) THEN	
-		UPDATE public."Carts"
-		   SET  "quantity" = (v_existing_quantity + NEW."quantity")
+		UPDATE public."Carts" SET "quantity" = (v_existing_quantity + NEW."quantity")
 		 WHERE "Carts"."UserId" = NEW."UserId"
 		   AND ("Carts"."AnimalProductId" = NEW."AnimalProductId"
 			   OR "Carts"."EggsBatchProductId" = NEW."EggsBatchProductId");

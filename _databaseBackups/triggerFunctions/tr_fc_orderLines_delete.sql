@@ -20,8 +20,7 @@ BEGIN
 		 
 		 v_newQuantityAvailable = (v_quantityAvailable + OLD."quantity");
 
-	   UPDATE public."AnimalProducts"
-		  SET  "quantityAvailable"= v_newQuantityAvailable
+	   UPDATE public."AnimalProducts" SET  "quantityAvailable"= v_newQuantityAvailable
 		WHERE "id" = OLD."AnimalProductId";
 	ELSE
 		SELECT "quantityAvailable"
@@ -31,8 +30,7 @@ BEGIN
 	
 		v_newQuantityAvailable = (v_quantityAvailable + OLD."quantity");
 
-	   UPDATE public."EggsBatchProducts"
-		  SET  "quantityAvailable"= v_newQuantityAvailable
+	   UPDATE public."EggsBatchProducts" SET  "quantityAvailable"= v_newQuantityAvailable
 		WHERE "id" = OLD."EggsBatchProductId";
 	END IF;
 	

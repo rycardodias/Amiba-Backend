@@ -42,6 +42,6 @@ AnimalProduct.belongsTo(Animal, {
 })
 Animal.hasMany(AnimalProduct)
 
-// AnimalProduct.sync({force: true})
+// AnimalProduct.sync({alter: true})
 
 module.exports = AnimalProduct

@@ -46,8 +46,7 @@ BEGIN
 			   AND ("Carts"."AnimalProductId" = NEW."AnimalProductId"
 			 		OR "Carts"."EggsBatchProductId" = NEW."EggsBatchProductId");
 		ELSE
-			UPDATE public."Carts"
-			   SET "quantity" = (v_quantity_carts - NEW."quantity")
+			UPDATE public."Carts" SET "quantity" = (v_quantity_carts - NEW."quantity")
 			 WHERE "Carts"."UserId" = v_UserId
 			   AND ("Carts"."AnimalProductId" = NEW."AnimalProductId"
 			 		OR "Carts"."EggsBatchProductId" = NEW."EggsBatchProductId");
@@ -71,12 +70,10 @@ BEGIN
 	END IF;
 	
 	IF(NEW."AnimalProductId" IS NOT NULL) THEN
-		UPDATE public."AnimalProducts"
-		   SET "quantityAvailable" = (v_quantity_products - NEW."quantity")
+		UPDATE public."AnimalProducts" SET "quantityAvailable" = (v_quantity_products - NEW."quantity")
 		 WHERE "AnimalProducts"."id" = NEW."AnimalProductId";
 	ELSIF(NEW."EggsBatchProductId" IS NOT NULL) THEN
-		UPDATE public."EggsBatchProducts"
-		   SET "quantityAvailable" = (v_quantity_products - NEW."quantity")
+		UPDATE public."EggsBatchProducts" SET "quantityAvailable" = (v_quantity_products - NEW."quantity")
 		 WHERE "EggsBatchProducts"."id" = NEW."EggsBatchProductId";
 	END IF;
 				
@@ -96,8 +93,7 @@ BEGIN
 
 	NEW."totalVAT"= NEW."total" * (v_product_tax::float/100);
 	
-	UPDATE public."Orders"
-	   SET "total" = v_total + NEW."total",
+	UPDATE public."Orders" SET "total" = v_total + NEW."total",
 	       "totalVAT" = v_totalVAT + NEW."totalVAT"
 	 WHERE "id" = NEW."OrderId";
 	

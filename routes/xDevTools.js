@@ -1,7 +1,9 @@
 const express = require('express')
+const { Sequelize } = require('sequelize')
 const router = express.Router()
 
 const ResponseModel = require('../lib/ResponseModel')
+const { sequelize } = require('../models/User')
 
 router.get('/requiredFields/:table', async (req, res) => {
     const response = new ResponseModel()
@@ -37,6 +39,13 @@ router.get('/requiredFields/:table', async (req, res) => {
     response.message = 'Chaves obrigatórias'
     response.data = prop
     res.status(200).json(response)
+})
+
+router.get('/teste', async (req, res) => {
+
+    const response = await sequelize.query('CALL public.sp_teste()')
+
+    res.status(200).json({teste: "aa"})
 })
 
 module.exports = router
