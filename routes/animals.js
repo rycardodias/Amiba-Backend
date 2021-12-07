@@ -1,6 +1,8 @@
 const express = require('express')
 const router = express.Router()
 const { Op } = require("sequelize");
+const { Sequelize } = require('../config/database');
+const { animalMinAge } = require('../lib/parameters');
 
 const Model = require('../models/Animal')
 const Exploration = require('../models/Exploration')
@@ -57,8 +59,7 @@ router.get('/id/:id', async (req, res) => {
     }
 
 })
-const { Sequelize } = require('../config/database');
-const { animalMinAge } = require('../lib/parameters');
+
 
 router.get('/ExplorationId/:ExplorationId/certificated', async (req, res) => {
     const response = new ResponseModel()
