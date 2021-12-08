@@ -91,18 +91,19 @@ router.get('/OrderId/:OrderId', async (req, res) => {
 router.post('/create', async (req, res) => {
     const response = new ResponseModel()
     try {
-        const { OrderId, quantity, AnimalProductId, EggsBatchProductId } = req.body
+        const { OrderId, quantity, total, totalVAT, AnimalProductId, EggsBatchProductId } = req.body
 
-        //FIXME não esta a deixar criar um estes parametros, falta os id ||id
-        // if (!(OrderId && quantity)) {
-        //     response.message = error_missing_fields
-        response.error = error_missing_fields
-        //     return res.status(400).json(response)
-        // }
+        if (!(OrderId && quantity)) {
+            response.message = error_missing_fields
+            response.error = error_missing_fields
+            return res.status(400).json(response)
+        }
 
         const data = {
             OrderId: OrderId,
             quantity: quantity,
+            total: total,
+            totalVAT: totalVAT,
             AnimalProductId: AnimalProductId,
             EggsBatchProductId: EggsBatchProductId,
         }
@@ -164,7 +165,7 @@ router.put('/update', async (req, res) => {
     }
 })
 
-router.delete('/delete',  async (req, res) => {
+router.delete('/delete', async (req, res) => {
     const response = new ResponseModel()
     try {
         const { id } = req.body

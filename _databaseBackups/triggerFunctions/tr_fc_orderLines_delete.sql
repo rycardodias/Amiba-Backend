@@ -8,33 +8,23 @@ CREATE FUNCTION public.tr_fc_orderlines_delete()
     COST 100
     VOLATILE NOT LEAKPROOF
 AS $BODY$
-DECLARE
-	v_quantityAvailable integer default 0;
-	v_newQuantityAvailable integer default 0;
 BEGIN
 	IF(OLD."AnimalProductId" IS NOT NULL) THEN
-		SELECT "quantityAvailable"
-		  INTO v_quantityAvailable
-		  FROM public."AnimalProducts"
+		UPDATE "AnimalProducts" 
+		   SET "quantityAvailable" = "quantityAvailable" + OLD."quantity"
 		 WHERE "id" = OLD."AnimalProductId";
-		 
-		 v_newQuantityAvailable = (v_quantityAvailable + OLD."quantity");
-
-	   UPDATE public."AnimalProducts" SET  "quantityAvailable"= v_newQuantityAvailable
-		WHERE "id" = OLD."AnimalProductId";
-	ELSE
-		SELECT "quantityAvailable"
-		  INTO v_quantityAvailable
-	 	 FROM public."EggsBatchProducts"
+	ELSIF(OLD."EggsBatchProductId" IS NOT NULL) THEN
+		UPDATE "EggsBatchProducts" 
+		   SET "quantityAvailable" = "quantityAvailable" + OLD."quantity"
 		 WHERE "id" = OLD."EggsBatchProductId";
-	
-		v_newQuantityAvailable = (v_quantityAvailable + OLD."quantity");
-
-	   UPDATE public."EggsBatchProducts" SET  "quantityAvailable"= v_newQuantityAvailable
-		WHERE "id" = OLD."EggsBatchProductId";
 	END IF;
 	
-	RETURN OLD;
+	UPDATE "Orders"
+	   SET "total" = "total" - OLD."total",
+	   	   "totalVAT" =  "totalVAT" - OLD."totalVAT"
+	 WHERE "Orders"."id" = OLD."OrderId";
+
+	RETURN NEW;
 END;
 $BODY$;
 
