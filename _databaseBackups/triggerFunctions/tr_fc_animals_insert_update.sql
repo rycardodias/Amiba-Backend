@@ -2,7 +2,7 @@
 
 -- DROP FUNCTION public.tr_fc_animals_insert_update();
 
-CREATE FUNCTION public.tr_fc_animals_insert_update()
+CREATE OR REPLACE FUNCTION  public.tr_fc_animals_insert_update()
     RETURNS trigger
     LANGUAGE 'plpgsql'
     COST 100

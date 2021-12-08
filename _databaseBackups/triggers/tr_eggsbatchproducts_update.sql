@@ -1,6 +1,6 @@
 -- Trigger: tr_eggsbatchproducts_update
 
--- DROP TRIGGER tr_eggsbatchproducts_update ON public."EggsBatchProducts";
+DROP TRIGGER IF EXISTS tr_eggsbatchproducts_update ON public."EggsBatchProducts";
 
 CREATE TRIGGER tr_eggsbatchproducts_update
     BEFORE UPDATE

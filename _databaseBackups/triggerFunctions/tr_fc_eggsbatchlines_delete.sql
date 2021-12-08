@@ -2,7 +2,7 @@
 
 -- DROP FUNCTION public.tr_fc_eggsbatchlines_delete();
 
-CREATE FUNCTION public.tr_fc_eggsbatchlines_delete()
+CREATE OR REPLACE FUNCTION  public.tr_fc_eggsbatchlines_delete()
     RETURNS trigger
     LANGUAGE 'plpgsql'
     COST 100
@@ -15,8 +15,7 @@ BEGIN
 		RAISE EXCEPTION 'quantity <> quantityAvailable';
 	END IF;
 	 
-	UPDATE "EggsBatches"
-	   SET "quantity" = "quantity" - OLD."quantity",
+	UPDATE "EggsBatches" SET "quantity" = "quantity" - OLD."quantity",
 	   	   "quantityAvailable" = "quantityAvailable" - OLD."quantityAvailable"
 	 WHERE "EggsBatches"."id" = OLD."EggsBatchId";
 	

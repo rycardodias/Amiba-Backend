@@ -1,6 +1,6 @@
 -- Trigger: tr_certifications_create_update
 
--- DROP TRIGGER tr_certifications_create_update ON public."Certifications";
+DROP TRIGGER IF EXISTS tr_certifications_create_update ON public."Certifications";
 
 CREATE TRIGGER tr_certifications_create_update
     BEFORE INSERT OR UPDATE 

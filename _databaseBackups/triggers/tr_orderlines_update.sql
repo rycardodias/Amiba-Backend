@@ -1,6 +1,6 @@
 -- Trigger: tr_orderlines_update
 
--- DROP TRIGGER "tr_orderlines_update" ON public."OrderLines";
+DROP TRIGGER IF EXISTS "tr_orderlines_update" ON public."OrderLines";
 
 CREATE TRIGGER "tr_orderlines_update"
     BEFORE UPDATE 

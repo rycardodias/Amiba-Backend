@@ -2,7 +2,7 @@
 
 -- DROP FUNCTION public.tr_fc_orderlines_insert();
 
-CREATE FUNCTION public.tr_fc_orderlines_insert()
+CREATE OR REPLACE FUNCTION  public.tr_fc_orderlines_insert()
     RETURNS trigger
     LANGUAGE 'plpgsql'
     COST 100
@@ -30,8 +30,7 @@ BEGIN
 			RAISE EXCEPTION 'quantityAvailable cannot be less than AnimalProducts.quantity';
 		END IF;
 		
-		UPDATE "AnimalProducts" 
-		   SET "quantityAvailable" = "quantityAvailable" - NEW."quantity"
+		UPDATE "AnimalProducts" SET "quantityAvailable" = "quantityAvailable" - NEW."quantity"
 		 WHERE "id" = NEW."AnimalProductId";
 	END IF;
 	
@@ -59,13 +58,11 @@ BEGIN
 			RAISE EXCEPTION 'Quantity must be divided by 6';
 		END IF;
 		
-		UPDATE "EggsBatchProducts" 
-		   SET "quantityAvailable" = "quantityAvailable" - NEW."quantity"
+		UPDATE "EggsBatchProducts" SET "quantityAvailable" = "quantityAvailable" - NEW."quantity"
 		 WHERE "id" = NEW."EggsBatchProductId";
 	END IF;
 	
-	UPDATE "Orders"
-	   SET "total" = "total" + NEW."total",
+	UPDATE "Orders" SET "total" = "total" + NEW."total",
 	   	   "totalVAT" =  "totalVAT" + NEW."totalVAT"
 	 WHERE "Orders"."id" = NEW."OrderId";
 	

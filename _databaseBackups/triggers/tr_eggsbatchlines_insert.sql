@@ -1,6 +1,6 @@
 -- Trigger: tr_eggsbatchlines_insert
 
--- DROP TRIGGER tr_eggsbatchlines_insert ON public."EggsBatchLines";
+DROP TRIGGER IF EXISTS tr_eggsbatchlines_insert ON public."EggsBatchLines";
 
 CREATE TRIGGER tr_eggsbatchlines_insert
     BEFORE INSERT

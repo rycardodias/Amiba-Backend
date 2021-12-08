@@ -2,7 +2,7 @@
 
 -- DROP FUNCTION public.tr_fc_animalproducts_insert();
 
-CREATE FUNCTION public.tr_fc_animalproducts_insert()
+CREATE OR REPLACE FUNCTION public.tr_fc_animalproducts_insert()
     RETURNS trigger
     LANGUAGE 'plpgsql'
     COST 100

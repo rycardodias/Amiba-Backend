@@ -1,6 +1,6 @@
 -- Trigger: tr_animalProducts_insert
 
--- DROP TRIGGER "tr_animalProducts_insert" ON public."AnimalProducts";
+DROP TRIGGER IF EXISTS "tr_animalProducts_insert" ON public."AnimalProducts";
 
 CREATE TRIGGER "tr_animalProducts_insert"
     BEFORE INSERT

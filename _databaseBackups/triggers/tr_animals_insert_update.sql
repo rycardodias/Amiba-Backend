@@ -1,6 +1,6 @@
 -- Trigger: tr_animals_insert_update
 
--- DROP TRIGGER tr_animals_insert_update ON public."Animals";
+DROP TRIGGER IF EXISTS tr_animals_insert_update ON public."Animals";
 
 CREATE TRIGGER tr_animals_insert_update
     BEFORE INSERT OR UPDATE

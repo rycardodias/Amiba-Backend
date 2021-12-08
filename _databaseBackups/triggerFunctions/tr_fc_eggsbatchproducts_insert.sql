@@ -2,7 +2,7 @@
 
 -- DROP FUNCTION public.tr_fc_eggsbatchproducts_insert();
 
-CREATE FUNCTION public.tr_fc_eggsbatchproducts_insert()
+CREATE OR REPLACE FUNCTION  public.tr_fc_eggsbatchproducts_insert()
     RETURNS trigger
     LANGUAGE 'plpgsql'
     COST 100

@@ -1,6 +1,6 @@
 -- Trigger: tr_orderLines_delete
 
--- DROP TRIGGER "tr_orderLines_delete" ON public."OrderLines";
+DROP TRIGGER IF EXISTS "tr_orderLines_delete" ON public."OrderLines";
 
 CREATE TRIGGER "tr_orderLines_delete"
     BEFORE DELETE

@@ -2,7 +2,7 @@
 
 -- DROP FUNCTION public.tr_fc_carts_insert();
 
-CREATE FUNCTION public.tr_fc_carts_insert()
+CREATE OR REPLACE FUNCTION  public.tr_fc_carts_insert()
     RETURNS trigger
     LANGUAGE 'plpgsql'
     COST 100
@@ -80,8 +80,7 @@ BEGIN
 		 	OR "Carts"."EggsBatchProductId" = NEW."EggsBatchProductId");
 	
 	IF(v_quantity_cart > 0) THEN	
-		UPDATE public."Carts"
-		   SET "quantity" = "quantity" + NEW."quantity" 
+		UPDATE public."Carts" SET "quantity" = "quantity" + NEW."quantity" 
 		 WHERE "Carts"."UserId" = NEW."UserId"
 		   AND ("Carts"."AnimalProductId" = NEW."AnimalProductId"
 			   OR "Carts"."EggsBatchProductId" = NEW."EggsBatchProductId");

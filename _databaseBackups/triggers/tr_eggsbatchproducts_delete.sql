@@ -1,6 +1,6 @@
 -- Trigger: tr_eggsbatchproducts_delete
 
--- DROP TRIGGER tr_eggsbatchproducts_delete ON public."EggsBatchLines";
+DROP TRIGGER IF EXISTS tr_eggsbatchproducts_delete ON public."EggsBatchLines";
 
 CREATE TRIGGER tr_eggsbatchproducts_delete
     BEFORE DELETE

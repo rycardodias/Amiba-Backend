@@ -1,6 +1,6 @@
 -- Trigger: tr_carts_update
 
--- DROP TRIGGER tr_carts_update ON public."Carts";
+DROP TRIGGER IF EXISTS tr_carts_update ON public."Carts";
 
 CREATE TRIGGER tr_carts_update
     BEFORE UPDATE

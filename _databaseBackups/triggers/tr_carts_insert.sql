@@ -1,6 +1,6 @@
 -- Trigger: tr_carts_insert
 
--- DROP TRIGGER tr_carts_insert ON public."Carts";
+DROP TRIGGER IF EXISTS tr_carts_insert ON public."Carts";
 
 CREATE TRIGGER tr_carts_insert
     BEFORE INSERT

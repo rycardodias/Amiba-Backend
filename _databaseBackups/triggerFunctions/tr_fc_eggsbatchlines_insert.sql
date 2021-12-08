@@ -2,7 +2,7 @@
 
 -- DROP FUNCTION public.tr_fc_eggsbatchlines_insert();
 
-CREATE FUNCTION public.tr_fc_eggsbatchlines_insert()
+CREATE OR REPLACE FUNCTION  public.tr_fc_eggsbatchlines_insert()
     RETURNS trigger
     LANGUAGE 'plpgsql'
     COST 100
@@ -13,8 +13,7 @@ BEGIN
 		RAISE EXCEPTION 'Quantity cannot be lower than 1';
 	END IF;
 	 
-	UPDATE "EggsBatches"
-	   SET "quantity" = quantity + NEW."quantity",
+	UPDATE "EggsBatches" SET "quantity" = quantity + NEW."quantity",
 	   	   "quantityAvailable" = "quantityAvailable" + NEW."quantity"
 	 WHERE "EggsBatches"."id" = NEW."EggsBatchId";
 	
