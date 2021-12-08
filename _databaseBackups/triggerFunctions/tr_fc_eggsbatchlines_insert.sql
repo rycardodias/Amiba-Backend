@@ -15,7 +15,7 @@ BEGIN
 	 
 	UPDATE "EggsBatches"
 	   SET "quantity" = quantity + NEW."quantity",
-	   	   "quantityAvailable" = quantityAvailable + NEW."quantity"
+	   	   "quantityAvailable" = "quantityAvailable" + NEW."quantity"
 	 WHERE "EggsBatches"."id" = NEW."EggsBatchId";
 	
 	RETURN NEW;
