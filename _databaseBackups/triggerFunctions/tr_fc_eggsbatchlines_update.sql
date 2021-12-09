@@ -1,72 +1,37 @@
--- FUNCTION: public.tr_fc_orderlines_update()
+-- FUNCTION: public.tr_fc_eggsbatchlines_update()
 
--- DROP FUNCTION public.tr_fc_orderlines_update();
+-- DROP FUNCTION public.tr_fc_eggsbatchlines_update();
 
-CREATE OR REPLACE FUNCTION public.tr_fc_orderlines_update()
+CREATE OR REPLACE FUNCTION public.tr_fc_eggsbatchlines_update()
     RETURNS trigger
     LANGUAGE 'plpgsql'
     COST 100
     VOLATILE NOT LEAKPROOF
 AS $BODY$
 DECLARE
-	v_quantityAvailable_animalProducts integer;
-	v_quantityAvailable_EggsBatchProducts integer;
-	v_unit varchar(30);
+	v_quantityAvailable integer;
 BEGIN
-	IF (NEW."AnimalProductId" IS NOT NULL AND NEW."EggsBatchProductId" IS NOT NULL) THEN
-		RAISE EXCEPTION 'Record cannot have AnimalProductId and EggsBatchProductId fields';
-	END IF;
-	IF (NEW."quantity" <1) THEN
+	IF (NEW."quantity" < 1) THEN
 		RAISE EXCEPTION 'Quantity cannot be lower than 1';
 	END IF;
 	
-	IF(NEW."AnimalProductId" IS NOT NULL) THEN
-		SELECT "quantityAvailable"
-		  INTO v_quantityAvailable_animalProducts
-		  FROM "AnimalProducts"
-		 WHERE "id" = NEW."AnimalProductId";
-		
-		IF(v_quantityAvailable_animalProducts<(NEW."quantity" - OLD."quantity")) THEN
-			RAISE EXCEPTION 'quantityAvailable cannot be less than AnimalProducts.quantity';
-		END IF;
-		
-		UPDATE "AnimalProducts" SET "quantityAvailable" = "quantityAvailable" + (OLD."quantity" - NEW."quantity")
-		 WHERE "id" = NEW."AnimalProductId";
-	ELSIF(NEW."EggsBatchProductId" IS NOT NULL) THEN
-		SELECT "quantityAvailable"
-		  INTO v_quantityAvailable_EggsBatchProducts
-		  FROM "EggsBatchProducts"
-		 WHERE "id" = NEW."EggsBatchProductId";
-		 
-		IF(v_quantityAvailable_EggsBatchProducts<(NEW."quantity" - OLD."quantity")) THEN
-			RAISE EXCEPTION 'quantityAvailable cannot be less than EggsBatchProducts.quantity';
-		END IF;
-		
-		SELECT "unit"
-	  	  INTO v_unit
-	  	  FROM "Products"
-	 	 WHERE "id" = (SELECT "ProductId" 
-					     FROM "EggsBatchProducts"
-					    WHERE "id" = NEW."EggsBatchProductId");
-	 
-		IF(v_unit = 'DOZEN' AND (NEW."quantity"%12)<>0) THEN
-			RAISE EXCEPTION 'Quantity must be divided by 12';
-		END IF;
-		IF(v_unit = 'HALFDOZEN' AND (NEW."quantity"%6)<>0) THEN
-			RAISE EXCEPTION 'Quantity must be divided by 6';
-		END IF;
-		
-		UPDATE "EggsBatchProducts" SET "quantityAvailable" = "quantityAvailable" + (OLD."quantity" - NEW."quantity")
-		 WHERE "id" = NEW."EggsBatchProductId";
-	END IF;
-	
-	UPDATE "Orders" SET "total" = "total" + (NEW."total" - OLD."total"),
-	   	   "totalVAT" =  "totalVAT" + (NEW."totalVAT" - OLD."totalVAT")
-	 WHERE "Orders"."id" = NEW."OrderId";
+	SELECT "quantityAvailable"
+	  INTO v_quantityAvailable
+	  FROM "EggsBatches"
+	 WHERE "EggsBatches"."id" = OLD."EggsBatchId";
 
+	IF (v_quantityAvailable + (NEW."quantity" - OLD."quantity") < 0) THEN
+		RAISE EXCEPTION 'quantity to remove is greater than quantityAvailable';
+	END IF;
+	 
+	 UPDATE "EggsBatches" SET "quantity" = "quantity" + (NEW."quantity" - OLD."quantity"),
+			"quantityAvailable" = "quantityAvailable" + (NEW."quantity" - OLD."quantity"),
+			"updatedAt" = now()
+	  WHERE "EggsBatches"."id" = NEW."EggsBatchId";
+		
 	RETURN NEW;
 END;
 $BODY$;
 
-ALTER FUNCTION public.tr_fc_orderlines_update()
+ALTER FUNCTION public.tr_fc_eggsbatchlines_update()
     OWNER TO postgres;

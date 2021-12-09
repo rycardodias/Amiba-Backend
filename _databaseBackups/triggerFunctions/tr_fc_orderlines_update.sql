@@ -2,7 +2,7 @@
 
 -- DROP FUNCTION public.tr_fc_orderlines_update();
 
-CREATE OR REPLACE FUNCTION  public.tr_fc_orderlines_update()
+CREATE OR REPLACE FUNCTION public.tr_fc_orderlines_update()
     RETURNS trigger
     LANGUAGE 'plpgsql'
     COST 100
@@ -19,7 +19,7 @@ BEGIN
 	IF (NEW."quantity" <1) THEN
 		RAISE EXCEPTION 'Quantity cannot be lower than 1';
 	END IF;
-	
+		
 	IF(NEW."AnimalProductId" IS NOT NULL) THEN
 		SELECT "quantityAvailable"
 		  INTO v_quantityAvailable_animalProducts
@@ -30,8 +30,10 @@ BEGIN
 			RAISE EXCEPTION 'quantityAvailable cannot be less than AnimalProducts.quantity';
 		END IF;
 		
-		UPDATE "AnimalProducts"  SET "quantityAvailable" = "quantityAvailable" + (OLD."quantity" - NEW."quantity")
+		UPDATE "AnimalProducts"  SET "quantityAvailable" = "quantityAvailable" + (OLD."quantity" - NEW."quantity"),
+		   		"updatedAt" = now()
 		 WHERE "id" = NEW."AnimalProductId";
+		 
 	ELSIF(NEW."EggsBatchProductId" IS NOT NULL) THEN
 		SELECT "quantityAvailable"
 		  INTO v_quantityAvailable_EggsBatchProducts
@@ -56,12 +58,14 @@ BEGIN
 			RAISE EXCEPTION 'Quantity must be divided by 6';
 		END IF;
 		
-		UPDATE "EggsBatchProducts" SET "quantityAvailable" = "quantityAvailable" + (OLD."quantity" - NEW."quantity")
+		UPDATE "EggsBatchProducts"  SET "quantityAvailable" = "quantityAvailable" + (OLD."quantity" - NEW."quantity"),
+		   "updatedAt" = now()
 		 WHERE "id" = NEW."EggsBatchProductId";
 	END IF;
 	
-	UPDATE "Orders" SET "total" = "total" + (NEW."total" - OLD."total"),
-	   	   "totalVAT" =  "totalVAT" + (NEW."totalVAT" - OLD."totalVAT")
+	UPDATE "Orders"  SET "total" = "total" + (NEW."total" - OLD."total"),
+	   	   "totalVAT" =  "totalVAT" + (NEW."totalVAT" - OLD."totalVAT"),
+		   "updatedAt" = now()
 	 WHERE "Orders"."id" = NEW."OrderId";
 
 	RETURN NEW;

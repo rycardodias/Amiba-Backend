@@ -2,58 +2,87 @@
 
 -- DROP FUNCTION public.tr_fc_eggsbatchproducts_update();
 
-CREATE OR REPLACE FUNCTION  public.tr_fc_eggsbatchproducts_update()
+CREATE OR REPLACE FUNCTION public.tr_fc_eggsbatchproducts_update()
     RETURNS trigger
     LANGUAGE 'plpgsql'
     COST 100
     VOLATILE NOT LEAKPROOF
 AS $BODY$
 DECLARE
-	v_quantity_EggsBatchExplorations integer default 0;
-	v_quantity_EggsBatchProducts integer default 0;
-	v_new_quantity_EggsBatchProducts integer default 0;
+	v_quantity_EggsBatch integer;
+	v_quantity_EggsBatchProducts integer;
+	v_unit varchar(50);
 BEGIN
 	IF (NEW."quantity" <1) THEN
 		RAISE EXCEPTION 'quantity must be greater than 0';
 	END IF;
+	
+	IF((NEW."quantity"<>OLD."quantity") AND (NEW."quantityAvailable"<>OLD."quantityAvailable")) THEN
+		RAISE EXCEPTION 'Cannot change bought quantities at same time';
+	END IF;
+	
+	SELECT "unit"
+	  INTO v_unit
+	  FROM "Products"
+	 WHERE "id" = NEW."ProductId";
+	 
+	IF(v_unit = 'DOZEN' AND (NEW."quantity"%12)<>0) THEN
+		RAISE EXCEPTION 'Quantity must be divided by 12';
+	END IF;
+	
+	IF(v_unit = 'HALFDOZEN' AND (NEW."quantity"%6)<>0) THEN
+		RAISE EXCEPTION 'Quantity must be divided by 6';
+	END IF;
+	
+	IF(NEW."quantityAvailable"<>OLD."quantityAvailable") THEN
+		IF (NEW."quantityAvailable" > NEW."quantity") THEN
+			RAISE EXCEPTION 'quantityAvailable cannot be greater than quantity';
+		END IF;
+		IF (NEW."quantityAvailable" < 0) THEN
+			RAISE EXCEPTION 'quantityAvailable cannot be lower than 0';
+		END IF;
+		
+		IF(v_unit = 'DOZEN' AND (NEW."quantityAvailable"%12)<>0) THEN
+			RAISE EXCEPTION 'Quantity must be divided by 12';
+		END IF;
+		IF(v_unit = 'HALFDOZEN' AND (NEW."quantityAvailable"%6)<>0) THEN
+			RAISE EXCEPTION 'Quantity must be divided by 6';
+		END IF;
+		
+		UPDATE "EggsBatches"  SET "quantityAvailable" = "quantityAvailable" + (NEW."quantityAvailable" - OLD."quantityAvailable"),
+		   "updatedAt" = now()
+		 WHERE "id" = NEW."EggsBatchId";
+		 
+		RETURN NEW;
+	END IF;
+	
+	-- aumenta quantidade
+	IF((NEW."quantity" - OLD."quantity")>0) THEN
+		SELECT COALESCE(SUM("quantity"),0)
+	  	  INTO v_quantity_EggsBatch
+	  	  FROM public."EggsBatches"
+	 	 WHERE "id" = NEW."EggsBatchId";
+	 
+		SELECT COALESCE(SUM("quantity"),0)
+	 	  INTO v_quantity_EggsBatchProducts
+	  	  FROM public."EggsBatchProducts"
+		 WHERE "EggsBatchId" = NEW."EggsBatchId";
+	 
+		IF((v_quantity_EggsBatch - v_quantity_EggsBatchProducts) < (NEW."quantity" - OLD."quantity")) THEN
+			RAISE EXCEPTION 'Invalid quantity available for use';
+		END IF;	
+	END IF;
+	
+	NEW."quantityAvailable" = OLD."quantityAvailable" + (NEW."quantity" - OLD."quantity");
+	
 	IF (NEW."quantityAvailable" <0) THEN
 		RAISE EXCEPTION 'quantityAvailable must be greater than 0';
 	END IF;
+
 	IF (NEW."quantityAvailable" > NEW."quantity") THEN
 		RAISE EXCEPTION 'quantityAvailable cannot be greater than quantity';
 	END IF;
-	IF((NEW."quantityAvailable"%NEW."divider")<>0) THEN
-		RAISE EXCEPTION 'quantityAvailable must have 0 remaining from division';
-	END IF;
-	IF (NEW."ProductId"<>OLD."ProductId") THEN
-		RAISE EXCEPTION 'ProductId cannot be changed';
-	END IF;
-	IF (NEW."EggsBatchId"<>OLD."EggsBatchId") THEN
-		RAISE EXCEPTION 'EggsBatchId cannot be changed';
-	END IF;
 	
-	SELECT COALESCE(SUM("quantity"),0)
-	  INTO v_quantity_EggsBatchExplorations
-	  FROM public."EggsBatchExplorations"
-	 WHERE "EggsBatchId" = NEW."EggsBatchId";
-	 
-	SELECT COALESCE(SUM("quantity"),0)
-	  INTO v_quantity_EggsBatchProducts
-	  FROM public."EggsBatchProducts"
-	 WHERE "EggsBatchId" = NEW."EggsBatchId";
-	 
-	 v_new_quantity_EggsBatchProducts = v_quantity_EggsBatchProducts + (NEW."quantity" - OLD."quantity");
-	 	 
-	IF(v_new_quantity_EggsBatchProducts>v_quantity_EggsBatchExplorations) THEN
-		RAISE EXCEPTION 'quantity cannot be greater than EggsBatchExplorations.quantity available';
-	END IF;
-	
-	IF(NEW."quantityAvailable"=OLD."quantityAvailable") THEN
-		IF ((OLD."quantityAvailable" + (NEW."quantity" - OLD."quantity"))<0) THEN
-			RAISE EXCEPTION 'quantityAvailable must be greater or equal than 0';
-		END IF;
-		NEW."quantityAvailable" = OLD."quantityAvailable" + (NEW."quantity" - OLD."quantity");
-	END IF;
 	RETURN NEW;
 
 END;
