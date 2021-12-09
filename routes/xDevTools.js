@@ -5,6 +5,25 @@ const router = express.Router()
 const ResponseModel = require('../lib/ResponseModel')
 const { sequelize } = require('../models/User')
 
+router.get('/logs', async (req, res) => {
+    const response = new ResponseModel()
+    try {
+        const request = await sequelize.query('SELECT * FROM \"Logs"\;')
+        if (request.length > 0) {
+            response.data = request
+            res.status(200).json(response)
+        } else {
+            response.message = "No data found"
+            res.status(404).json(response)
+        }
+    } catch (error) {
+        response.message = "No data found"
+        response.error = error
+        return res.status(400).json(response)
+    }
+
+})
+
 router.get('/requiredFields/:table', async (req, res) => {
     const response = new ResponseModel()
 
