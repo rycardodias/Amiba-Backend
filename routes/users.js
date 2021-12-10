@@ -8,7 +8,7 @@ const Model = require('../models/User')
 const { error_missing_fields, error_invalid_token, error_invalid_fields, error_data_not_found, error_admin_permission_required,
     success_row_delete, error_row_delete, success_row_update, error_row_update, error_row_create, success_row_create,
     success_token_delete, success_token_valid, success_data_exits } = require('../lib/ResponseMessages')
-
+const cache = require('../lib/cache/routeCache')
 router.get('/', async (req, res) => {
     const response = new ResponseModel()
     try {
@@ -276,7 +276,7 @@ router.post('/logout', async (req, res) => {
     }
 })
 
-router.get('/me/:token', async (req, res) => {
+router.get('/me/:token', cache(), async (req, res) => {
     const response = new ResponseModel()
 
     try {
