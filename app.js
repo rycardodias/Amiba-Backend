@@ -59,6 +59,8 @@ app.use(`${process.env.BASEPATH}/animalProducts`, require('./routes/animalProduc
 app.use(`${process.env.BASEPATH}/eggsBatchProducts`, require('./routes/eggsBatchProducts'))
 app.use(`${process.env.BASEPATH}/carts`, require('./routes/carts'))
 app.use(`${process.env.BASEPATH}/uploadFiles`, require('./routes/uploadFiles'))
+app.use(`${process.env.BASEPATH}/transactions`, require('./routes/transactions'))
+
 
 app.use(`${process.env.BASEPATH}/devTools`, require('./routes/xDevTools'))
 

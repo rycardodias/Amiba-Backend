@@ -276,7 +276,7 @@ router.post('/logout', async (req, res) => {
     }
 })
 
-router.get('/me/:token', cache(), async (req, res) => {
+router.get('/me/:token', async (req, res) => {
     const response = new ResponseModel()
 
     try {

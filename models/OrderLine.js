@@ -16,6 +16,7 @@ const OrderLine = db.define('OrderLine', {
         validate: {
             notEmpty: {
                 msg: "quantity field is required",
+                type: DataTypes.INTEGER
             }
         },
     },

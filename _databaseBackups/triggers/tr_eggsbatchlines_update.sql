@@ -1,6 +1,6 @@
 -- Trigger: tr_eggsbatchlines_update
 
- DROP TRIGGER tr_eggsbatchlines_update ON public."EggsBatchLines";
+ DROP TRIGGER IF EXISTS tr_eggsbatchlines_update ON public."EggsBatchLines";
 
 CREATE TRIGGER tr_eggsbatchlines_update
     BEFORE UPDATE

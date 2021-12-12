@@ -12,61 +12,51 @@ router.post('/transaction', async (req, res) => {
     const response = new ResponseModel()
 
     try {
-        const { UserId, address, locale, zipcode, observation, fiscalNumber,
-            OrderId, quantity, total, totalVAT, AnimalProductId, EggsBatchProductId } = req.body
+        const { UserId, address, locale, zipcode, observation, fiscalNumber, OrderLines } = req.body
 
-        if (!(UserId)) {
+        if (!(UserId && OrderLines.length > 0)) {
             response.message = error_missing_fields
             response.error = error_missing_fields
             return res.status(400).json(response)
         }
 
-        const data = {
-            UserId: UserId,
-            address: address,
-            locale: locale,
-            zipcode: zipcode,
-            observation: observation,
-            fiscalNumber: fiscalNumber
-        }
-
         const result = await db.transaction(async (t) => {
 
-            await Model.create(data, { transaction: t })
-
-
-            const dataLines = {
-                OrderId: OrderId,
-                quantity: quantity,
-                total: total,
-                totalVAT: totalVAT,
-                AnimalProductId: AnimalProductId,
-                EggsBatchProductId: EggsBatchProductId,
+            const data = {
+                UserId: UserId,
+                address: address,
+                locale: locale,
+                zipcode: zipcode,
+                observation: observation,
+                fiscalNumber: fiscalNumber
             }
 
-            await OrderLine.create(dataLines, { transaction: t })
+            const order = await Model.create(data, { transaction: t })
 
-            // await Model.create({
-            //     name: 'RICARDODIAS5',
-            //     email: 'jss@ttta.pt',
-            //     password: 'pw'
-            // }, { transaction: t });
+            let dataLines
+            for (const element of OrderLines) {
+                dataLines = {
+                    OrderId: order.dataValues.id,
+                    quantity: element.quantity,
+                    total: element.total,
+                    totalVAT: element.totalVAT,
+                    AnimalProductId: element.AnimalProductId,
+                    EggsBatchProductId: element.EggsBatchProductId,
+                }
 
-            // await User.create({
-            //     name: 'RICARDODIAS6',
-            //     email: 'ss43@ttta.pt',
-            //     password: 'pw'
-            // }, { transaction: t });
+                const res = await OrderLine.create(dataLines, { transaction: t })
+                console.log("res.dataValues", res.dataValues)
+            }
 
-
+            response.message = success_row_create
+            response.data = request
+            return res.status(200).json(response)
         });
 
-        return res.status(400).json({ response: "entrouss" })
-
     } catch (error) {
-
-        return res.status(400).json(error)
-
+        response.message = error_data_not_found
+        response.error = error
+        return res.status(400).json(response)
     }
 })
 
