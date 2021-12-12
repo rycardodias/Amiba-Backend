@@ -2,6 +2,7 @@ const express = require('express')
 const cors = require("cors")
 const cookieSession = require('cookie-session')
 const fileUpload = require('express-fileupload')
+const cookieParser = require('cookie-parser')
 const dotenv = require('dotenv')
 const db = require('./config/database')
 dotenv.config()
@@ -23,6 +24,8 @@ app.use(
     }
   )
 );
+
+app.use(cookieParser())
 
 app.use(
   cookieSession({

@@ -2,16 +2,23 @@ const express = require('express')
 const router = express.Router()
 const bcrypt = require("bcrypt")
 const jwt = require("jsonwebtoken");
-const userPermission = require('../verifications/userPermissions')
+const { verifyPermission } = require('../verifications/userPermissions')
 const ResponseModel = require('../lib/ResponseModel')
 const Model = require('../models/User')
 const { error_missing_fields, error_invalid_token, error_invalid_fields, error_data_not_found, error_admin_permission_required,
     success_row_delete, error_row_delete, success_row_update, error_row_update, error_row_create, success_row_create,
     success_token_delete, success_token_valid, success_data_exits } = require('../lib/ResponseMessages')
-const cache = require('../lib/cache/routeCache')
+
 router.get('/', async (req, res) => {
     const response = new ResponseModel()
     try {
+        console.log("token", req.cookies.user_token)
+        if (!await verifyPermission(req.cookies.user_token, ['ADMIN'])) {
+            response.message = error_invalid_token
+            response.error = error_data_not_found
+            return res.status(req.cookies.user_token ? 403 : 401).json(response)
+        }
+
         const request = await Model.findAll()
         if (request.length > 0) {
             response.message = success_data_exits
@@ -60,7 +67,6 @@ router.post('/create', async (req, res) => {
     const response = new ResponseModel()
     try {
         const { name, email, password, address, locale, zipcode, fiscalNumber, telephone, mobilePhone } = req.body
-
         if (!(name && email && password)) {
             response.message = error_missing_fields
             response.error = error_missing_fields
