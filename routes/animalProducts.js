@@ -121,7 +121,7 @@ router.post('/create', async (req, res) => {
 router.put('/update', async (req, res) => {
     const response = new ResponseModel()
     try {
-        const { id, quantity, weight } = req.body
+        const { id, quantity, quantityAvailable, weight } = req.body
 
 
         if (!id) {
@@ -132,6 +132,7 @@ router.put('/update', async (req, res) => {
 
         const data = {
             quantity: quantity,
+            quantityAvailable: quantityAvailable,
             weight: weight,
         }
 

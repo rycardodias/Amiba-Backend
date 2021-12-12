@@ -5,9 +5,72 @@ const User = require('../models/User')
 const ResponseModel = require('../lib/ResponseModel')
 const { error_missing_fields, error_invalid_fields, error_data_not_found, success_row_delete, error_row_delete, success_row_update,
     error_row_update, error_row_create, success_row_create, success_data_exits } = require('../lib/ResponseMessages')
+const db = require('../config/database');
+const OrderLine = require('../models/OrderLine')
+
+router.post('/transaction', async (req, res) => {
+    const response = new ResponseModel()
+
+    try {
+        const { UserId, address, locale, zipcode, observation, fiscalNumber,
+            OrderId, quantity, total, totalVAT, AnimalProductId, EggsBatchProductId } = req.body
+
+        if (!(UserId)) {
+            response.message = error_missing_fields
+            response.error = error_missing_fields
+            return res.status(400).json(response)
+        }
+
+        const data = {
+            UserId: UserId,
+            address: address,
+            locale: locale,
+            zipcode: zipcode,
+            observation: observation,
+            fiscalNumber: fiscalNumber
+        }
+
+        const result = await db.transaction(async (t) => {
+
+            await Model.create(data, { transaction: t })
 
 
-router.get('/',  async (req, res) => {
+            const dataLines = {
+                OrderId: OrderId,
+                quantity: quantity,
+                total: total,
+                totalVAT: totalVAT,
+                AnimalProductId: AnimalProductId,
+                EggsBatchProductId: EggsBatchProductId,
+            }
+
+            await OrderLine.create(dataLines, { transaction: t })
+
+            // await Model.create({
+            //     name: 'RICARDODIAS5',
+            //     email: 'jss@ttta.pt',
+            //     password: 'pw'
+            // }, { transaction: t });
+
+            // await User.create({
+            //     name: 'RICARDODIAS6',
+            //     email: 'ss43@ttta.pt',
+            //     password: 'pw'
+            // }, { transaction: t });
+
+
+        });
+
+        return res.status(400).json({ response: "entrouss" })
+
+    } catch (error) {
+
+        return res.status(400).json(error)
+
+    }
+})
+
+router.get('/', async (req, res) => {
     const response = new ResponseModel()
     try {
         const request = await Model.findAll({ include: User })
@@ -161,7 +224,7 @@ router.put('/update', async (req, res) => {
 })
 
 
-router.delete('/delete',  async (req, res) => {
+router.delete('/delete', async (req, res) => {
     const response = new ResponseModel()
     try {
         const { id } = req.body
