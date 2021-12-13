@@ -261,6 +261,39 @@ router.get('/allAvailable/type/:type', async (req, res) => {
     }
 })
 
+router.get('/allAvailable/inOrganization', async (req, res) => {
+    const response = new ResponseModel()
+    try {
+        const { organizations } = req.body
+        const request = await Model.findAll({
+            include: [AnimalProduct, EggsBatchProduct,
+                {
+                    model: Organization,
+                    required: true,
+                    where: { id: { [Op.in]: organizations } }
+                }],
+            where: {
+                [Op.or]: [
+                    { '$AnimalProducts.quantityAvailable$': { [Op.gt]: 0 } }
+                    , { '$EggsBatchProducts.quantityAvailable$': { [Op.gt]: 0 } }],
+            }
+        })
+        if (request.length > 0) {
+            response.message = success_data_exits
+            response.data = request
+            res.status(200).json(response)
+        } else {
+            response.message = error_data_not_found
+            response.error = error_data_not_found
+            res.status(404).json(response)
+        }
+    } catch (error) {
+        response.message = error_data_not_found
+        response.error = error
+        return res.status(400).json(response)
+    }
+})
+
 router.post('/create', async (req, res) => {
     const response = new ResponseModel()
     try {
