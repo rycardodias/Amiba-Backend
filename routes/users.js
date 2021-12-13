@@ -2,7 +2,7 @@ const express = require('express')
 const router = express.Router()
 const bcrypt = require("bcrypt")
 const jwt = require("jsonwebtoken");
-const { verifyPermission } = require('../verifications/userPermissions')
+const { verifyPermission, convertToToken } = require('../verifications/userPermissions')
 const ResponseModel = require('../lib/ResponseModel')
 const Model = require('../models/User')
 const { error_missing_fields, error_invalid_token, error_invalid_fields, error_data_not_found, error_admin_permission_required,
@@ -18,7 +18,7 @@ router.get('/', async (req, res) => {
             return res.status(req.cookies.user_token ? 403 : 401).json(response)
         }
 
-        const request = await Model.findAll({attributes: { exclude: ['password', 'createdAt', 'updatedAt']}})
+        const request = await Model.findAll({ attributes: { exclude: ['password', 'createdAt', 'updatedAt'] } })
         if (request.length > 0) {
             response.message = success_data_exits
             response.data = request
@@ -43,7 +43,14 @@ router.get('/id/:id', async (req, res) => {
             response.error = error_missing_fields
             return res.status(400).json(response)
         }
-        const request = await Model.findByPk(req.params.id)
+
+        if (!await verifyPermission(req.cookies.user_token, ['USER'])) {
+            response.message = error_invalid_token
+            response.error = error_data_not_found
+            return res.status(req.cookies.user_token ? 403 : 401).json(response)
+        }
+
+        const request = await Model.findByPk(req.params.id, { attributes: { exclude: ['password', 'createdAt', 'updatedAt'] } })
 
         if (request) {
             response.message = success_data_exits
@@ -66,6 +73,7 @@ router.post('/create', async (req, res) => {
     const response = new ResponseModel()
     try {
         const { name, email, password, address, locale, zipcode, fiscalNumber, telephone, mobilePhone } = req.body
+
         if (!(name && email && password)) {
             response.message = error_missing_fields
             response.error = error_missing_fields
@@ -87,7 +95,7 @@ router.post('/create', async (req, res) => {
         const request = await Model.create(data)
 
         response.message = success_row_create
-        response.data = jwt.sign({ id: request.id, }, "MySecret")
+        response.data = jwt.sign({ id: request.id, }, process.env.TOKEN_SECRET)
         return res.status(201).json(response)
 
 
@@ -109,7 +117,7 @@ router.put('/update', async (req, res) => {
         }
 
         const isAdmin = await userPermission.verifyPermission(token, ['ADMIN'])
-        const idToken = jwt.verify(token, "MySecret").id
+        const idToken = jwt.verify(token, process.env.TOKEN_SECRET).id
 
         if (!isAdmin && (idToken != id)) {
             response.error = error_admin_permission_required
@@ -165,7 +173,7 @@ router.put('/update/password', async (req, res) => {
             res.status(400).json(response)
         }
 
-        const idToken = jwt.verify(token, "MySecret").id
+        const idToken = jwt.verify(token, process.env.TOKEN_SECRET).id
 
         if (idToken != id) {
             response.message = error_invalid_token
@@ -249,7 +257,7 @@ router.post('/login', async (req, res) => {
 
         if (bcrypt.compareSync(password, request.password)) {
             response.message = success_data_exits
-            response.data = jwt.sign({ id: request.id, }, "MySecret")
+            response.data = jwt.sign({ id: request.id, }, process.env.TOKEN_SECRET)
 
             req.session = { token: response.data };
 
@@ -285,7 +293,7 @@ router.get('/me/:token', async (req, res) => {
     const response = new ResponseModel()
 
     try {
-        const userID = jwt.verify(req.session.token || req.params.token, "MySecret");
+        const userID = jwt.verify(req.session.token || req.params.token, process.env.TOKEN_SECRET);
         const request = await Model.findByPk(userID.id, { attributes: ['id', 'name', 'permission'] })
 
         if (request) {

@@ -136,7 +136,7 @@ router.get('/allAvailable', async (req, res) => {
     const response = new ResponseModel()
     try {
         const request = await Model.findAll({
-            include: [AnimalProduct, EggsBatchProduct],
+            include: [AnimalProduct, EggsBatchProduct, Organization],
             where: {
                 [Op.or]: [
                     { '$AnimalProducts.quantityAvailable$': { [Op.gt]: 0 } }

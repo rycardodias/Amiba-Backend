@@ -3,7 +3,7 @@ const jwt = require("jsonwebtoken");
 
 
 exports.convertToToken = async function (id) {
-    const token = jwt.sign({ id: id }, "MySecret")
+    const token = jwt.sign({ id: id }, process.env.TOKEN_SECRET)
     return token
 }
 
@@ -20,7 +20,7 @@ const verifyPermissionArray = (perm1, perm2) => {
 
 exports.verifyPermission = async function (token, requiredPermission) {
     try {
-        const idToken = jwt.verify(token, "MySecret").id
+        const idToken = jwt.verify(token, process.env.TOKEN_SECRET).id
 
         const request = await Users.findByPk(idToken)
         if (request.dataValues) {
