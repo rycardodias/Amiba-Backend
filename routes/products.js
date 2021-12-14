@@ -261,7 +261,7 @@ router.get('/allAvailable/type/:type', async (req, res) => {
     }
 })
 
-router.get('/allAvailable/inOrganization', async (req, res) => {
+router.post('/allAvailable/inOrganization', async (req, res) => {
     const response = new ResponseModel()
     try {
         const { organizations } = req.body
