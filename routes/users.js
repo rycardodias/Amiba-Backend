@@ -7,7 +7,7 @@ const ResponseModel = require('../lib/ResponseModel')
 const Model = require('../models/User')
 const { error_missing_fields, error_invalid_token, error_invalid_fields, error_data_not_found, error_admin_permission_required,
     success_row_delete, error_row_delete, success_row_update, error_row_update, error_row_create, success_row_create,
-    success_token_delete, success_token_valid, success_data_exits } = require('../lib/ResponseMessages')
+    success_token_delete, success_token_valid, success_data_exits, error_invalid_password } = require('../lib/ResponseMessages')
 
 router.get('/', async (req, res) => {
     const response = new ResponseModel()
@@ -95,7 +95,7 @@ router.post('/create', async (req, res) => {
         const request = await Model.create(data)
 
         response.message = success_row_create
-        response.data = {token: jwt.sign({ id: request.id, }, process.env.TOKEN_SECRET), user: request}
+        response.data = { token: jwt.sign({ id: request.id, }, process.env.TOKEN_SECRET), user: request }
         return res.status(201).json(response)
 
 
@@ -170,7 +170,7 @@ router.put('/update/password', async (req, res) => {
         if (!(id && token && oldPassword && newPassword)) {
             response.message = error_missing_fields
             response.error = error_missing_fields
-            res.status(400).json(response)
+            return res.status(400).json(response)
         }
 
         const idToken = jwt.verify(token, process.env.TOKEN_SECRET).id
@@ -178,13 +178,16 @@ router.put('/update/password', async (req, res) => {
         if (idToken != id) {
             response.message = error_invalid_token
             response.error = error_invalid_token
-            res.status(400).json(response)
+            return res.status(400).json(response)
         }
 
-        // const res = await Model.findByPk(id)
-        //     .then((data) => res.status(200).json(data))
-        //     .catch((error) => res.status(200).json("erro", error))
-        //FIXME não está a validar password antiga
+        const user = await Model.findByPk(id)
+
+        if (!bcrypt.compareSync(oldPassword, user.dataValues.password)) {
+            response.message = error_invalid_password
+            response.error = error_invalid_password
+            return res.status(200).json(response)
+        }
 
         const data = {
             password: bcrypt.hashSync(newPassword, 10)
@@ -195,14 +198,15 @@ router.put('/update/password', async (req, res) => {
             returning: true
         })
 
+
         if (request[0] === 1) {
             response.message = success_row_update
             response.data = request[1][0].dataValues
-            res.status(200).json(response)
+            return res.status(200).json(response)
         } else {
             response.message = error_row_update
             response.error = request[0]
-            res.status(404).json(response)
+            return res.status(404).json(response)
         }
 
     } catch (error) {
