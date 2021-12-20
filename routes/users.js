@@ -294,7 +294,7 @@ router.get('/me/:token', async (req, res) => {
 
     try {
         const userID = jwt.verify(req.session.token || req.params.token, process.env.TOKEN_SECRET);
-        const request = await Model.findByPk(userID.id, { attributes: ['id', 'name', 'permission'] })
+        const request = await Model.findByPk(userID.id, { attributes: ['id', 'name', 'permission', 'email'] })
 
         if (request) {
             response.message = success_token_valid
