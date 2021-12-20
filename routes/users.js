@@ -95,7 +95,7 @@ router.post('/create', async (req, res) => {
         const request = await Model.create(data)
 
         response.message = success_row_create
-        response.data = jwt.sign({ id: request.id, }, process.env.TOKEN_SECRET)
+        response.data = {token: jwt.sign({ id: request.id, }, process.env.TOKEN_SECRET), user: request}
         return res.status(201).json(response)
 
 
