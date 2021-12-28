@@ -12,11 +12,11 @@ const { error_missing_fields, error_invalid_token, error_invalid_fields, error_d
 router.get('/', async (req, res) => {
     const response = new ResponseModel()
     try {
-        if (!await verifyPermission(req.cookies.user_token, ['ADMIN', 'AMIBA'])) {
-            response.message = error_invalid_token
-            response.error = error_data_not_found
-            return res.status(req.cookies.user_token ? 403 : 401).json(response)
-        }
+        // if (!await verifyPermission(req.cookies.user_token, ['ADMIN', 'AMIBA'])) {
+        //     response.message = error_invalid_token
+        //     response.error = error_data_not_found
+        //     return res.status(req.cookies.user_token ? 403 : 401).json(response)
+        // }
 
         const request = await Model.findAll({ attributes: { exclude: ['password', 'createdAt', 'updatedAt'] } })
         if (request.length > 0) {
