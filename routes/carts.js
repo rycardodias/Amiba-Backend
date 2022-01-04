@@ -13,8 +13,10 @@ const Animal = require('../models/Animal')
 const Exploration = require('../models/Exploration')
 const Organization = require('../models/Organization')
 const EggsBatch = require('../models/EggsBatch')
+const jwt = require("jsonwebtoken");
 
-router.get('/',  async (req, res) => {
+
+router.get('/', async (req, res) => {
     const response = new ResponseModel()
     try {
         const request = await Model.findAll({})
@@ -114,7 +116,7 @@ router.get('/UserId/Product/:UserId', async (req, res) => {
                     model: EggsBatchProduct, include: [
                         Product,
                         {
-                            model: EggsBatch, 
+                            model: EggsBatch,
                             // include: EggsBatchExploration
                         }]
                 }
@@ -140,16 +142,17 @@ router.get('/UserId/Product/:UserId', async (req, res) => {
 router.post('/create', async (req, res) => {
     const response = new ResponseModel()
     try {
-        const { UserId, AnimalProductId, EggsBatchProductId, quantity } = req.body
+        const { token, AnimalProductId, EggsBatchProductId, quantity } = req.body
 
-        if (!(UserId && (AnimalProductId || EggsBatchProductId) && quantity)) {
+        if (!(token && (AnimalProductId || EggsBatchProductId) && quantity)) {
             response.message = error_missing_fields
             response.error = error_missing_fields
             return res.status(400).json(response)
         }
+        let tokenDecoded = (jwt.verify(token, process.env.TOKEN_SECRET))
 
         const data = {
-            UserId: UserId,
+            UserId: tokenDecoded.id,
             AnimalProductId: AnimalProductId,
             EggsBatchProductId: EggsBatchProductId,
             quantity: quantity
@@ -172,7 +175,7 @@ router.post('/create', async (req, res) => {
     }
 })
 
-router.put('/update',  async (req, res) => {
+router.put('/update', async (req, res) => {
     const response = new ResponseModel()
     try {
         const { ProductId, AnimalId, EggsBatchId, quantity } = req.body
@@ -208,7 +211,7 @@ router.put('/update',  async (req, res) => {
     }
 })
 
-router.delete('/delete',  async (req, res) => {
+router.delete('/delete', async (req, res) => {
     const response = new ResponseModel()
     try {
         const { id } = req.body

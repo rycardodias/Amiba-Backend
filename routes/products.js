@@ -202,16 +202,13 @@ router.get('/allAvailable/id/:id', async (req, res) => {
                         WHERE sum IS NOT NULL)
                         `), "quantityAvailable"
                     ],
-
                 ],
             },
-
             include: [
                 {
                     model: AnimalProduct,
                     required: false,
                     where: { quantityAvailable: { [Op.gt]: 0 } }
-
                 },
                 {
                     model: EggsBatchProduct,
