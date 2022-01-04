@@ -136,6 +136,25 @@ router.get('/allAvailable', async (req, res) => {
     const response = new ResponseModel()
     try {
         const request = await Model.findAll({
+            attributes: {
+                include: [
+                    [Sequelize.literal(`(
+                        SELECT CAST(sum AS INTEGER)
+                        FROM (
+                            SELECT SUM("quantityAvailable")
+                            FROM "AnimalProducts"
+                            WHERE "AnimalProducts"."ProductId" = "Product"."id"
+                            UNION ALL
+                            SELECT SUM("quantityAvailable")
+                            FROM "EggsBatchProducts"
+                            WHERE "EggsBatchProducts"."ProductId" = "Product"."id"
+                            ) v
+                        WHERE sum IS NOT NULL)
+                        `), "quantityAvailable"
+                    ],
+
+                ],
+            },
             include: [AnimalProduct, EggsBatchProduct, Organization],
             where: {
                 [Op.or]: [
