@@ -13,8 +13,8 @@ router.get('/', async (req, res) => {
     const response = new ResponseModel()
     try {
         const perms = jwt.verify(req.session.token, "MySecret").permission
-        
-        if (!await verifyPermissionArray(perms, ['ADMIN', 'AMIBA'])) {
+
+        if (!await verifyPermissionArray(perms, ['ADMIN', 'AMIBA', 'USER'])) {
             response.message = error_invalid_token
             response.error = error_data_not_found
             return res.status(req.cookies.user_token ? 403 : 401).json(response)
@@ -266,7 +266,7 @@ router.post('/login', async (req, res) => {
             response.data = jwt.sign({ id: request.id, permission: request.permission }, process.env.TOKEN_SECRET)
 
             req.session = { token: response.data };
-
+            console.log(response.data)
             return res.status(200).json(response)
 
         } else {
@@ -295,11 +295,11 @@ router.post('/logout', async (req, res) => {
     }
 })
 
-router.get('/me/:token', async (req, res) => {
+router.get('/me', async (req, res) => {
     const response = new ResponseModel()
 
     try {
-        const userID = jwt.verify(req.session.token || req.params.token, process.env.TOKEN_SECRET);
+        const userID = jwt.verify(req.session.token, process.env.TOKEN_SECRET);
         const request = await Model.findByPk(userID.id, { attributes: ['id', 'name', 'permission', 'email'] })
 
         if (request) {
