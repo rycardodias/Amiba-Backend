@@ -151,6 +151,7 @@ router.post('/create', async (req, res) => {
             response.error = error_missing_fields
             return res.status(400).json(response)
         }
+
         let tokenDecoded = jwt.verify(token, process.env.TOKEN_SECRET)
 
         const data = {

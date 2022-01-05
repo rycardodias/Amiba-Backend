@@ -12,12 +12,12 @@ const { error_missing_fields, error_invalid_token, error_invalid_fields, error_d
 router.get('/', async (req, res) => {
     const response = new ResponseModel()
     try {
-        const perms = jwt.verify(req.session.token, "MySecret").permission
+        const decodedToken = jwt.verify(req.session.token, process.env.TOKEN_SECRET)
 
-        if (!await verifyPermissionArray(perms, ['ADMIN', 'AMIBA', 'USER'])) {
+        if (!await verifyPermissionArray(decodedToken.permission, ['ADMIN', 'AMIBA'])) {
             response.message = error_invalid_token
             response.error = error_data_not_found
-            return res.status(req.cookies.user_token ? 403 : 401).json(response)
+            return res.status(req.session.token ? 403 : 401).json(response)
         }
 
         const request = await Model.findAll({ attributes: { exclude: ['password', 'createdAt', 'updatedAt'] } })
@@ -266,7 +266,7 @@ router.post('/login', async (req, res) => {
             response.data = jwt.sign({ id: request.id, permission: request.permission }, process.env.TOKEN_SECRET)
 
             req.session = { token: response.data };
-            
+
             return res.status(200).json(response)
 
         } else {
