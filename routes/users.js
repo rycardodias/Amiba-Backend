@@ -2,7 +2,7 @@ const express = require('express')
 const router = express.Router()
 const bcrypt = require("bcrypt")
 const jwt = require("jsonwebtoken");
-const { verifyPermission, convertToToken } = require('../verifications/userPermissions')
+const { verifyPermission, verifyPermissionArray } = require('../verifications/userPermissions')
 const ResponseModel = require('../lib/ResponseModel')
 const Model = require('../models/User')
 const { error_missing_fields, error_invalid_token, error_invalid_fields, error_data_not_found, error_admin_permission_required,
@@ -12,12 +12,13 @@ const { error_missing_fields, error_invalid_token, error_invalid_fields, error_d
 router.get('/', async (req, res) => {
     const response = new ResponseModel()
     try {
-        console.log(req.cookies.token || ".", req.session.token || ",")
-        // if (!await verifyPermission(req.cookies.user_token, ['ADMIN', 'AMIBA'])) {
-        //     response.message = error_invalid_token
-        //     response.error = error_data_not_found
-        //     return res.status(req.cookies.user_token ? 403 : 401).json(response)
-        // }
+        const perms = jwt.verify(req.session.token, "MySecret").permission
+        
+        if (!await verifyPermissionArray(perms, ['ADMIN', 'AMIBA'])) {
+            response.message = error_invalid_token
+            response.error = error_data_not_found
+            return res.status(req.cookies.user_token ? 403 : 401).json(response)
+        }
 
         const request = await Model.findAll({ attributes: { exclude: ['password', 'createdAt', 'updatedAt'] } })
         if (request.length > 0) {
