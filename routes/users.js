@@ -12,6 +12,7 @@ const { error_missing_fields, error_invalid_token, error_invalid_fields, error_d
 router.get('/', async (req, res) => {
     const response = new ResponseModel()
     try {
+        console.log(req.cookies.token || ".", req.session.token || ",")
         // if (!await verifyPermission(req.cookies.user_token, ['ADMIN', 'AMIBA'])) {
         //     response.message = error_invalid_token
         //     response.error = error_data_not_found
