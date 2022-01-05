@@ -142,7 +142,9 @@ router.get('/UserId/Product/:UserId', async (req, res) => {
 router.post('/create', async (req, res) => {
     const response = new ResponseModel()
     try {
-        const { token, AnimalProductId, EggsBatchProductId, quantity } = req.body
+        const { AnimalProductId, EggsBatchProductId, quantity } = req.body
+
+        const { token } = req.session
 
         if (!(token && (AnimalProductId || EggsBatchProductId) && quantity)) {
             response.message = error_missing_fields

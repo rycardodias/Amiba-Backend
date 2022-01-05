@@ -266,7 +266,7 @@ router.post('/login', async (req, res) => {
             response.data = jwt.sign({ id: request.id, permission: request.permission }, process.env.TOKEN_SECRET)
 
             req.session = { token: response.data };
-            console.log(response.data)
+            
             return res.status(200).json(response)
 
         } else {
