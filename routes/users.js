@@ -2,21 +2,20 @@ const express = require('express')
 const router = express.Router()
 const bcrypt = require("bcrypt")
 const jwt = require("jsonwebtoken");
-const { verifyPermission, verifyPermissionArray } = require('../verifications/userPermissions')
 const ResponseModel = require('../lib/ResponseModel')
 const Model = require('../models/User')
-const { error_missing_fields, error_invalid_token, error_invalid_fields, error_data_not_found, error_admin_permission_required,
+const { error_missing_fields, error_invalid_token, error_invalid_token_or_permission, error_invalid_fields, error_data_not_found, error_admin_permission_required,
     success_row_delete, error_row_delete, success_row_update, error_row_update, error_row_create, success_row_create,
-    success_token_delete, success_token_valid, success_data_exits, error_invalid_password } = require('../lib/ResponseMessages')
+    success_token_delete, success_token_valid, success_data_exits, error_invalid_password } = require('../lib/ResponseMessages');
+const { verifyTokenPermissions, validateToken } = require('../verifications/tokenVerifications');
 
 router.get('/', async (req, res) => {
     const response = new ResponseModel()
-    try {
-        const decodedToken = jwt.verify(req.session.token, process.env.TOKEN_SECRET)
 
-        if (!await verifyPermissionArray(decodedToken.permission, ['ADMIN', 'AMIBA'])) {
-            response.message = error_invalid_token
-            response.error = error_data_not_found
+    try {
+        if (!await verifyTokenPermissions(req.session.token, ['ADMIN', 'AMIBA'])) {
+            response.message = error_invalid_token_or_permission
+            response.error = error_invalid_token_or_permission
             return res.status(req.session.token ? 403 : 401).json(response)
         }
 
@@ -46,10 +45,10 @@ router.get('/id/:id', async (req, res) => {
             return res.status(400).json(response)
         }
 
-        if (!await verifyPermission(req.cookies.user_token, ['USER'])) {
-            response.message = error_invalid_token
-            response.error = error_data_not_found
-            return res.status(req.cookies.user_token ? 403 : 401).json(response)
+        if (!await verifyTokenPermissions(req.session.token, ['ADMIN', 'AMIBA'])) {
+            response.message = error_invalid_token_or_permission
+            response.error = error_invalid_token_or_permission
+            return res.status(req.session.token ? 403 : 401).json(response)
         }
 
         const request = await Model.findByPk(req.params.id, { attributes: { exclude: ['password', 'createdAt', 'updatedAt'] } })
@@ -118,7 +117,7 @@ router.put('/update', async (req, res) => {
             res.status(400).json(response)
         }
 
-        const isAdmin = await userPermission.verifyPermission(token, ['ADMIN'])
+        const isAdmin = await verifyTokenPermissions(req.session.token, ['ADMIN'])
         const idToken = jwt.verify(token, process.env.TOKEN_SECRET).id
 
         if (!isAdmin && (idToken != id)) {

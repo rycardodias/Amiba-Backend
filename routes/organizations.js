@@ -5,7 +5,6 @@ const User = require('../models/User')
 const ResponseModel = require('../lib/ResponseModel')
 const { error_missing_fields, error_invalid_fields, error_data_not_found, success_row_delete, error_row_delete, success_row_update,
     error_row_update, error_row_create, success_row_create, success_data_exits, error_invalid_token } = require('../lib/ResponseMessages')
-const { verifyPermissionArray } = require('../verifications/userPermissions')
 const jwt = require("jsonwebtoken");
 
 
@@ -189,14 +188,15 @@ router.delete('/delete', async (req, res) => {
             response.error = error_missing_fields
             return res.status(400).json(response)
         }
-        
+
         const tokenDecoded = jwt.verify(token, process.env.TOKEN_SECRET)
 
-        if (!verifyPermissionArray(tokenDecoded.permission, ["ADMIN", "AMIBA"])) {
-            response.message = error_invalid_token
-            response.error = error_invalid_token
-            return res.status(400).json(response)
+        if (!await verifyTokenPermissions(req.session.token, ['ADMIN'])) {
+            response.message = error_invalid_token_or_permission
+            response.error = error_invalid_token_or_permission
+            return res.status(req.session.token ? 403 : 401).json(response)
         }
+
         const request = await Model.destroy({ where: { id: id } })
 
         if (request === 1) {
