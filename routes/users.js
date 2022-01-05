@@ -319,4 +319,27 @@ router.get('/me', async (req, res) => {
     }
 })
 
+router.get('/validateToken', async (req, res) => {
+    const response = new ResponseModel()
+
+    try {
+        const userID = jwt.verify(req.session.token, process.env.TOKEN_SECRET);
+        const request = await Model.findByPk(userID.id, { attributes: ['id', 'name', 'permission', 'email'] })
+
+        if (request) {
+            response.message = success_token_valid
+            response.data = true
+            res.status(200).json(response)
+        } else {
+            response.message = error_invalid_token
+            response.error = error_invalid_token
+            res.status(404).json(response)
+        }
+    } catch (error) {
+        response.message = error_invalid_token
+        response.error = error_invalid_token
+        return res.status(400).json(response)
+    }
+})
+
 module.exports = router
