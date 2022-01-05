@@ -96,9 +96,11 @@ router.post('/create', async (req, res) => {
         const request = await Model.create(data)
 
         response.message = success_row_create
-        response.data = { token: jwt.sign({ id: request.id, permission: request.permission }, process.env.TOKEN_SECRET), user: request }
-        return res.status(201).json(response)
+        response.data = jwt.sign({ id: request.id, permission: request.permission }, process.env.TOKEN_SECRET)
 
+        req.session = { token: response.data };
+
+        return res.status(201).json(response)
 
     } catch (error) {
         response.message = error_invalid_fields
