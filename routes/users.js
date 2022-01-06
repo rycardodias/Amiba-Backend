@@ -342,4 +342,20 @@ router.get('/validateToken', async (req, res) => {
     }
 })
 
+router.get('/tokenPermission', async (req, res) => {
+    const response = new ResponseModel()
+
+    try {
+        const userID = jwt.verify(req.session.token, process.env.TOKEN_SECRET);
+   
+        response.message = success_token_valid
+        response.data = userID.permission
+        res.status(200).json(response)
+    } catch (error) {
+        response.message = error_invalid_token
+        response.error = error
+        return res.status(400).json(response)
+    }
+})
+
 module.exports = router
