@@ -8,15 +8,6 @@ const Organization = db.define('Organization', {
         primaryKey: true,
         defaultValue: DataTypes.UUIDV4
     },
-    type: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        validate: {
-            notEmpty: {
-                msg: "type field is required",
-            }
-        }
-    },
     name: {
         type: DataTypes.STRING,
         allowNull: false,

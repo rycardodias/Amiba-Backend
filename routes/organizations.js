@@ -100,7 +100,7 @@ router.get('/productAvailable', async (req, res) => {
     try {
         const request = await Model.findAll({
             attributes: {
-                exclude: ["type", "address", "locale", "zipcode", "telephone", "mobilePhone", "fiscalNumber", "createdAt", "updatedAt", "UserId"],
+                exclude: ["address", "locale", "zipcode", "telephone", "mobilePhone", "fiscalNumber", "createdAt", "updatedAt", "UserId"],
                 include: [
                     [Sequelize.literal(`(SELECT COUNT(*) FROM "Products" p WHERE p."id" = "Products"."id" AND p."OrganizationId" = "Organization"."id")`), "totalProducts"]
                 ]
@@ -144,10 +144,10 @@ router.get('/productAvailable', async (req, res) => {
 router.post('/create', async (req, res) => {
     const response = new ResponseModel()
     try {
-        const { type, UserId, name, address, locale, zipcode, telephone, mobilePhone, fiscalNumber } = req.body
+        const { UserId, name, address, locale, zipcode, telephone, mobilePhone, fiscalNumber } = req.body
 
 
-        if (!(type && UserId && name && address && locale && zipcode && fiscalNumber)) {
+        if (!(UserId && name && address && locale && zipcode && fiscalNumber)) {
             response.message = error_missing_fields
             response.error = error_missing_fields
 
@@ -155,7 +155,6 @@ router.post('/create', async (req, res) => {
         }
 
         const data = {
-            type: type,
             UserId: UserId,
             name: name,
             address: address,
@@ -188,7 +187,7 @@ router.post('/create', async (req, res) => {
 router.put('/update', async (req, res) => {
     const response = new ResponseModel()
     try {
-        const { id, type, UserId, name, address, locale, zipcode, telephone, mobilePhone, fiscalNumber } = req.body
+        const { id, UserId, name, address, locale, zipcode, telephone, mobilePhone, fiscalNumber } = req.body
 
         if (!id) {
             response.message = error_missing_fields
@@ -197,7 +196,6 @@ router.put('/update', async (req, res) => {
         }
 
         const data = {
-            type: type,
             UserId: UserId,
             name: name,
             address: address,
