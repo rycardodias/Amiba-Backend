@@ -11,9 +11,7 @@ const { error_missing_fields, error_invalid_fields, error_data_not_found, succes
     error_row_update, error_row_create, success_row_create, success_data_exits, error_invalid_token } = require('../lib/ResponseMessages')
 const jwt = require("jsonwebtoken");
 const { Op } = require("sequelize");
-
-
-
+const { Sequelize } = require('../config/database')
 
 router.get('/', async (req, res) => {
     const response = new ResponseModel()
@@ -100,9 +98,13 @@ router.get('/UserId/:UserId', async (req, res) => {
 router.get('/productAvailable', async (req, res) => {
     const response = new ResponseModel()
     try {
-
         const request = await Model.findAll({
-            attributes: ['id', 'name'],
+            attributes: {
+                exclude: ["type", "address", "locale", "zipcode", "telephone", "mobilePhone", "fiscalNumber", "createdAt", "updatedAt", "UserId"],
+                include: [
+                    [Sequelize.literal(`(SELECT COUNT(*) FROM "Products" p WHERE p."id" = "Products"."id" AND p."OrganizationId" = "Organization"."id")`), "totalProducts"]
+                ]
+            },
             include: [{
                 model: Product,
                 attributes: ['id'],
