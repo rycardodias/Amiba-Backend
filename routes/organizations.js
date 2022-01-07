@@ -2,10 +2,16 @@ const express = require('express')
 const router = express.Router()
 const Model = require('../models/Organization')
 const User = require('../models/User')
+const Product = require('../models/Product')
+const AnimalProduct = require('../models/AnimalProduct')
+const EggsBatchProduct = require('../models/EggsBatchProduct')
+
 const ResponseModel = require('../lib/ResponseModel')
 const { error_missing_fields, error_invalid_fields, error_data_not_found, success_row_delete, error_row_delete, success_row_update,
     error_row_update, error_row_create, success_row_create, success_data_exits, error_invalid_token } = require('../lib/ResponseMessages')
 const jwt = require("jsonwebtoken");
+const { Op } = require("sequelize");
+
 
 
 
@@ -73,6 +79,48 @@ router.get('/UserId/:UserId', async (req, res) => {
         }
 
         const request = await Model.findAll({ where: { UserId: req.params.UserId } })
+
+        if (request) {
+            response.message = success_data_exits
+            response.data = request
+            res.status(200).json(response)
+        } else {
+            response.message = error_data_not_found
+            response.error = error_data_not_found
+            res.status(404).json(response)
+        }
+    } catch (error) {
+        response.message = error_data_not_found
+        response.error = error
+        return res.status(400).json(response)
+    }
+
+})
+
+router.get('/productAvailable', async (req, res) => {
+    const response = new ResponseModel()
+    try {
+
+        const request = await Model.findAll({
+            attributes: ['id', 'name'],
+            include: [{
+                model: Product,
+                attributes: ['id'],
+                include: [{
+                    model: AnimalProduct,
+                    attributes: ['id', 'quantityAvailable'],
+                }, {
+                    model: EggsBatchProduct,
+                    attributes: ['id', 'quantityAvailable'],
+                }],
+            }],
+            where: {
+                [Op.or]: [
+                    { '$Products.AnimalProducts.quantityAvailable$': { [Op.gt]: 0 } },
+                    { '$Products.EggsBatchProducts.quantityAvailable$': { [Op.gt]: 0 } }
+                ]
+            }
+        })
 
         if (request) {
             response.message = success_data_exits
