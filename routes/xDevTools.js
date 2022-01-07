@@ -40,7 +40,7 @@ router.get('/requiredFields/:table', async (req, res) => {
         'orders': [],
         'orderHistory': [],
         'orderLines': [],
-        'organizations': ['id', 'type', 'name', 'address', 'locale', 'zipcode', 'fiscalNumber', 'UserId'],
+        'organizations': ['id', 'name', 'address', 'locale', 'zipcode', 'fiscalNumber', 'UserId'],
         'products': [],
         'restaurants': ['id', 'UserId', 'name', 'description', 'address', 'locale', 'zipcode', 'fiscalNumber'],
         'users': ['id', 'name'], //TODO acabar,
@@ -64,7 +64,7 @@ router.get('/teste', async (req, res) => {
 
     const response = await sequelize.query('CALL public.sp_teste()')
 
-    res.status(200).json({teste: "aa"})
+    res.status(200).json({ teste: "aa" })
 })
 
 module.exports = router
