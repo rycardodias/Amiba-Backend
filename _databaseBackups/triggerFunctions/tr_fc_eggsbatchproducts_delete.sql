@@ -1,8 +1,8 @@
--- FUNCTION: public.tr_fc_eggsbatchlines_delete()
+-- FUNCTION: public.tr_fc_eggsbatchproducts_delete()
 
--- DROP FUNCTION public.tr_fc_eggsbatchlines_delete();
+-- DROP FUNCTION public.tr_fc_eggsbatchproducts_delete();
 
-CREATE OR REPLACE FUNCTION  public.tr_fc_eggsbatchlines_delete()
+CREATE OR REPLACE FUNCTION  public.tr_fc_eggsbatchproducts_delete()
     RETURNS trigger
     LANGUAGE 'plpgsql'
     COST 100
@@ -28,5 +28,5 @@ BEGIN
 END;
 $BODY$;
 
-ALTER FUNCTION public.tr_fc_eggsbatchlines_delete()
+ALTER FUNCTION public.tr_fc_eggsbatchproducts_delete()
     OWNER TO postgres;
