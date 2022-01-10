@@ -236,7 +236,7 @@ router.delete('/delete', async (req, res) => {
 
         if (!id) {
             response.message = error_missing_fields
-            response.error = id
+            response.error = error_missing_fields
             return res.status(400).json(response)
         }
 
