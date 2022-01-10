@@ -110,9 +110,11 @@ router.get('/productAvailable', async (req, res) => {
                 attributes: ['id'],
                 include: [{
                     model: AnimalProduct,
+                    required: false,
                     attributes: ['id', 'quantityAvailable'],
                 }, {
                     model: EggsBatchProduct,
+                    required: false,
                     attributes: ['id', 'quantityAvailable'],
                 }],
             }],
