@@ -121,7 +121,7 @@ router.post('/create', async (req, res) => {
 router.put('/update',  async (req, res) => {
     const response = new ResponseModel()
     try {
-        const { id, RestaurantId, name, description, image, active } = req.body
+        const { id, name, description, image, active } = req.body
 
         if (!id) {
             response.message = error_missing_fields
@@ -130,7 +130,6 @@ router.put('/update',  async (req, res) => {
         }
 
         const data = {
-            RestaurantId: RestaurantId,
             name: name,
             description: description,
             image: image,
