@@ -12,6 +12,8 @@ const { error_missing_fields, error_invalid_fields, error_data_not_found, succes
 const jwt = require("jsonwebtoken");
 const { Op } = require("sequelize");
 const { Sequelize } = require('../config/database')
+const { verifyTokenPermissions, validateToken } = require('../verifications/tokenVerifications');
+
 
 router.get('/', async (req, res) => {
     const response = new ResponseModel()
@@ -230,16 +232,15 @@ router.put('/update', async (req, res) => {
 router.delete('/delete', async (req, res) => {
     const response = new ResponseModel()
     try {
-        const { token, id } = req.body
-        if (!(id && token)) {
+        const { id } = req.body
+
+        if (!id) {
             response.message = error_missing_fields
-            response.error = error_missing_fields
+            response.error = id
             return res.status(400).json(response)
         }
 
-        const tokenDecoded = jwt.verify(token, process.env.TOKEN_SECRET)
-
-        if (!await verifyTokenPermissions(req.session.token, ['ADMIN'])) {
+        if (!await verifyTokenPermissions(req.session.token, ['ADMIN', 'AMIBA'])) {
             response.message = error_invalid_token_or_permission
             response.error = error_invalid_token_or_permission
             return res.status(req.session.token ? 403 : 401).json(response)
