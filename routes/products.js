@@ -241,27 +241,35 @@ router.get('/allAvailable/type/:type', async (req, res) => {
             response.error = "error_missing_fields"
             res.status(400).json(response)
         }
-        const request = await Model.findAll
-            ({
-                where: { type: req.params.type },
+        const request = await Model.findAll({
+            where: { type: req.params.type },
+            attributes: {
                 include: [
-                    {
-                        model: AnimalProduct,
-                        where: { quantityAvailable: { [Op.gt]: 0 } }, attributes: ['quantityAvailable'],
-                        include: {
-                            model: Animal, attributes: ['id'],
-                            include: {
-                                model: Exploration, attributes: ['id'],
-                                include: {
-                                    model: Organization, attributes: ['id', 'name'],
-                                }
-                            }
-                        }
+                    [Sequelize.literal(`(
+                        SELECT CAST(sum AS INTEGER)
+                        FROM (
+                            SELECT SUM("quantityAvailable")
+                            FROM "AnimalProducts"
+                            WHERE "AnimalProducts"."ProductId" = "Product"."id"
+                            UNION ALL
+                            SELECT SUM("quantityAvailable")
+                            FROM "EggsBatchProducts"
+                            WHERE "EggsBatchProducts"."ProductId" = "Product"."id"
+                            ) v
+                        WHERE sum IS NOT NULL)
+                        `), "quantityAvailable"
+                    ],
 
-                    }
-                ]
-            })
-        if (request) {
+                ],
+            },
+            include: [AnimalProduct, EggsBatchProduct, Organization],
+            where: {
+                [Op.or]: [
+                    { '$AnimalProducts.quantityAvailable$': { [Op.gt]: 0 } }
+                    , { '$EggsBatchProducts.quantityAvailable$': { [Op.gt]: 0 } }],
+            }
+        })
+        if (request.length > 0) {
             response.message = success_data_exits
             response.data = request
             res.status(200).json(response)
@@ -281,31 +289,32 @@ router.get('/allAvailable/type/:type/organization/:organization', async (req, re
     const response = new ResponseModel()
     try {
         const { type, organization } = req.params
+
         if (!(type && organization)) {
             response.error = "error_missing_fields"
             res.status(400).json(response)
         }
-        const request = await Model.findAll
-            ({
-                where: { type: type, OrganizationId: organization },
-                include: [
-                    {
-                        model: AnimalProduct,
-                        where: { quantityAvailable: { [Op.gt]: 0 } }, attributes: ['quantityAvailable'],
-                        include: {
-                            model: Animal, attributes: ['id'],
-                            include: {
-                                model: Exploration, attributes: ['id', 'name'],
-                                include: {
-                                    model: Organization, attributes: ['id', 'name'],
-                                }
-                            }
-                        }
 
-                    }
-                ]
-            })
-        if (request) {
+        const request = await Model.findAll({
+            where: { type: type, OrganizationId: organization },
+            attributes: {
+                include: [
+                    [Sequelize.literal(`(
+                        SELECT CAST(sum AS INTEGER) FROM (SELECT SUM("quantityAvailable") FROM "AnimalProducts" WHERE "AnimalProducts"."ProductId" = "Product"."id" UNION ALL
+                            SELECT SUM("quantityAvailable") FROM "EggsBatchProducts" WHERE "EggsBatchProducts"."ProductId" = "Product"."id") v WHERE sum IS NOT NULL)`
+                    ), "quantityAvailable"
+                    ],
+
+                ],
+            },
+            include: [AnimalProduct, EggsBatchProduct, Organization],
+            where: {
+                [Op.or]: [
+                    { '$AnimalProducts.quantityAvailable$': { [Op.gt]: 0 } }
+                    , { '$EggsBatchProducts.quantityAvailable$': { [Op.gt]: 0 } }],
+            }
+        })
+        if (request.length > 0) {
             response.message = success_data_exits
             response.data = request
             res.status(200).json(response)
