@@ -277,6 +277,50 @@ router.get('/allAvailable/type/:type', async (req, res) => {
     }
 })
 
+router.get('/allAvailable/type/:type/organization/:organization', async (req, res) => {
+    const response = new ResponseModel()
+    try {
+        const { type, organization } = req.params
+        if (!(type && organization)) {
+            response.error = "error_missing_fields"
+            res.status(400).json(response)
+        }
+        const request = await Model.findAll
+            ({
+                where: { type: type, OrganizationId: organization },
+                include: [
+                    {
+                        model: AnimalProduct,
+                        where: { quantityAvailable: { [Op.gt]: 0 } }, attributes: ['quantityAvailable'],
+                        include: {
+                            model: Animal, attributes: ['id'],
+                            include: {
+                                model: Exploration, attributes: ['id', 'name'],
+                                include: {
+                                    model: Organization, attributes: ['id', 'name'],
+                                }
+                            }
+                        }
+
+                    }
+                ]
+            })
+        if (request) {
+            response.message = success_data_exits
+            response.data = request
+            res.status(200).json(response)
+        } else {
+            response.message = error_data_not_found
+            response.error = error_data_not_found
+            res.status(404).json(response)
+        }
+    } catch (error) {
+        response.message = error_data_not_found
+        response.error = error
+        return res.status(400).json(response)
+    }
+})
+
 router.post('/allAvailable/inOrganization', async (req, res) => {
     const response = new ResponseModel()
     try {
