@@ -7,7 +7,7 @@ const { error_missing_fields, error_invalid_fields, error_data_not_found, succes
     error_row_update, error_row_create, success_row_create, success_data_exits } = require('../lib/ResponseMessages')
 const Order = require('../models/Order')
 
-router.get('/',  async (req, res) => {
+router.get('/', async (req, res) => {
     const response = new ResponseModel()
     try {
         const request = await Model.findAll({ include: Order })
@@ -90,10 +90,10 @@ router.post('/create', async (req, res) => {
 })
 
 
-router.put('/update',  async (req, res) => {
+router.put('/update', async (req, res) => {
     const response = new ResponseModel()
     try {
-        const { id, state, OrderId } = req.body
+        const { id, state } = req.body
 
         if (!id) {
             response.message = error_missing_fields
@@ -103,7 +103,6 @@ router.put('/update',  async (req, res) => {
 
         const data = {
             state: state,
-            OrderId: OrderId
         }
 
         const request = await Model.update(data, {
@@ -127,7 +126,7 @@ router.put('/update',  async (req, res) => {
     }
 })
 
-router.delete('/delete',  async (req, res) => {
+router.delete('/delete', async (req, res) => {
     const response = new ResponseModel()
     try {
         const { id } = req.body
