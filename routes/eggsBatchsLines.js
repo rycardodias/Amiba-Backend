@@ -5,11 +5,12 @@ const ResponseModel = require('../lib/ResponseModel')
 const { error_missing_fields, error_invalid_fields, error_data_not_found, success_row_delete, error_row_delete, success_row_update,
     error_row_update, error_row_create, success_row_create, success_data_exits } = require('../lib/ResponseMessages')
 const EggsBatch = require('../models/EggsBatch')
+const Exploration = require('../models/Exploration')
 
 router.get('/', async (req, res) => {
     const response = new ResponseModel()
     try {
-        const request = await Model.findAll({ include: EggsBatch })
+        const request = await Model.findAll({ include: { model: EggsBatch, include: Exploration } })
         if (request.length > 0) {
             response.message = success_data_exits
             response.data = request
@@ -36,7 +37,7 @@ router.get('/id/:id', async (req, res) => {
             res.status(400).json(response)
         }
         const request = await Model.findByPk(req.params.id, { include: EggsBatch })
-    
+
         if (request) {
             response.message = success_data_exits
             response.data = request

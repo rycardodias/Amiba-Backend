@@ -28,7 +28,7 @@ router.get('/requiredFields/:table', async (req, res) => {
     const response = new ResponseModel()
 
     const data = {
-        'animal': [],
+        'animals': ['id', 'ExplorationId', 'identifier', 'race', 'birthDate', 'weight'],
         'animalProducts': [],
         'carts': [],
         'certifications': [],
