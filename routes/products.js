@@ -181,6 +181,7 @@ router.get('/allAvailable', async (req, res) => {
 router.get('/allAvailable/id/:id', async (req, res) => {
     const response = new ResponseModel()
     try {
+        console.log(req.params)
         if (!req.params.id) {
             response.error = "error_missing_fields"
             res.status(400).json(response)
@@ -242,7 +243,6 @@ router.get('/allAvailable/type/:type', async (req, res) => {
             res.status(400).json(response)
         }
         const request = await Model.findAll({
-            where: { type: req.params.type },
             attributes: {
                 include: [
                     [Sequelize.literal(`(
@@ -267,6 +267,7 @@ router.get('/allAvailable/type/:type', async (req, res) => {
                 [Op.or]: [
                     { '$AnimalProducts.quantityAvailable$': { [Op.gt]: 0 } }
                     , { '$EggsBatchProducts.quantityAvailable$': { [Op.gt]: 0 } }],
+                type: req.params.type
             }
         })
         if (request.length > 0) {
@@ -296,7 +297,6 @@ router.get('/allAvailable/type/:type/organization/:organization', async (req, re
         }
 
         const request = await Model.findAll({
-            where: { type: req.params.type, OrganizationId: req.params.organization },
             attributes: {
                 include: [
                     [Sequelize.literal(`(
@@ -312,6 +312,9 @@ router.get('/allAvailable/type/:type/organization/:organization', async (req, re
                 [Op.or]: [
                     { '$AnimalProducts.quantityAvailable$': { [Op.gt]: 0 } }
                     , { '$EggsBatchProducts.quantityAvailable$': { [Op.gt]: 0 } }],
+                type: req.params.type,
+                OrganizationId: req.params.organization
+
             }
         })
         if (request.length > 0) {
