@@ -288,15 +288,15 @@ router.get('/allAvailable/type/:type', async (req, res) => {
 router.get('/allAvailable/type/:type/organization/:organization', async (req, res) => {
     const response = new ResponseModel()
     try {
-        const { type, organization } = req.params
+        // const { type, organization } = req.params
 
-        if (!(type && organization)) {
+        if (!(req.params.type && req.params.organization)) {
             response.error = "error_missing_fields"
             res.status(400).json(response)
         }
 
         const request = await Model.findAll({
-            where: { type: type, OrganizationId: organization },
+            where: { type: req.params.type, OrganizationId: req.params.organization },
             attributes: {
                 include: [
                     [Sequelize.literal(`(
