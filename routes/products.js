@@ -160,7 +160,9 @@ router.get('/allAvailable', async (req, res) => {
                 [Op.or]: [
                     { '$AnimalProducts.quantityAvailable$': { [Op.gt]: 0 } }
                     , { '$EggsBatchProducts.quantityAvailable$': { [Op.gt]: 0 } }],
-            }
+            },
+            limit: 6, 
+            offset: 0
         })
         if (request.length > 0) {
             response.message = success_data_exits

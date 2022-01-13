@@ -25,10 +25,6 @@ BEGIN
 	  INTO v_type, v_unit
 	  FROM "Products"
 	 WHERE "id" = NEW."ProductId";
-	 
-	IF(v_type <> 'LOTE') THEN
-		RAISE EXCEPTION 'Invalid type %', v_type;
-	END IF;
 	
 	IF(v_unit != 'DOZEN' AND v_unit != 'HALFDOZEN') THEN
 		RAISE EXCEPTION 'Invalid unit %', v_unit;
