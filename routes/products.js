@@ -132,7 +132,7 @@ router.get('/ExplorationId/:ExplorationId/type/:type', async (req, res) => {
     }
 })
 
-router.get('/allAvailable', async (req, res) => {
+router.post('/allAvailable', async (req, res) => {
     const response = new ResponseModel()
     try {
         const { limit, offset } = req.body
