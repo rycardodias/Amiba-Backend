@@ -1,38 +1,5 @@
 SELECT
-    "Product"."id",
-    "Product"."type",
-    "Product"."name",
-    "Product"."description",
-    "Product"."price",
-    "Product"."unit",
-    "Product"."tax",
-    "Product"."image",
-    "Product"."createdAt",
-    "Product"."updatedAt",
-    "Product"."OrganizationId",
-    (
-        SELECT
-            CAST(sum AS INTEGER)
-        FROM
-            (
-                SELECT
-                    SUM("quantityAvailable")
-                FROM
-                    "AnimalProducts"
-                WHERE
-                    "AnimalProducts"."ProductId" = "Product"."id"
-                UNION
-                ALL
-                SELECT
-                    SUM("quantityAvailable")
-                FROM
-                    "EggsBatchProducts"
-                WHERE
-                    "EggsBatchProducts"."ProductId" = "Product"."id"
-            ) v
-        WHERE
-            sum IS NOT NULL
-    ) AS "quantityAvailable",
+    "Product".*,
     "AnimalProducts"."id" AS "AnimalProducts.id",
     "AnimalProducts"."quantity" AS "AnimalProducts.quantity",
     "AnimalProducts"."quantityAvailable" AS "AnimalProducts.quantityAvailable",
@@ -60,12 +27,52 @@ SELECT
     "Organization"."updatedAt" AS "Organization.updatedAt",
     "Organization"."UserId" AS "Organization.UserId"
 FROM
-    "Products" AS "Product"
+    (
+        SELECT
+            "Product"."id",
+            "Product"."type",
+            "Product"."name",
+            "Product"."description",
+            "Product"."price",
+            "Product"."unit",
+            "Product"."tax",
+            "Product"."image",
+            "Product"."createdAt",
+            "Product"."updatedAt",
+            "Product"."OrganizationId",
+            (
+                SELECT
+                    CAST(sum AS INTEGER)
+                FROM
+                    (
+                        SELECT
+                            SUM("quantityAvailable")
+                        FROM
+                            "AnimalProducts"
+                        WHERE
+                            "AnimalProducts"."ProductId" = "Product"."id"
+                        UNION
+                        ALL
+                        SELECT
+                            SUM("quantityAvailable")
+                        FROM
+                            "EggsBatchProducts"
+                        WHERE
+                            "EggsBatchProducts"."ProductId" = "Product"."id"
+                    ) v
+                WHERE
+                    sum IS NOT NULL
+            ) AS "quantityAvailable"
+        FROM
+            "Products" AS "Product"
+        WHERE
+            (
+                "AnimalProducts"."quantityAvailable" > 0
+                OR "EggsBatchProducts"."quantityAvailable" > 0
+            )
+        LIMIT
+            6
+    ) AS "Product"
     LEFT OUTER JOIN "AnimalProducts" AS "AnimalProducts" ON "Product"."id" = "AnimalProducts"."ProductId"
     LEFT OUTER JOIN "EggsBatchProducts" AS "EggsBatchProducts" ON "Product"."id" = "EggsBatchProducts"."ProductId"
-    LEFT OUTER JOIN "Organizations" AS "Organization" ON "Product"."OrganizationId" = "Organization"."id"
-WHERE
-    (
-        "AnimalProducts"."quantityAvailable" > 0
-        OR "EggsBatchProducts"."quantityAvailable" > 0
-    )
+    LEFT OUTER JOIN "Organizations" AS "Organization" ON "Product"."OrganizationId" = "Organization"."id";

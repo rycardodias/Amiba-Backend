@@ -135,7 +135,12 @@ router.get('/ExplorationId/:ExplorationId/type/:type', async (req, res) => {
 router.get('/allAvailable', async (req, res) => {
     const response = new ResponseModel()
     try {
+        const { limit, offset } = req.body
+
         const request = await Model.findAll({
+            limit: limit > 0 ? limit : undefined,
+            offset: offset > 0 ? offset : undefined,
+            subQuery: false,
             attributes: {
                 include: [
                     [Sequelize.literal(`(
@@ -161,8 +166,7 @@ router.get('/allAvailable', async (req, res) => {
                     { '$AnimalProducts.quantityAvailable$': { [Op.gt]: 0 } }
                     , { '$EggsBatchProducts.quantityAvailable$': { [Op.gt]: 0 } }],
             },
-            limit: 6, 
-            offset: 0
+
         })
         if (request.length > 0) {
             response.message = success_data_exits
