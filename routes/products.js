@@ -160,7 +160,8 @@ router.post('/allAvailable', async (req, res) => {
 
                 ],
             },
-            include: [AnimalProduct, EggsBatchProduct, Organization],
+            include: [
+                {model: AnimalProduct,  attributes: ['id', 'quantityAvailable']}, EggsBatchProduct, Organization],
             where: {
                 [Op.or]: [
                     { '$AnimalProducts.quantityAvailable$': { [Op.gt]: 0 } }
