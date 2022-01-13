@@ -161,8 +161,8 @@ router.post('/allAvailable', async (req, res) => {
                 ],
             },
             include: [
-                { model: AnimalProduct, attributes: ['id', 'quantityAvailable'] },
-                { model: EggsBatchProduct, attributes: ['id', 'quantityAvailable'] },
+                { model: AnimalProduct, attributes: ['id', 'quantityAvailable'], separate: true },
+                { model: EggsBatchProduct, attributes: ['id', 'quantityAvailable'], separate: true },
                 { model: Organization, attributes: ['id', 'name', 'UserId']  },
             ],
             where: {
