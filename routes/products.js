@@ -132,15 +132,11 @@ router.get('/ExplorationId/:ExplorationId/type/:type', async (req, res) => {
     }
 })
 
-router.post('/allAvailable', async (req, res) => {
+router.get('/allAvailable', async (req, res) => {
     const response = new ResponseModel()
     try {
-        const { limit, offset } = req.body
 
         const request = await Model.findAll({
-            limit: limit > 0 ? limit : undefined,
-            offset: offset > 0 ? offset : undefined,
-            subQuery: false,
             attributes: {
                 include: [
                     [Sequelize.literal(`(
@@ -161,9 +157,9 @@ router.post('/allAvailable', async (req, res) => {
                 ],
             },
             include: [
-                { model: AnimalProduct, attributes: ['id', 'quantityAvailable'], separate: true },
-                { model: EggsBatchProduct, attributes: ['id', 'quantityAvailable'], separate: true },
-                { model: Organization, attributes: ['id', 'name', 'UserId']  },
+                { model: AnimalProduct, attributes: ['id', 'quantityAvailable'] },
+                { model: EggsBatchProduct, attributes: ['id', 'quantityAvailable'] },
+                { model: Organization, attributes: ['id', 'name', 'UserId'] },
             ],
             where: {
                 [Op.or]: [
