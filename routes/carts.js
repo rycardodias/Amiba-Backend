@@ -75,7 +75,7 @@ router.get('/UserId', async (req, res) => {
         }
 
         let tokenDecoded = jwt.verify(req.session.token, process.env.TOKEN_SECRET)
-        return res.status(200).json(req.session.token)
+        return res.status(200).json(req.session.token, tokenDecoded)
 
         const request = await Model.findAll({ where: { UserId: tokenDecoded.id } })
 
