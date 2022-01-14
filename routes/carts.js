@@ -79,7 +79,7 @@ router.get('/UserId', async (req, res) => {
         let tokenDecoded = jwt.verify(token, process.env.TOKEN_SECRET)
         
         const request = await Model.findAll({ where: { UserId: tokenDecoded.id } })
-        return res.status(200).json(request)
+        // return res.status(200).json(request)
         if (request.length > 0) {
             response.message = success_data_exits
             response.data = request
