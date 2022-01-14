@@ -103,22 +103,24 @@ router.get('/productAvailable', async (req, res) => {
         const request = await Model.findAll({
             attributes: {
                 exclude: ["address", "locale", "zipcode", "telephone", "mobilePhone", "fiscalNumber", "createdAt", "updatedAt", "UserId"],
-                include: [
-                    [Sequelize.literal(`(SELECT COUNT(*) FROM "Products" p WHERE p."OrganizationId" = "Organization"."id"` +
-                        ` AND (p."id" = "Products->AnimalProducts"."ProductId" OR p."id" = "Products->EggsBatchProducts"."ProductId" ))`), "totalProducts"]
-                ]
+                // include: [
+                //     [Sequelize.literal(`(SELECT COUNT(*) FROM "Products" p WHERE p."OrganizationId" = "Organization"."id"` +
+                //         ` AND (p."id" = "Products->AnimalProducts"."ProductId" OR p."id" = "Products->EggsBatchProducts"."ProductId" ))`), "totalProducts"]
+                // ]
             },
-            include: [{
-                model: Product,
-                attributes: ['id'],
-                include: [{
-                    model: AnimalProduct,
-                    attributes: ['id', 'quantityAvailable'],
-                }, {
-                    model: EggsBatchProduct,
-                    attributes: ['id', 'quantityAvailable'],
+            include: [
+                // [[Sequelize.fn('COUNT', Sequelize.col('id')), 'total']],
+                {
+                    model: Product,
+                    attributes: ['id'],
+                    include: [{
+                        model: AnimalProduct,
+                        attributes: ['id', 'quantityAvailable'],
+                    }, {
+                        model: EggsBatchProduct,
+                        attributes: ['id', 'quantityAvailable'],
+                    }],
                 }],
-            }],
             where: {
                 [Op.or]: [
                     { '$Products.AnimalProducts.quantityAvailable$': { [Op.gt]: 0 } },
