@@ -104,7 +104,8 @@ router.get('/productAvailable', async (req, res) => {
             attributes: {
                 exclude: ["address", "locale", "zipcode", "telephone", "mobilePhone", "fiscalNumber", "createdAt", "updatedAt", "UserId"],
                 include: [
-                    [Sequelize.literal(`(SELECT COUNT(*) FROM "Products" p WHERE p."id" = "Products"."id" AND p."OrganizationId" = "Organization"."id")`), "totalProducts"]
+                    [Sequelize.literal(`(SELECT COUNT(*) FROM "Products" p WHERE p."OrganizationId" = "Organization"."id"` +
+                        ` AND (p."id" = "Products->AnimalProducts"."ProductId" OR p."id" = "Products->EggsBatchProducts"."ProductId" ))`), "totalProducts"]
                 ]
             },
             include: [{
