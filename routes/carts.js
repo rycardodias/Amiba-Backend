@@ -73,7 +73,7 @@ router.get('/UserId', async (req, res) => {
             response.error = error_invalid_token_or_permission
             return res.status(req.session.token ? 403 : 401).json(response)
         }
-        let tokenDecoded = jwt.verify(token, process.env.TOKEN_SECRET)
+        let tokenDecoded = jwt.verify(req.session.token, process.env.TOKEN_SECRET)
 
         const request = await Model.findAll({ where: { UserId: tokenDecoded.id } })
 
