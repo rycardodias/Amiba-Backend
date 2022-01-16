@@ -27,12 +27,17 @@ EggsBatchLine.belongsTo(EggsBatch, {
 })
 EggsBatch.hasMany(EggsBatchLine)
 
-EggsBatchLine.afterSave((instance, options) => {
-    EggsBatch.increment({ quantity: instance.quantity, quantityAvailable: instance.quantity}, { where: { id: instance.EggsBatchId } })
-    // EggsBatch.update({ quantity: instance.quantity }, {
-    //     where: { id: id }
-    // })
+EggsBatchLine.afterSave(instance => {
+    EggsBatch.increment({ quantity: instance.quantity, quantityAvailable: instance.quantity },
+        { where: { id: instance.EggsBatchId } })
+
 })
+
+EggsBatchLine.afterDestroy(instance => {
+    EggsBatch.decrement({ quantity: instance.quantity, quantityAvailable: instance.quantity },
+        { where: { id: instance.EggsBatchId } })
+}
+)
 
 // EggsBatchLine.sync({ force: true })
 
