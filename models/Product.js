@@ -69,7 +69,7 @@ Product.belongsTo(Organization, {
 })
 Organization.hasMany(Product)
 
-Product.beforeCreate((values, options) => {
+Product.beforeSave((values, options) => {
     if ((values.type === "EGGS") && (values.unit !== "DOZEN" && values.unit !== "HALFDOZEN")) {
         throw new Error("Type & unit combination are invalid!");
     }
