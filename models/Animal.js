@@ -21,9 +21,6 @@ const Animal = db.define('Animal', {
             notEmpty: {
                 msg: "identifier field is required",
             },
-            unique: {
-                msg: "id must be unique",
-            }
         }
     },
     race: {
