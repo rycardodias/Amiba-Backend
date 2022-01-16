@@ -20,6 +20,9 @@ const Animal = db.define('Animal', {
         validate: {
             notEmpty: {
                 msg: "identifier field is required",
+            },
+            unique: {
+                msg: "id must be unique",
             }
         }
     },
@@ -78,7 +81,7 @@ Exploration.hasMany(Animal)
 
 Animal.beforeSave((values, options) => {
     if (values.birthDate < values.slaughterDate) {
-        throw new Error("slaughterDate must be greater than birthdate!");
+        throw new Error("slaughterDate must be greater than birthdate");
     }
 })
 
