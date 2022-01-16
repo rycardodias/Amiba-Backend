@@ -10,6 +10,7 @@ const EggsBatch = db.define('EggsBatch', {
     },
     name: {
         type: DataTypes.STRING,
+        unique: true,
     },
     quantity: {
         type: DataTypes.INTEGER,
