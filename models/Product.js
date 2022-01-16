@@ -69,5 +69,8 @@ Product.belongsTo(Organization, {
 })
 Organization.hasMany(Product)
 
+Product.beforeCreate((values, options) => {
+    console.log(values)
+})
 // Product.sync({force: true})
 module.exports = Product

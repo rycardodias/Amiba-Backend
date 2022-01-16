@@ -47,7 +47,6 @@ OrderLine.belongsTo(EggsBatchProduct, {
 })
 EggsBatchProduct.hasMany(OrderLine)
 
-
 // OrderLine.sync({ force: true })
 
 module.exports = OrderLine
