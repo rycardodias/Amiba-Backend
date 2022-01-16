@@ -14,7 +14,8 @@ const EggsBatchLine = db.define('EggsBatchLine', {
         validate: {
             notEmpty: {
                 msg: "quantity field is required",
-            }
+            },
+            min: 1
         },
     },
 },
@@ -25,6 +26,10 @@ EggsBatchLine.belongsTo(EggsBatch, {
     onUpdate: 'RESTRICT'
 })
 EggsBatch.hasMany(EggsBatchLine)
+
+EggsBatchLine.afterSave((instance, options) => {
+    console.log("instance", instance, options)
+})
 
 // EggsBatchLine.sync({ force: true })
 

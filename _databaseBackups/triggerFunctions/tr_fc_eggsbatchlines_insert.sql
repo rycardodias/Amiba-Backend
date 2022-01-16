@@ -8,11 +8,7 @@ CREATE OR REPLACE FUNCTION  public.tr_fc_eggsbatchlines_insert()
     COST 100
     VOLATILE NOT LEAKPROOF
 AS $BODY$
-BEGIN
-	IF (NEW."quantity" <1) THEN
-		RAISE EXCEPTION 'Quantity cannot be lower than 1';
-	END IF;
-	 
+BEGIN	 
 	UPDATE "EggsBatches" SET "quantity" = quantity + NEW."quantity",
 	   	   "quantityAvailable" = "quantityAvailable" + NEW."quantity"
 	 WHERE "EggsBatches"."id" = NEW."EggsBatchId";
