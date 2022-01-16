@@ -84,7 +84,7 @@ router.post('/createOrderOrderLines', async (req, res) => {
         });
     } catch (error) {
         response.message = error_data_not_found
-        response.error = error
+        response.error = error.toString()
         return res.status(400).json(response)
     }
 })

@@ -70,7 +70,13 @@ Product.belongsTo(Organization, {
 Organization.hasMany(Product)
 
 Product.beforeCreate((values, options) => {
-    console.log(values)
+    if ((values.type === "EGGS") && (values.unit !== "DOZEN" && values.unit !== "HALFDOZEN")) {
+        throw new Error("Type & unit combination are invalid!");
+    }
+    else if ((values.type === "ANIMAL") && (values.unit !== "KG" && values.unit !== "UNIT")) {
+        throw new Error("Type & unit combination are invalid!");
+    }
+
 })
 // Product.sync({force: true})
 module.exports = Product

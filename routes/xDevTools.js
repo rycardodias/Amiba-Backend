@@ -18,7 +18,7 @@ router.get('/logs', async (req, res) => {
         }
     } catch (error) {
         response.message = "No data found"
-        response.error = error
+        response.error = error.toString()
         return res.status(400).json(response)
     }
 
