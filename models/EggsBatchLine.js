@@ -28,7 +28,7 @@ EggsBatchLine.belongsTo(EggsBatch, {
 EggsBatch.hasMany(EggsBatchLine)
 
 EggsBatchLine.afterSave((instance, options) => {
-    EggsBatch.increment({ quantity: instance.quantity }, { where: { id: instance.EggsBatchId } })
+    EggsBatch.increment({ quantity: instance.quantity, quantityAvailable: instance.quantity}, { where: { id: instance.EggsBatchId } })
     // EggsBatch.update({ quantity: instance.quantity }, {
     //     where: { id: id }
     // })
