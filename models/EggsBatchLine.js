@@ -1,4 +1,4 @@
-const { DataTypes } = require('sequelize');
+const { DataTypes, where } = require('sequelize');
 const db = require('../config/database');
 const EggsBatch = require('./EggsBatch');
 
@@ -28,7 +28,10 @@ EggsBatchLine.belongsTo(EggsBatch, {
 EggsBatch.hasMany(EggsBatchLine)
 
 EggsBatchLine.afterSave((instance, options) => {
-    console.log("instance", instance, options)
+    EggsBatch.increment({ quantity: instance.quantity }, { where: { id: instance.EggsBatchId } })
+    // EggsBatch.update({ quantity: instance.quantity }, {
+    //     where: { id: id }
+    // })
 })
 
 // EggsBatchLine.sync({ force: true })
