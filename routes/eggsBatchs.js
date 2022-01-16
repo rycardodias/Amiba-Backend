@@ -10,6 +10,7 @@ const { error_missing_fields, error_invalid_fields, error_data_not_found, succes
 router.get('/', async (req, res) => {
     const response = new ResponseModel()
     try {
+        
         const request = await Model.findAll({ include: [Exploration] })
         if (request.length > 0) {
             response.message = success_data_exits
