@@ -71,10 +71,10 @@ Organization.hasMany(Product)
 
 Product.beforeSave((values, options) => {
     if ((values.type === "EGGS") && (values.unit !== "DOZEN" && values.unit !== "HALFDOZEN")) {
-        throw new Error({ error: "Type & unit combination are invalid!" });
+        throw new Error("Type & unit combination are invalid!");
     }
     else if ((values.type === "ANIMAL") && (values.unit !== "KG" && values.unit !== "UNIT")) {
-        throw new Error({ error: "Type & unit combination are invalid!" });
+        throw new Error("Type & unit combination are invalid!");
     }
 
 })

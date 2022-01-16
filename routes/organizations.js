@@ -33,7 +33,7 @@ router.get('/', async (req, res) => {
         }
     } catch (error) {
         response.message = error_data_not_found
-        response.error = error.toString()
+        response.error = error
         return res.status(400).json(response)
     }
 
@@ -63,7 +63,7 @@ router.get('/id/:id', async (req, res) => {
         }
     } catch (error) {
         response.message = error_data_not_found
-        response.error = error.toString()
+        response.error = error
         return res.status(400).json(response)
     }
 
@@ -91,7 +91,7 @@ router.get('/UserId/:UserId', async (req, res) => {
         }
     } catch (error) {
         response.message = error_data_not_found
-        response.error = error.toString()
+        response.error = error
         return res.status(400).json(response)
     }
 
@@ -140,7 +140,7 @@ router.get('/productAvailable', async (req, res) => {
         }
     } catch (error) {
         response.message = error_data_not_found
-        response.error = error.toString()
+        response.error = error
         return res.status(400).json(response)
     }
 
@@ -183,7 +183,7 @@ router.post('/create', async (req, res) => {
         }
     } catch (error) {
         response.message = error_invalid_fields
-        response.error = error.toString()
+        response.error = error
         return res.status(400).json(response)
     }
 })
@@ -227,7 +227,7 @@ router.put('/update', async (req, res) => {
         }
     } catch (error) {
         response.message = error_invalid_fields
-        response.error = error.toString()
+        response.error = error
         return res.status(400).json(response)
     }
 })
@@ -262,7 +262,7 @@ router.delete('/delete', async (req, res) => {
         }
     } catch (error) {
         response.message = error_invalid_fields
-        response.error = error.toString()
+        response.error = error
         return res.status(400).json(response)
     }
 })
