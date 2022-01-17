@@ -13,14 +13,7 @@ DECLARE
 	v_quantity_EggsBatchProducts integer default 0;
 	v_type varchar(100);
 	v_unit varchar(100);
-BEGIN
-	IF (NEW."quantity" <1) THEN
-		RAISE EXCEPTION 'quantity must be greater than 0';
-	END IF;
-	IF (NEW."quantityAvailable" <0) THEN
-		RAISE EXCEPTION 'quantity must be greater than 0';
-	END IF;
-	
+BEGIN	
 	SELECT "type", "unit"
 	  INTO v_type, v_unit
 	  FROM "Products"

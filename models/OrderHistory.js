@@ -28,12 +28,4 @@ OrderHistory.belongsTo(Order, {
 })
 Order.hasMany(OrderHistory)
 
-// OrderHistory.sync({ alter: true })
-//     .then(() => {
-//         db.query("ALTER TABLE \"OrderHistory\" DROP CONSTRAINT \"OrderHistory_OrderId_fkey\", " +
-//             " ADD CONSTRAINT \"Orders_UserId_fkey\" FOREIGN KEY(\"OrderId\") REFERENCES \"Orders\" ON UPDATE NO ACTION;")
-
-//     })
-
-
 module.exports = OrderHistory

@@ -17,14 +17,21 @@ const OrderLine = db.define('OrderLine', {
             notEmpty: {
                 msg: "quantity field is required",
                 type: DataTypes.INTEGER
-            }
+            },
+            min: 1
         },
     },
     total: {
         type: DataTypes.FLOAT,
+        validate: {
+            min: 0
+        }
     },
     totalVAT: {
         type: DataTypes.FLOAT,
+        validate: {
+            min: 0
+        }
     },
 },
 )

@@ -136,8 +136,7 @@ router.delete('/delete', async (req, res) => {
             response.error = error_missing_fields
             return res.status(400).json(response)
         }
-        const request = await Model.destroy({ where: { id: id }, hooks: true })
-
+        const request = await Model.destroy({ where: { id: id } })
         if (request === 1) {
             response.message = success_row_delete
             response.data = success_row_delete

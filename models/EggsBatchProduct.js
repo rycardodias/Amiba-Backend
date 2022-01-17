@@ -15,11 +15,20 @@ const EggsBatchProduct = db.define('EggsBatchProduct', {
         validate: {
             notEmpty: {
                 msg: "quantity field is required",
-            }
+            },
+            min: 1
         }
     },
     quantityAvailable: {
         type: DataTypes.INTEGER,
+        allowNull: false,
+        defaultValue: 0,
+        validate: {
+            notEmpty: {
+                msg: "quantity field is required",
+            },
+            min: 0
+        }
     },
 },
 )

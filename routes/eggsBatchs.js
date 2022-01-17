@@ -10,7 +10,7 @@ const { error_missing_fields, error_invalid_fields, error_data_not_found, succes
 router.get('/', async (req, res) => {
     const response = new ResponseModel()
     try {
-        
+
         const request = await Model.findAll({ include: [Exploration] })
         if (request.length > 0) {
             response.message = success_data_exits
@@ -163,7 +163,7 @@ router.delete('/delete', async (req, res) => {
             response.error = error_missing_fields
             return res.status(400).json(response)
         }
-        const request = await Model.destroy({ where: { id: id } })
+        const request = await Model.destroy({ where: { id: id, }, })
 
         if (request === 1) {
             response.message = success_row_delete

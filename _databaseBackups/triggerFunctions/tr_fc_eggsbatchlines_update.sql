@@ -11,10 +11,6 @@ AS $BODY$
 DECLARE
 	v_quantityAvailable integer;
 BEGIN
-	IF (NEW."quantity" < 1) THEN
-		RAISE EXCEPTION 'Quantity cannot be lower than 1';
-	END IF;
-	
 	SELECT "quantityAvailable"
 	  INTO v_quantityAvailable
 	  FROM "EggsBatches"

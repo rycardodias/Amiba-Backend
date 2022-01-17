@@ -16,9 +16,6 @@ BEGIN
 	IF (NEW."AnimalProductId" IS NOT NULL AND NEW."EggsBatchProductId" IS NOT NULL) THEN
 		RAISE EXCEPTION 'Record cannot have AnimalProductId and EggsBatchProductId fields';
 	END IF;
-	IF (NEW."quantity" <1) THEN
-		RAISE EXCEPTION 'Quantity cannot be lower than 1';
-	END IF;
 	
 	IF(NEW."AnimalProductId" IS NOT NULL) THEN
 		SELECT "quantityAvailable"

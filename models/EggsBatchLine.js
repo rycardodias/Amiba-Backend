@@ -1,4 +1,4 @@
-const { DataTypes, where } = require('sequelize');
+const { DataTypes } = require('sequelize');
 const db = require('../config/database');
 const EggsBatch = require('./EggsBatch');
 
@@ -18,7 +18,6 @@ const EggsBatchLine = db.define('EggsBatchLine', {
             min: 1
         },
     },
-
 },
 )
 
@@ -36,9 +35,6 @@ EggsBatchLine.afterSave((instance, options) => {
 
 })
 
-EggsBatchLine.afterDestroy((instance, options) => {
-    console.log("instante", instance)
-})
 
 
 // EggsBatchLine.sync({ force: true })
