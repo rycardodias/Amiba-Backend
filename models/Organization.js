@@ -68,7 +68,8 @@ const Organization = db.define('Organization', {
 
 Organization.belongsTo(User, {
     onDelete: 'RESTRICT',
-    onUpdate: 'RESTRICT'
+    onUpdate: 'RESTRICT',
+    foreignKey: { allowNull: false },
 })
 User.hasMany(Organization)
 // Organization.sync({ force: true })

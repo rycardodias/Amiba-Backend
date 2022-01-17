@@ -18,26 +18,28 @@ const EggsBatchLine = db.define('EggsBatchLine', {
             min: 1
         },
     },
+
 },
 )
 
 EggsBatchLine.belongsTo(EggsBatch, {
     onDelete: 'RESTRICT',
-    onUpdate: 'RESTRICT'
+    onUpdate: 'RESTRICT',
+    foreignKey: { allowNull: false },
 })
 EggsBatch.hasMany(EggsBatchLine)
 
-EggsBatchLine.afterSave(instance => {
+
+EggsBatchLine.afterSave((instance, options) => {
     EggsBatch.increment({ quantity: instance.quantity, quantityAvailable: instance.quantity },
         { where: { id: instance.EggsBatchId } })
 
 })
 
-EggsBatchLine.afterDestroy(instance => {
-    EggsBatch.decrement({ quantity: instance.quantity, quantityAvailable: instance.quantity },
-        { where: { id: instance.EggsBatchId } })
-}
-)
+EggsBatchLine.afterDestroy((instance, options) => {
+    console.log("instante", instance)
+})
+
 
 // EggsBatchLine.sync({ force: true })
 

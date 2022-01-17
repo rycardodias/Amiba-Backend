@@ -76,7 +76,8 @@ const Restaurant = db.define('Restaurant', {
 
 Restaurant.belongsTo(User, {
     onDelete: 'RESTRICT',
-    onUpdate: 'RESTRICT'
+    onUpdate: 'RESTRICT',
+    foreignKey: { allowNull: false },
 })
 User.hasMany(Restaurant)
 

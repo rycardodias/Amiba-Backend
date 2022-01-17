@@ -77,7 +77,8 @@ const Exploration = db.define('Exploration', {
 
 Exploration.belongsTo(Organization, {
     onDelete: 'RESTRICT',
-    onUpdate: 'RESTRICT'
+    onUpdate: 'RESTRICT',
+    foreignKey: { allowNull: false },
 })
 Organization.hasMany(Exploration)
 

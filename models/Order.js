@@ -48,7 +48,8 @@ const Order = db.define('Order', {
 
 Order.belongsTo(User, {
     onDelete: 'RESTRICT',
-    onUpdate: 'RESTRICT'
+    onUpdate: 'RESTRICT',
+    foreignKey: { allowNull: false },
 })
 User.hasMany(Order)
 

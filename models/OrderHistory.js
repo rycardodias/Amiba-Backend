@@ -23,7 +23,8 @@ const OrderHistory = db.define('OrderHistory', {
 )
 OrderHistory.belongsTo(Order, {
     onDelete: 'RESTRICT',
-    onUpdate: 'RESTRICT'
+    onUpdate: 'RESTRICT',
+    foreignKey: { allowNull: false },
 })
 Order.hasMany(OrderHistory)
 

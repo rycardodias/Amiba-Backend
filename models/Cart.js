@@ -37,6 +37,7 @@ EggsBatchProduct.hasMany(Cart)
 Cart.belongsTo(User, {
     onDelete: 'RESTRICT',
     onUpdate: 'RESTRICT',
+    foreignKey: { allowNull: false },
 })
 User.hasMany(Cart)
 

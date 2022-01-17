@@ -29,13 +29,15 @@ EggsBatch.belongsToMany(Product, { through: EggsBatchProduct, onDelete: 'RESTRIC
 
 EggsBatchProduct.belongsTo(Product, {
     onDelete: 'RESTRICT',
-    onUpdate: 'RESTRICT'
+    onUpdate: 'RESTRICT',
+    foreignKey: { allowNull: false },
 })
 Product.hasMany(EggsBatchProduct)
 
 EggsBatchProduct.belongsTo(EggsBatch, {
     onDelete: 'RESTRICT',
-    onUpdate: 'RESTRICT'
+    onUpdate: 'RESTRICT',
+    foreignKey: { allowNull: false },
 })
 EggsBatch.hasMany(EggsBatchProduct)
 

@@ -32,21 +32,13 @@ const EggsBatch = db.define('EggsBatch', {
             }
         },
     },
-    ExplorationId: {
-        type: DataTypes.UUID,
-        allowNull: false,
-        validate: {
-            notEmpty: {
-                msg: "ExplorationId field is required",
-            }
-        },
-    }
 },
 )
 
 EggsBatch.belongsTo(Exploration, {
     onDelete: 'RESTRICT',
-    onUpdate: 'RESTRICT'
+    onUpdate: 'RESTRICT',
+    foreignKey: { allowNull: false },
 })
 Exploration.hasMany(EggsBatch)
 

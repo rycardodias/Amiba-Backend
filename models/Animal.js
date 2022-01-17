@@ -72,7 +72,8 @@ const Animal = db.define('Animal', {
 
 Animal.belongsTo(Exploration, {
     onDelete: 'RESTRICT',
-    onUpdate: 'RESTRICT'
+    onUpdate: 'RESTRICT',
+    foreignKey: { allowNull: false },
 })
 Exploration.hasMany(Animal)
 

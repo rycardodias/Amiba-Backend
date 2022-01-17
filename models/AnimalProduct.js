@@ -32,13 +32,15 @@ Animal.belongsToMany(Product, { through: AnimalProduct, onDelete: 'RESTRICT', on
 
 AnimalProduct.belongsTo(Product, {
     onDelete: 'RESTRICT',
-    onUpdate: 'RESTRICT'
+    onUpdate: 'RESTRICT',
+    foreignKey: { allowNull: false },
 })
 Product.hasMany(AnimalProduct)
 
 AnimalProduct.belongsTo(Animal, {
     onDelete: 'RESTRICT',
-    onUpdate: 'RESTRICT'
+    onUpdate: 'RESTRICT',
+    foreignKey: { allowNull: false },
 })
 Animal.hasMany(AnimalProduct)
 

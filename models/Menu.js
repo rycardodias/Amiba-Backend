@@ -33,7 +33,8 @@ const Menu = db.define('Menu', {
 
 Menu.belongsTo(Restaurant, {
     onDelete: 'RESTRICT',
-    onUpdate: 'RESTRICT'
+    onUpdate: 'RESTRICT',
+    foreignKey: { allowNull: false },
 })
 Restaurant.hasMany(Menu)
 

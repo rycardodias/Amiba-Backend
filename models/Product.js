@@ -65,7 +65,8 @@ const Product = db.define('Product', {
 
 Product.belongsTo(Organization, {
     onDelete: 'RESTRICT',
-    onUpdate: 'RESTRICT'
+    onUpdate: 'RESTRICT',
+    foreignKey: { allowNull: false },
 })
 Organization.hasMany(Product)
 

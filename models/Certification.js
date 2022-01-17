@@ -38,7 +38,8 @@ const Certification = db.define('Certification', {
 
 Certification.belongsTo(Exploration, {
     onDelete: 'RESTRICT',
-    onUpdate: 'RESTRICT'
+    onUpdate: 'RESTRICT',
+    foreignKey: { allowNull: false },
 })
 Exploration.hasMany(Certification)
 

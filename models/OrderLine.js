@@ -31,7 +31,8 @@ const OrderLine = db.define('OrderLine', {
 
 OrderLine.belongsTo(Order, {
     onDelete: 'RESTRICT',
-    onUpdate: 'RESTRICT'
+    onUpdate: 'RESTRICT',
+    foreignKey: { allowNull: false },
 })
 Order.hasMany(OrderLine)
 
