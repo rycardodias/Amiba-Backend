@@ -15,11 +15,16 @@ const AnimalProduct = db.define('AnimalProduct', {
         validate: {
             notEmpty: {
                 msg: "quantity field is required",
-            }
+            },
+            min: 1
         }
     },
     quantityAvailable: {
         type: DataTypes.INTEGER,
+        defaultValue: 0,
+        validate: {
+            min: 0
+        }
     },
     weight: {
         type: DataTypes.INTEGER,

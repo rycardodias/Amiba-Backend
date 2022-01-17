@@ -29,13 +29,10 @@ EggsBatchLine.belongsTo(EggsBatch, {
 EggsBatch.hasMany(EggsBatchLine)
 
 
-EggsBatchLine.afterSave((instance, options) => {
+EggsBatchLine.afterCreate((instance, options) => {
     EggsBatch.increment({ quantity: instance.quantity, quantityAvailable: instance.quantity },
         { where: { id: instance.EggsBatchId } })
-
 })
-
-
 
 // EggsBatchLine.sync({ force: true })
 

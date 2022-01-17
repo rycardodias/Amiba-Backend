@@ -18,10 +18,6 @@ BEGIN
 		RAISE EXCEPTION 'Record cannot have AnimalProductId and EggsBatchProductId fields';
 	END IF;
 	
-	IF (NEW."quantity" <1) THEN
-		RAISE EXCEPTION 'Quantity cannot be lower than 1';
-	END IF;
-	
 	-- ver se já existe outra linha com o mesmo artigo
 	SELECT quantity
 	  INTO v_quantity_cart

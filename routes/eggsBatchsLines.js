@@ -70,6 +70,7 @@ router.post('/create', async (req, res) => {
         const data = {
             EggsBatchId: EggsBatchId,
             quantity: quantity,
+            quantityAvailable: quantity,
         }
 
         const request = await Model.create(data)

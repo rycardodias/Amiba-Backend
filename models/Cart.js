@@ -16,7 +16,8 @@ const Cart = db.define('Cart', {
         validate: {
             notEmpty: {
                 msg: "quantity field is required",
-            }
+            },
+            min: 1
         }
     },
 },

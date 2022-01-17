@@ -14,9 +14,6 @@ DECLARE
 	v_quantity_cart integer;
 	v_unit varchar(50);
 BEGIN	
-	IF (NEW."quantity" <1) THEN
-		RAISE EXCEPTION 'Quantity cannot be lower than 1';
-	END IF;
 	
 	IF (NEW."AnimalProductId" IS NOT NULL) THEN
 		SELECT "quantityAvailable"

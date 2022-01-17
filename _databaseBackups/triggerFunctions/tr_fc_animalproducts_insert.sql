@@ -11,12 +11,6 @@ AS $BODY$
 DECLARE
 	v_unit varchar(50);
 BEGIN
-	IF (NEW."quantity" <1) THEN
-		RAISE EXCEPTION 'Quantity cannot be lower than 1';
-	END IF;
-	IF (NEW."quantityAvailable" <0) THEN
-		RAISE EXCEPTION 'QuantityAvailable cannot be lower than 0';
-	END IF;
 	
 	SELECT "unit"
 	  INTO v_unit
