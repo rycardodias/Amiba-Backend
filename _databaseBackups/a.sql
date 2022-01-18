@@ -1,27 +1,19 @@
 SELECT
-    "Organization"."id",
-    "Organization"."name",
-    (
-        SELECT
-            COUNT(*)
-        FROM
-            "Products" p
-        WHERE
-            p."OrganizationId" = "Organization"."id"
-            AND p."id" = "Products->AnimalProducts"."id"
-    ) AS "totalProducts",
-    "Products"."id" AS "Products.id",
-    "Products->AnimalProducts"."id" AS "Products.AnimalProducts.id",
-    "Products->AnimalProducts"."quantityAvailable" AS "Products.AnimalProducts.quantityAvailable",
-    "Products->EggsBatchProducts"."id" AS "Products.EggsBatchProducts.id",
-    "Products->EggsBatchProducts"."quantityAvailable" AS "Products.EggsBatchProducts.quantityAvailable"
+    "Product"."id",
+    "Product"."OrganizationId",
+    "AnimalProducts"."id" AS "AnimalProducts.id",
+    "AnimalProducts"."quantityAvailable" AS "AnimalProducts.quantityAvailable",
+    "EggsBatchProducts"."id" AS "EggsBatchProducts.id",
+    "EggsBatchProducts"."quantityAvailable" AS "EggsBatchProducts.quantityAvailable",
+    "EggsBatchProducts"."EggsBatchId" AS "EggsBatchProducts.EggsBatchId",
+    "Organization"."id" AS "Organization.id"
 FROM
-    "Organizations" AS "Organization"
-    LEFT OUTER JOIN "Products" AS "Products" ON "Organization"."id" = "Products"."OrganizationId"
-    LEFT OUTER JOIN "AnimalProducts" AS "Products->AnimalProducts" ON "Products"."id" = "Products->AnimalProducts"."ProductId"
-    LEFT OUTER JOIN "EggsBatchProducts" AS "Products->EggsBatchProducts" ON "Products"."id" = "Products->EggsBatchProducts"."ProductId"
+    "Products" AS "Product"
+    LEFT OUTER JOIN "AnimalProducts" AS "AnimalProducts" ON "Product"."id" = "AnimalProducts"."ProductId"
+    LEFT OUTER JOIN "EggsBatchProducts" AS "EggsBatchProducts" ON "Product"."id" = "EggsBatchProducts"."ProductId"
+    LEFT OUTER JOIN "Organizations" AS "Organization" ON "Product"."OrganizationId" = "Organization"."id";
 WHERE
     (
-        "Products->AnimalProducts"."quantityAvailable" > 0
-        OR "Products->EggsBatchProducts"."quantityAvailable" > 0
+        "AnimalProducts"."quantityAvailable" > 0
+        OR "EggsBatchProducts"."quantityAvailable" > 0
     );

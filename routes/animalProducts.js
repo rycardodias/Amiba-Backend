@@ -98,6 +98,7 @@ router.post('/create', async (req, res) => {
             ProductId: ProductId,
             AnimalId: AnimalId,
             quantity: quantity,
+            quantityAvailable: quantity,
             weight: weight || undefined,
         }
 
