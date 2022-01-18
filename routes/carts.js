@@ -176,15 +176,37 @@ router.post('/create', async (req, res) => {
             quantity: quantity
         }
 
+        const exists = await Model.findAndCountAll({
+            where: {
+                AnimalProductId: AnimalProductId || null,
+                EggsBatchProductId: EggsBatchProductId || null,
+                UserId: tokenDecoded.id
+            },
+        })
+
+        if (exists.count > 0) {
+
+            const update = await Model.increment({ quantity: quantity }, {
+                where: {
+                    AnimalProductId: AnimalProductId || null,
+                    EggsBatchProductId: EggsBatchProductId || null,
+                    UserId: tokenDecoded.id
+                },
+            })
+            response.message = success_row_create
+            response.data = update[0][0][0]
+            return res.status(200).json(response)
+        }
+
         const request = await Model.create(data)
 
         if (request) {
             response.message = success_row_create
             response.data = request
-            res.status(200).json(response)
+            return res.status(200).json(response)
         } else {
             response.error = error_row_create
-            res.status(404).json(response)
+            return res.status(404).json(response)
         }
     } catch (error) {
         response.message = error_invalid_fields
