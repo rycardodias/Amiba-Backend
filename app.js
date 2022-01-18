@@ -6,7 +6,6 @@ const cookieParser = require('cookie-parser')
 const dotenv = require('dotenv')
 const db = require('./config/database')
 dotenv.config()
-
 // db.sync({ force: true })
 
 // db.authenticate()
@@ -14,16 +13,17 @@ dotenv.config()
 //    .catch((error)=> console.error('Unable to connect to the database:', error))
 
 const app = express();
+app.set('trust proxy',true)
 app.use(express.json());
-app.use(
-  cors(
-    {
-      // credentials: true,
-      // origin: 'http://localhost:3000',
-      //   optionsSuccessStatus: 200,
-    }
-  )
-);
+// app.use(
+//   cors(
+//     {
+//       // credentials: true,
+//       // origin: 'http://localhost:3000',
+//       //   optionsSuccessStatus: 200,
+//     }
+//   )
+// );
 
 app.use(cookieParser())
 
@@ -31,7 +31,6 @@ app.use(
   cookieSession({
     signed: false,
     secure: false,
-    httpOnly: true,
   }
   )
 )
