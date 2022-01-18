@@ -102,7 +102,7 @@ router.get('/UserId', async (req, res) => {
     }
 })
 
-router.get('/UserId/Product/:UserId', async (req, res) => {
+router.get('/UserId/Product', async (req, res) => {
     const response = new ResponseModel()
     try {
         const { token } = req.session

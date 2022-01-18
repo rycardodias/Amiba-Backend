@@ -6,6 +6,7 @@ const Organization = require('../models/Organization')
 const ResponseModel = require('../lib/ResponseModel')
 const { error_missing_fields, error_invalid_fields, error_data_not_found, success_row_delete, error_row_delete, success_row_update,
     error_row_update, error_row_create, success_row_create, success_data_exits } = require('../lib/ResponseMessages')
+const jwt = require("jsonwebtoken");
 
 router.get('/', async (req, res) => {
     const response = new ResponseModel()
@@ -53,17 +54,22 @@ router.get('/id/:id', async (req, res) => {
     }
 })
 
-router.get('/UserId/:UserId', async (req, res) => {
+router.get('/UserId', async (req, res) => {
     const response = new ResponseModel()
     try {
-        if (!req.params.UserId) {
+        const { token } = req.session
+
+        if (!token) {
             response.message = error_missing_fields
             response.error = error_missing_fields
-            res.status(400).json(response)
+            return res.status(400).json(response)
         }
+
+        let tokenDecoded = jwt.verify(token, process.env.TOKEN_SECRET)
+
         const request = await Model.findAll({
             include: [
-                { model: Organization, where: { UserId: req.params.UserId } }]
+                { model: Organization, where: { UserId: tokenDecoded.id } }]
         })
 
 
@@ -83,7 +89,7 @@ router.get('/UserId/:UserId', async (req, res) => {
     }
 })
 
-router.post('/create',  async (req, res) => {
+router.post('/create', async (req, res) => {
     const response = new ResponseModel()
     try {
         const { OrganizationId, type, name, address, locale, zipcode, telephone, mobilePhone, fiscalNumber, gpsLocalization } = req.body
@@ -124,7 +130,7 @@ router.post('/create',  async (req, res) => {
     }
 })
 
-router.put('/update',  async (req, res) => {
+router.put('/update', async (req, res) => {
     const response = new ResponseModel()
     try {
         const { id, type, name, address, locale, zipcode, telephone, mobilePhone, fiscalNumber, gpsLocalization } = req.body
@@ -169,7 +175,7 @@ router.put('/update',  async (req, res) => {
     }
 })
 
-router.delete('/delete',  async (req, res) => {
+router.delete('/delete', async (req, res) => {
     const response = new ResponseModel()
     try {
         const { id } = req.body
