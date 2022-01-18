@@ -8,15 +8,9 @@ CREATE OR REPLACE FUNCTION  public.tr_fc_eggsbatchlines_delete()
     COST 100
     VOLATILE NOT LEAKPROOF
 AS $BODY$
-DECLARE
-	v_quantity integer;
-BEGIN
-	IF (OLD."quantity" <> OLD."quantityAvailable") THEN
-		RAISE EXCEPTION 'quantity <> quantityAvailable';
-	END IF;
-	 
+BEGIN	 
 	UPDATE "EggsBatches" SET "quantity" = "quantity" - OLD."quantity",
-	   	   "quantityAvailable" = "quantityAvailable" - OLD."quantityAvailable"
+	   	   "quantityAvailable" = "quantityAvailable" - OLD."quantity"
 	 WHERE "EggsBatches"."id" = OLD."EggsBatchId";
 	
 	RETURN OLD;

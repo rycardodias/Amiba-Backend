@@ -157,8 +157,8 @@ router.get('/allAvailable', async (req, res) => {
                 ],
             },
             include: [
-                { model: AnimalProduct, },
-                { model: EggsBatchProduct, },
+                { model: AnimalProduct, required: false },
+                { model: EggsBatchProduct, required: false },
                 { model: Organization, attributes: ['id', 'name'] },
             ],
             where: {
