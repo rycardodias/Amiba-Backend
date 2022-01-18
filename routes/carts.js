@@ -104,15 +104,19 @@ router.get('/UserId', async (req, res) => {
 
 router.get('/UserId/Product/:UserId', async (req, res) => {
     const response = new ResponseModel()
-    const { UserId } = req.params
     try {
-        if (!UserId) {
+        const { token } = req.session
+
+        if (!token) {
             response.message = error_missing_fields
             response.error = error_missing_fields
-            res.status(400).json(response)
+            return res.status(400).json(response)
         }
+
+        let tokenDecoded = jwt.verify(token, process.env.TOKEN_SECRET)
+
         const request = await Model.findAll({
-            where: { UserId: UserId },
+            where: { UserId: tokenDecoded.id },
             include: [
                 {
                     model: AnimalProduct, include: [

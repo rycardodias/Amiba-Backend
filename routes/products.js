@@ -8,11 +8,8 @@ const { error_missing_fields, error_invalid_fields, error_data_not_found, succes
 const Organization = require('../models/Organization')
 const AnimalProduct = require('../models/AnimalProduct')
 const EggsBatchProduct = require('../models/EggsBatchProduct')
-
 const { Op } = require("sequelize");
-const Animal = require('../models/Animal')
 const Exploration = require('../models/Exploration')
-const db = require('../config/database');
 const { Sequelize } = require('../config/database')
 
 router.get('/', async (req, res) => {
