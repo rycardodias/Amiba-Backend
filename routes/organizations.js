@@ -9,10 +9,8 @@ const EggsBatchProduct = require('../models/EggsBatchProduct')
 const ResponseModel = require('../lib/ResponseModel')
 const { error_missing_fields, error_invalid_fields, error_data_not_found, success_row_delete, error_row_delete, success_row_update,
     error_row_update, error_row_create, success_row_create, success_data_exits, error_invalid_token } = require('../lib/ResponseMessages')
-const jwt = require("jsonwebtoken");
 const { Op } = require("sequelize");
-const { Sequelize } = require('../config/database')
-const { verifyTokenPermissions, validateToken } = require('../verifications/tokenVerifications');
+const { verifyTokenPermissions } = require('../verifications/tokenVerifications');
 
 
 router.get('/', async (req, res) => {
@@ -103,16 +101,11 @@ router.get('/productAvailable', async (req, res) => {
         const request = await Model.findAll({
             attributes: {
                 exclude: ["address", "locale", "zipcode", "telephone", "mobilePhone", "fiscalNumber", "createdAt", "updatedAt", "UserId"],
-                // include: [
-                //     [Sequelize.literal(`(SELECT COUNT(*) FROM "Products" p WHERE p."OrganizationId" = "Organization"."id"` +
-                //         ` AND (p."id" = "Products->AnimalProducts"."ProductId" OR p."id" = "Products->EggsBatchProducts"."ProductId" ))`), "totalProducts"]
-                // ]
             },
             include: [
-                // [[Sequelize.fn('COUNT', Sequelize.col('id')), 'total']],
                 {
                     model: Product,
-                    attributes: ['id', 'OrganizationId'],
+                    attributes: ['id',],
                     include: [{
                         model: AnimalProduct,
                         attributes: ['id', 'quantityAvailable'],
@@ -128,7 +121,7 @@ router.get('/productAvailable', async (req, res) => {
                 ]
             }
         })
-
+        
         if (request) {
             response.message = success_data_exits
             response.data = request
