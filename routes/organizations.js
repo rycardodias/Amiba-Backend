@@ -112,7 +112,7 @@ router.get('/productAvailable', async (req, res) => {
                 // [[Sequelize.fn('COUNT', Sequelize.col('id')), 'total']],
                 {
                     model: Product,
-                    attributes: ['id'],
+                    attributes: ['id', 'OrganizationId'],
                     include: [{
                         model: AnimalProduct,
                         attributes: ['id', 'quantityAvailable'],
