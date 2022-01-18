@@ -11,7 +11,7 @@ const { v4 } = require('uuid')
 router.get("/:folder/:file", async (req, res) => {
     try {
         const folder = req.params.folder + '/'
-        const img = "../Projeto-Investigacao/public/uploads/" + folder + req.params.file
+        const img = "./Projeto-Investigacao/public/uploads/" + folder + req.params.file
         fs.access(img, fs.constants.F_OK, err => {
             return err
         })
