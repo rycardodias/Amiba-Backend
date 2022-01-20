@@ -84,7 +84,7 @@ router.get('/UserId', async (req, res) => {
 
         let tokenDecoded = jwt.verify(token || process.env.DEV_MODE_TOKEN, process.env.TOKEN_SECRET)
 
-        const request = await Model.findAll({ where: { UserId: tokenDecoded.id } })
+        const request = await Model.findAll({ where: { UserId: tokenDecoded.id }, include: Product })
 
         if (request.length > 0) {
             response.message = success_data_exits
@@ -102,57 +102,57 @@ router.get('/UserId', async (req, res) => {
     }
 })
 
-router.get('/UserId/Product', async (req, res) => {
-    const response = new ResponseModel()
-    try {
-        const { token } = req.session
+// router.get('/UserId/Product', async (req, res) => {
+//     const response = new ResponseModel()
+//     try {
+//         const { token } = req.session
 
-        if (!token && !process.env.DEV_MODE) {
-            response.message = error_missing_fields
-            response.error = error_missing_fields
-            return res.status(400).json(response)
-        }
+//         if (!token && !process.env.DEV_MODE) {
+//             response.message = error_missing_fields
+//             response.error = error_missing_fields
+//             return res.status(400).json(response)
+//         }
 
-        let tokenDecoded = jwt.verify(token || process.env.DEV_MODE_TOKEN, process.env.TOKEN_SECRET)
+//         let tokenDecoded = jwt.verify(token || process.env.DEV_MODE_TOKEN, process.env.TOKEN_SECRET)
 
-        const request = await Model.findAll({
-            where: { UserId: tokenDecoded.id },
-            include: [
-                {
-                    model: AnimalProduct, include: [
-                        Product,
-                        {
-                            model: Animal, include: [{
-                                model: Exploration, include: Organization
-                            }]
-                        }]
-                },
-                {
-                    model: EggsBatchProduct, include: [
-                        Product,
-                        {
-                            model: EggsBatch,
-                            // include: EggsBatchExploration
-                        }]
-                }
-            ]
-        })
+//         const request = await Model.findAll({
+//             where: { UserId: tokenDecoded.id },
+//             include: [
+//                 {
+//                     model: AnimalProduct, include: [
+//                         Product,
+//                         {
+//                             model: Animal, include: [{
+//                                 model: Exploration, include: Organization
+//                             }]
+//                         }]
+//                 },
+//                 {
+//                     model: EggsBatchProduct, include: [
+//                         Product,
+//                         {
+//                             model: EggsBatch,
+//                             // include: EggsBatchExploration
+//                         }]
+//                 }
+//             ]
+//         })
 
-        if (request.length > 0) {
-            response.message = success_data_exits
-            response.data = request
-            res.status(200).json(response)
-        } else {
-            response.message = error_data_not_found
-            response.error = error_data_not_found
-            res.status(404).json(response)
-        }
-    } catch (error) {
-        response.message = error_data_not_found
-        response.error = error
-        return res.status(400).json(response)
-    }
-})
+//         if (request.length > 0) {
+//             response.message = success_data_exits
+//             response.data = request
+//             res.status(200).json(response)
+//         } else {
+//             response.message = error_data_not_found
+//             response.error = error_data_not_found
+//             res.status(404).json(response)
+//         }
+//     } catch (error) {
+//         response.message = error_data_not_found
+//         response.error = error
+//         return res.status(400).json(response)
+//     }
+// })
 
 router.post('/create', async (req, res) => {
     const response = new ResponseModel()

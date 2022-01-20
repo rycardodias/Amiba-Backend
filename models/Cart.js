@@ -1,7 +1,7 @@
-const { DataTypes, Sequelize } = require('sequelize');
+const { DataTypes } = require('sequelize');
 const db = require('../config/database');
-const EggsBatchProduct = require('./EggsBatchProduct');
-const AnimalProduct = require('./AnimalProduct');
+// const EggsBatchProduct = require('./EggsBatchProduct');
+// const AnimalProduct = require('./AnimalProduct');
 const User = require('./User');
 const Product = require('./Product');
 
