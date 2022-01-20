@@ -161,7 +161,7 @@ router.post('/create', async (req, res) => {
 
         const { token } = req.session
 
-        if (!(token && process.env.DEV_MODE && (AnimalProductId || EggsBatchProductId) && quantity)) {
+        if ((!token && !process.env.DEV_MODE) && !((AnimalProductId || EggsBatchProductId) && quantity)) {
             response.message = error_missing_fields
             response.error = error_missing_fields
             return res.status(400).json(response)
