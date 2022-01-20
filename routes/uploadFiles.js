@@ -34,7 +34,6 @@ router.post("/create", async (req, res) => {
     const response = new ResponseModel()
     try {
         const requiredSizes = JSON.parse(req.body.requiredSizes)
-        const directory = req.body.directory
         const file = req.files.file
         const fileName = file.name
         const size = file.data.length
@@ -58,31 +57,29 @@ router.post("/create", async (req, res) => {
 
         const fileNameSaved = v4() + extension
 
-        const URL = "/uploads/" + directory + '/'
-        const fileURL = URL + fileNameSaved
+        const URL = "./public/uploads/"
 
-        util.promisify(file.mv)("./public" + fileURL).then(async () => {
+        util.promisify(file.mv)(URL + fileNameSaved).then(async () => {
             try {
 
                 requiredSizes.forEach(async (value) => {
                     if (sizes[value]) {
-                        const imageResized = await resizeImg(fs.readFileSync('../Projeto-Investigacao/public/' + fileURL), sizes[value])
+                        const imageResized = await resizeImg(fs.readFileSync(URL + fileNameSaved), sizes[value])
 
-                        fs.writeFileSync("../Projeto-Investigacao/public" + URL + sizes[value].width + 'x' + sizes[value].height + '_' + fileNameSaved, imageResized);
+                        fs.writeFileSync(URL + sizes[value].width + 'x' + sizes[value].height + '_' + fileNameSaved, imageResized);
                     }
                 })
 
             } catch (error) {
+                console.log("falhou", error);
                 res.status(500).json({ error: error })
             }
-        },
-
-        )
-            .then(() => fs.unlinkSync("./public" + fileURL))
+        })
+            .then(() => fs.unlinkSync(URL + fileNameSaved))
 
 
         response.message = "file uploaded"
-        response.data = { url: fileURL, fileName: fileNameSaved }
+        response.data = { url: URL + fileNameSaved, fileName: fileNameSaved }
 
         res.status(200).json(response)
     } catch (error) {
