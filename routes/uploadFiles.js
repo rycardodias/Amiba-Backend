@@ -34,14 +34,14 @@ router.post("/create", async (req, res) => {
     const response = new ResponseModel()
     try {
         const requiredSizes = JSON.parse(req.body.requiredSizes)
-        const file = req.files.file
-        const fileName = file.name
-        const size = file.data.length
-        const extension = path.extname(fileName)
+        // const file = req.files.file
+        // const fileName = file.name
+        // const size = file.data.length
+        // const extension = path.extname(fileName)
 
         const allowedExtensions = /png|jpeg|jpg|gif/
 
-        res.status(500).json({ requiredSizes: requiredSizes, fileName: fileName })
+        return res.status(500).json({ requiredSizes: requiredSizes, fileName: fileName })
 
         if (!allowedExtensions.test(extension)) throw "Unsupported extension!"
         if (size > 1024 * 1024 * 5) throw "File must be less than 5MB"
