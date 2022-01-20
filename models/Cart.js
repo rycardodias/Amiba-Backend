@@ -3,6 +3,7 @@ const db = require('../config/database');
 const EggsBatchProduct = require('./EggsBatchProduct');
 const AnimalProduct = require('./AnimalProduct');
 const User = require('./User');
+const Product = require('./Product');
 
 const Cart = db.define('Cart', {
     id: {
@@ -22,25 +23,31 @@ const Cart = db.define('Cart', {
 },
 )
 
-Cart.belongsTo(AnimalProduct, {
-    onDelete: 'RESTRICT',
-    onUpdate: 'RESTRICT',
+Cart.belongsTo(Product, {
+    onDelete: 'SET NULL',
+    onUpdate: 'SET NULL'
 })
-AnimalProduct.hasMany(Cart)
+Product.hasMany(Cart)
 
-Cart.belongsTo(EggsBatchProduct, {
-    onDelete: 'RESTRICT',
-    onUpdate: 'RESTRICT',
-})
-EggsBatchProduct.hasMany(Cart)
+// Cart.belongsTo(AnimalProduct, {
+//     onDelete: 'RESTRICT',
+//     onUpdate: 'RESTRICT',
+// })
+// AnimalProduct.hasMany(Cart)
+
+// Cart.belongsTo(EggsBatchProduct, {
+//     onDelete: 'RESTRICT',
+//     onUpdate: 'RESTRICT',
+// })
+// EggsBatchProduct.hasMany(Cart)
 
 Cart.belongsTo(User, {
-    onDelete: 'RESTRICT',
-    onUpdate: 'RESTRICT',
+    onDelete: 'SET NULL',
+    onUpdate: 'SET NULL',
     foreignKey: { allowNull: false },
 })
 User.hasMany(Cart)
 
-// Cart.sync({ alter: true })
+// Cart.sync({ force: true })
 
 module.exports = Cart

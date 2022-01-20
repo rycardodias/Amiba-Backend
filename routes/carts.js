@@ -157,11 +157,12 @@ router.get('/UserId/Product', async (req, res) => {
 router.post('/create', async (req, res) => {
     const response = new ResponseModel()
     try {
-        const { AnimalProductId, EggsBatchProductId, quantity } = req.body
-
         const { token } = req.session
+        // const { AnimalProductId, EggsBatchProductId, quantity } = req.body
+        const { ProductId, quantity } = req.body
 
-        if ((!token && !process.env.DEV_MODE) && !((AnimalProductId || EggsBatchProductId) && quantity)) {
+        // if ((!token && !process.env.DEV_MODE) && !((AnimalProductId || EggsBatchProductId) && quantity)) {
+        if ((!token && !process.env.DEV_MODE) || !(ProductId && quantity)) {
             response.message = error_missing_fields
             response.error = error_missing_fields
             return res.status(400).json(response)
@@ -171,15 +172,17 @@ router.post('/create', async (req, res) => {
 
         const data = {
             UserId: tokenDecoded.id,
-            AnimalProductId: AnimalProductId,
-            EggsBatchProductId: EggsBatchProductId,
+            ProductId: ProductId,
+            // AnimalProductId: AnimalProductId,
+            // EggsBatchProductId: EggsBatchProductId,
             quantity: quantity
         }
 
         const exists = await Model.findAndCountAll({
             where: {
-                AnimalProductId: AnimalProductId || null,
-                EggsBatchProductId: EggsBatchProductId || null,
+                ProductId: ProductId,
+                // AnimalProductId: AnimalProductId || null,
+                // EggsBatchProductId: EggsBatchProductId || null,
                 UserId: tokenDecoded.id
             },
         })
@@ -188,8 +191,9 @@ router.post('/create', async (req, res) => {
 
             const update = await Model.increment({ quantity: quantity }, {
                 where: {
-                    AnimalProductId: AnimalProductId || null,
-                    EggsBatchProductId: EggsBatchProductId || null,
+                    ProductId: ProductId,
+                    // AnimalProductId: AnimalProductId || null,
+                    // EggsBatchProductId: EggsBatchProductId || null,
                     UserId: tokenDecoded.id
                 },
             })
@@ -218,20 +222,28 @@ router.post('/create', async (req, res) => {
 router.put('/update', async (req, res) => {
     const response = new ResponseModel()
     try {
-        const { ProductId, AnimalId, EggsBatchId, quantity } = req.body
+        const { token } = req.session
 
-        if (!(ProductId && (AnimalId || EggsBatchId))) {
+        const { ProductId, quantity } = req.body
+
+        // if ((!token && !process.env.DEV_MODE) && !((AnimalProductId || EggsBatchProductId) && quantity)) {
+        if ((!token && !process.env.DEV_MODE) || !(ProductId && quantity)) {
             response.message = error_missing_fields
             response.error = error_missing_fields
-            res.status(400).json(response)
+            return res.status(400).json(response)
         }
+
+        let tokenDecoded = jwt.verify(token || process.env.DEV_MODE_TOKEN, process.env.TOKEN_SECRET)
 
         const data = {
             quantity: quantity
         }
 
         const request = await Model.update(data, {
-            where: { ProductId: Productid },
+            where: {
+                ProductId: Productid,
+                UserId: tokenDecoded.id
+            },
             returning: true
         })
 
@@ -254,13 +266,24 @@ router.put('/update', async (req, res) => {
 router.delete('/delete', async (req, res) => {
     const response = new ResponseModel()
     try {
+        const { token } = req.session
+
         const { id } = req.body
-        if (!id) {
+
+        if ((!token && !process.env.DEV_MODE) || !id) {
             response.message = error_missing_fields
             response.error = error_missing_fields
             return res.status(400).json(response)
         }
-        const request = await Model.destroy({ where: { id: id } })
+
+        let tokenDecoded = jwt.verify(token || process.env.DEV_MODE_TOKEN, process.env.TOKEN_SECRET)
+        const request = await Model.destroy(
+            {
+                where: {
+                    id: id,
+                    UserId: tokenDecoded.id
+                }
+            })
 
         if (request === 1) {
             response.message = success_row_delete
