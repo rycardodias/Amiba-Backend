@@ -34,7 +34,6 @@ router.post("/create", async (req, res) => {
     const response = new ResponseModel()
     try {
         const requiredSizes = ["1:1", "16:9"] // JSON.parse(req.body.requiredSizes)
-        res.status(500).json({ error: req.files })
         const file = req.files.file
         const fileName = file.name
         const size = file.data.length
