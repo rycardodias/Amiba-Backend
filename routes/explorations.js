@@ -59,13 +59,13 @@ router.get('/UserId', async (req, res) => {
     try {
         const { token } = req.session
 
-        if (!token) {
+        if (!token && !process.env.DEV_MODE) {
             response.message = error_missing_fields
             response.error = error_missing_fields
             return res.status(400).json(response)
         }
 
-        let tokenDecoded = jwt.verify(token, process.env.TOKEN_SECRET)
+        let tokenDecoded = jwt.verify(token || process.env.DEV_MODE_TOKEN, process.env.TOKEN_SECRET)
 
         const request = await Model.findAll({
             include: [

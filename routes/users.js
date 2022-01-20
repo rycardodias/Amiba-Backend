@@ -13,7 +13,7 @@ router.get('/', async (req, res) => {
     const response = new ResponseModel()
 
     try {
-        if (!await verifyTokenPermissions(req.session.token, ['ADMIN', 'AMIBA'])) {
+        if (!await verifyTokenPermissions(req.session.token, ['ADMIN', 'AMIBA']) && !process.env.DEV_MODE) {
             response.message = error_invalid_token_or_permission
             response.error = error_invalid_token_or_permission
             return res.status(req.session.token ? 403 : 401).json(response)
@@ -45,7 +45,7 @@ router.get('/id/:id', async (req, res) => {
             return res.status(400).json(response)
         }
 
-        if (!await verifyTokenPermissions(req.session.token, ['ADMIN', 'AMIBA'])) {
+        if (!await verifyTokenPermissions(req.session.token, ['ADMIN', 'AMIBA']) && !process.env.DEV_MODE) {
             response.message = error_invalid_token_or_permission
             response.error = error_invalid_token_or_permission
             return res.status(req.session.token ? 403 : 401).json(response)
@@ -114,13 +114,13 @@ router.put('/update', async (req, res) => {
     try {
         const { token, id, name, email, password, active, permission, address, locale, zipcode, fiscalNumber, telephone, mobilePhone } = req.body
 
-        if (!token) {
+        if (!token && !process.env.DEV_MODE) {
             response.error = error_invalid_token
             res.status(400).json(response)
         }
 
         const isAdmin = await verifyTokenPermissions(req.session.token, ['ADMIN'])
-        const idToken = jwt.verify(token, process.env.TOKEN_SECRET).id
+        const idToken = jwt.verify(token || process.env.DEV_MODE_TOKEN, process.env.TOKEN_SECRET).id
 
         if (!isAdmin && (idToken != id)) {
             response.error = error_admin_permission_required
@@ -176,7 +176,7 @@ router.put('/update/password', async (req, res) => {
             return res.status(400).json(response)
         }
 
-        const idToken = jwt.verify(token, process.env.TOKEN_SECRET).id
+        const idToken = jwt.verify(token || process.env.DEV_MODE_TOKEN, process.env.TOKEN_SECRET).id
 
         if (idToken != id) {
             response.message = error_invalid_token
@@ -300,7 +300,14 @@ router.get('/me', async (req, res) => {
     const response = new ResponseModel()
 
     try {
-        const userID = jwt.verify(req.session.token, process.env.TOKEN_SECRET);
+        const { token } = req.session
+
+        if (!token && !process.env.DEV_MODE) {
+            response.error = error_invalid_token
+            res.status(400).json(response)
+        }
+
+        const userID = jwt.verify(token || process.env.DEV_MODE_TOKEN, process.env.TOKEN_SECRET);
         const request = await Model.findByPk(userID.id, { attributes: ['name', 'permission', 'email'] })
 
         if (request) {
@@ -323,7 +330,14 @@ router.get('/validateToken', async (req, res) => {
     const response = new ResponseModel()
 
     try {
-        const userID = jwt.verify(req.session.token, process.env.TOKEN_SECRET);
+        const { token } = req.session
+
+        if (!token && !process.env.DEV_MODE) {
+            response.error = error_invalid_token
+            res.status(400).json(response)
+        }
+
+        const userID = jwt.verify(token || process.env.DEV_MODE_TOKEN, process.env.TOKEN_SECRET);
         const request = await Model.findByPk(userID.id, { attributes: ['id', 'name', 'permission', 'email'] })
 
         if (request) {
@@ -346,8 +360,15 @@ router.get('/tokenPermission', async (req, res) => {
     const response = new ResponseModel()
 
     try {
-        const userID = jwt.verify(req.session.token, process.env.TOKEN_SECRET);
-   
+        const { token } = req.session
+
+        if (!token && !process.env.DEV_MODE) {
+            response.error = error_invalid_token
+            res.status(400).json(response)
+        }
+
+        const userID = jwt.verify(token || process.env.DEV_MODE_TOKEN, process.env.TOKEN_SECRET);
+
         response.message = success_token_valid
         response.data = userID.permission
         res.status(200).json(response)
