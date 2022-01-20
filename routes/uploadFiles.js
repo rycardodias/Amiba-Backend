@@ -56,8 +56,8 @@ router.post("/create", async (req, res) => {
         }
 
         const fileNameSaved = v4() + extension
-
-        const URL = "./public/uploads/"
+        const dir = __dirname
+        const URL = dir.replace("routes", "") + "public/uploads/"
 
         util.promisify(file.mv)(URL + fileNameSaved).then(async () => {
             try {
