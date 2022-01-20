@@ -8,10 +8,12 @@ const resizeImg = require('resize-img');
 const ResponseModel = require('../lib/ResponseModel')
 const { v4 } = require('uuid')
 
-router.get("/:folder/:file", async (req, res) => {
+router.get("/:file", async (req, res) => {
     try {
-        const folder = req.params.folder + '/'
-        const img = "./Projeto-Investigacao/public/uploads/" + folder + req.params.file
+        const dir = __dirname
+        const URL = dir.replace("routes", "") + "public/uploads/"
+
+        const img = URL + req.params.file
         fs.access(img, fs.constants.F_OK, err => {
             return err
         })
