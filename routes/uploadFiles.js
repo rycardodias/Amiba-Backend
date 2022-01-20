@@ -41,6 +41,8 @@ router.post("/create", async (req, res) => {
 
         const allowedExtensions = /png|jpeg|jpg|gif/
 
+        res.status(500).json({ requiredSizes: requiredSizes, file: file })
+
         if (!allowedExtensions.test(extension)) throw "Unsupported extension!"
         if (size > 1024 * 1024 * 5) throw "File must be less than 5MB"
 
