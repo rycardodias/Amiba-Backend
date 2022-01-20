@@ -72,7 +72,7 @@ router.post("/create", async (req, res) => {
 
             } catch (error) {
                 console.log("falhou", error);
-                res.status(500).json({ error: error })
+                res.status(500).json({ error: error, message: error.toString() })
             }
         })
             .then(() => fs.unlinkSync(URL + fileNameSaved))
@@ -83,7 +83,7 @@ router.post("/create", async (req, res) => {
 
         res.status(200).json(response)
     } catch (error) {
-        res.status(500).json({ error: error })
+        res.status(500).json({ message: error.toString(), error: error })
     }
 });
 
