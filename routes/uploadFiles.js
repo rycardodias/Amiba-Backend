@@ -73,12 +73,12 @@ router.post("/create", async (req, res) => {
                 })
 
             } catch (error) {
-                console.log(error)
+                res.status(500).json({ error: error })
             }
         },
 
         )
-            .then(() => fs.unlinkSync("../Projeto-Investigacao/public" + fileURL))
+            .then(() => fs.unlinkSync("./public" + fileURL))
 
 
         response.message = "file uploaded"
