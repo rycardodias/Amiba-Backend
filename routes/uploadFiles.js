@@ -61,7 +61,7 @@ router.post("/create", async (req, res) => {
         const URL = "/uploads/" + directory + '/'
         const fileURL = URL + fileNameSaved
 
-        util.promisify(file.mv)("../Projeto-Investigacao/public" + fileURL).then(async () => {
+        util.promisify(file.mv)("./Projeto-Investigacao/public" + fileURL).then(async () => {
             try {
 
                 requiredSizes.forEach(async (value) => {
