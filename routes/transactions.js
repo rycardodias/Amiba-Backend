@@ -76,10 +76,10 @@ router.post('/createOrderOrderLines', async (req, res) => {
                         dataLines = {
                             OrderId: order.dataValues.id,
                             quantity: row.quantity,
-                            total: element.quantity * element.price,
-                            totalVAT: element.quantity * element.price * element.tax / 100,
+                            total: element.quantity * element.Product.price,
+                            totalVAT: element.quantity * element.Product.price * element.Product.tax / 100,
                             AnimalProductId: undefined,
-                            EggsBatchProductId: row.id !== null ? row.id : undefined,
+                            EggsBatchProductId: row.id,
                         }
                         const res = await OrderLine.create(dataLines, { transaction: t })
                     }
