@@ -55,6 +55,16 @@ OrderLine.belongsTo(EggsBatchProduct, {
 })
 EggsBatchProduct.hasMany(OrderLine)
 
+OrderLine.afterCreate((instance, options) => {
+    if (instance.EggsBatchProductId) {
+        EggsBatchProduct.decrement({ quantityAvailable: instance.quantity },
+            { where: { id: instance.EggsBatchId } })
+    } else {
+        AnimalProduct.decrement({ quantityAvailable: instance.quantity },
+            { where: { id: instance.EggsBatchId } })
+    }
+})
+
 // OrderLine.sync({ force: true })
 
 module.exports = OrderLine
