@@ -121,7 +121,7 @@ router.get('/productAvailable', async (req, res) => {
                 ]
             }
         })
-        
+
         if (request) {
             response.message = success_data_exits
             response.data = request
@@ -162,7 +162,6 @@ router.post('/create', async (req, res) => {
             mobilePhone: mobilePhone || undefined,
             fiscalNumber: fiscalNumber
         }
-        console.log(data)
 
         const request = await Model.create(data)
 
@@ -176,7 +175,7 @@ router.post('/create', async (req, res) => {
         }
     } catch (error) {
         response.message = error_invalid_fields
-        response.error = error
+        response.error = error.toString()
         return res.status(400).json(response)
     }
 })

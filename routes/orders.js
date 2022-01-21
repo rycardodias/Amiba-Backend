@@ -8,62 +8,62 @@ const { error_missing_fields, error_invalid_fields, error_data_not_found, succes
 const db = require('../config/database');
 const OrderLine = require('../models/OrderLine')
 
-router.post('/transaction', async (req, res) => {
-    const response = new ResponseModel()
+// router.post('/transaction', async (req, res) => {
+//     const response = new ResponseModel()
 
-    try {
-        const { UserId, address, locale, zipcode, observation, fiscalNumber, OrderLines } = req.body
+//     try {
+//         const { UserId, address, locale, zipcode, observation, fiscalNumber, OrderLines } = req.body
 
-        if (!(UserId && OrderLines.length > 0)) {
-            response.message = error_missing_fields
-            response.error = error_missing_fields
-            return res.status(400).json(response)
-        }
+//         if (!(UserId && OrderLines.length > 0)) {
+//             response.message = error_missing_fields
+//             response.error = error_missing_fields
+//             return res.status(400).json(response)
+//         }
 
-        const result = await db.transaction(async (t) => {
+//         const result = await db.transaction(async (t) => {
 
-            const data = {
-                UserId: UserId,
-                address: address,
-                locale: locale,
-                zipcode: zipcode,
-                observation: observation,
-                fiscalNumber: fiscalNumber
-            }
+//             const data = {
+//                 UserId: UserId,
+//                 address: address,
+//                 locale: locale,
+//                 zipcode: zipcode,
+//                 observation: observation,
+//                 fiscalNumber: fiscalNumber
+//             }
 
-            const order = await Model.create(data, { transaction: t })
+//             const order = await Model.create(data, { transaction: t })
 
-            let dataLines
-            for (const element of OrderLines) {
-                dataLines = {
-                    OrderId: order.dataValues.id,
-                    quantity: element.quantity,
-                    total: element.total,
-                    totalVAT: element.totalVAT,
-                    AnimalProductId: element.AnimalProductId,
-                    EggsBatchProductId: element.EggsBatchProductId,
-                }
+//             let dataLines
+//             for (const element of OrderLines) {
+//                 dataLines = {
+//                     OrderId: order.dataValues.id,
+//                     quantity: element.quantity,
+//                     total: element.total,
+//                     totalVAT: element.totalVAT,
+//                     AnimalProductId: element.AnimalProductId,
+//                     EggsBatchProductId: element.EggsBatchProductId,
+//                 }
 
-                const res = await OrderLine.create(dataLines, { transaction: t })
-                console.log("res.dataValues", res.dataValues)
-            }
+//                 const res = await OrderLine.create(dataLines, { transaction: t })
+//                 console.log("res.dataValues", res.dataValues)
+//             }
 
-            response.message = success_row_create
-            response.data = request
-            return res.status(200).json(response)
-        });
+//             response.message = success_row_create
+//             response.data = request
+//             return res.status(200).json(response)
+//         });
 
-    } catch (error) {
-        response.message = error_data_not_found
-        response.error = error
-        return res.status(400).json(response)
-    }
-})
+//     } catch (error) {
+//         response.message = error_data_not_found
+//         response.error = error
+//         return res.status(400).json(response)
+//     }
+// })
 
 router.get('/', async (req, res) => {
     const response = new ResponseModel()
     try {
-        const request = await Model.findAll({ include: User })
+        const request = await Model.findAll({ include: { model: User, attributes: ['id', 'name'] } })
         if (request.length > 0) {
             response.message = success_data_exits
             response.data = request
