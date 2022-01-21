@@ -71,8 +71,11 @@ router.post('/createOrderOrderLines', async (req, res) => {
                         allObject.push(element.dataValues)
                     }
                     const eggsRows = await addEggsBatchProducts(element.quantity, allObject)
-                    console.log(element);
+
+                    total = element.quantity * element.Product.price
+                    totalVAT = element.quantity * element.Product.price * element.Product.tax / 100
                     for (const row of eggsRows) {
+
                         dataLines = {
                             OrderId: order.dataValues.id,
                             quantity: row.quantity,
@@ -81,14 +84,13 @@ router.post('/createOrderOrderLines', async (req, res) => {
                             AnimalProductId: undefined,
                             EggsBatchProductId: row.id,
                         }
-                        const res = await OrderLine.create(dataLines, { transaction: t })
+                        await OrderLine.create(dataLines, { transaction: t })
                     }
 
-                    await Cart.destroy({
-                        where: {
-                            UserId: tokenDecoded.id, ProductId: element.ProductId
-                        }
-                    }, { transaction: t })
+                    await Cart.destroy({ where: { UserId: tokenDecoded.id, ProductId: element.ProductId } }, { transaction: t })
+
+                    await Order.update({ total: total, totalVAT: totalVAT },
+                        { where: { UserId: tokenDecoded.id, id: order.dataValues.id } })
 
                 } else {
                     all = await AnimalProduct.findAll({ where: { ProductId: element.ProductId, quantityAvailable: { [Op.gt]: 0 } } })
