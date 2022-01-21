@@ -336,7 +336,7 @@ router.get('/validateToken', async (req, res) => {
             response.error = error_invalid_token
             res.status(400).json(response)
         }
-
+        
         const userID = jwt.verify(token || process.env.DEV_MODE_TOKEN, process.env.TOKEN_SECRET);
         const request = await Model.findByPk(userID.id, { attributes: ['id', 'name', 'permission', 'email'] })
 

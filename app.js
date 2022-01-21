@@ -19,8 +19,8 @@ app.use(
   cors(
     {
       credentials: true,
-      origin: '*',
-      optionsSuccessStatus: 200,
+      origin: 'localhost:3000',
+    //   optionsSuccessStatus: 200,
     }
   )
 );

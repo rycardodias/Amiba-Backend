@@ -58,12 +58,16 @@ EggsBatchProduct.hasMany(OrderLine)
 OrderLine.afterCreate((instance, options) => {
     if (instance.EggsBatchProductId) {
         EggsBatchProduct.decrement({ quantityAvailable: instance.quantity },
-            { where: { id: instance.EggsBatchId } })
+            { where: { id: instance.EggsBatchProductId } })
     } else {
         AnimalProduct.decrement({ quantityAvailable: instance.quantity },
-            { where: { id: instance.EggsBatchId } })
+            { where: { id: instance.AnimalProductId } })
     }
 })
+
+// OrderLine.afterSave(instance => console.log("save", instance))
+// OrderLine.afterCreate(instance => console.log("aftercreate", instance))
+// OrderLine.afterUpdate(instance => console.log("aftercreate", instance))
 
 // OrderLine.sync({ force: true })
 
