@@ -19,7 +19,16 @@ const handleProductsQuantity = async (quantity, data) => {
     let j = 0
     let dataReturn = []
 
+
     while (i > 0) {
+        if (data[j].EggsBatchId) {
+            console.log("é ovo");
+        }
+        if (data[j].AnimalProductId) {
+            console.log("é carne");
+        }
+
+
         if (i <= data[j].quantityAvailable) {
             dataReturn.push({ id: data[j].id, quantity: i })
             return dataReturn;
@@ -29,6 +38,8 @@ const handleProductsQuantity = async (quantity, data) => {
         }
         j++
     }
+
+
 }
 
 
@@ -58,7 +69,7 @@ router.post('/createOrderOrderLines', async (req, res) => {
 
         let total, totalVAT, order
 
-        const result = await db.transaction(async (t) => {
+        await db.transaction(async (t) => {
 
             order = await Order.create(data, { transaction: t })
 
@@ -79,17 +90,17 @@ router.post('/createOrderOrderLines', async (req, res) => {
 
                 const rows = await handleProductsQuantity(element.quantity, allObject)
 
-                const divider = element.Product.type === "EGGS" ? 12 : 1
+                // const divider = element.Product.type === "EGGS" ? 12 : 1
 
-                total = element.quantity * element.Product.price / divider
-                totalVAT = element.quantity * element.Product.price * (element.Product.tax / 100) / divider
+                total = element.quantity * element.Product.price /// divider
+                totalVAT = element.quantity * element.Product.price * (element.Product.tax / 100) /// divider
 
                 for (const row of rows) {
                     dataLines = {
                         OrderId: order.dataValues.id,
                         quantity: row.quantity,
-                        total: (element.quantity * element.Product.price) / divider,
-                        totalVAT: (element.quantity * element.Product.price * (element.Product.tax / 100)) / divider,
+                        total: (element.quantity * element.Product.price), /// divider,
+                        totalVAT: (element.quantity * element.Product.price * (element.Product.tax / 100)),/// divider,
                         AnimalProductId: element.Product.type === "EGGS" ? undefined : row.id,
                         EggsBatchProductId: element.Product.type === "EGGS" ? row.id : undefined,
                     }

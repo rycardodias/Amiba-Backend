@@ -55,15 +55,16 @@ OrderLine.belongsTo(EggsBatchProduct, {
 })
 EggsBatchProduct.hasMany(OrderLine)
 
-OrderLine.afterCreate((instance, options) => {
-    if (instance.EggsBatchProductId) {
-        EggsBatchProduct.decrement({ quantityAvailable: instance.quantity },
-            { where: { id: instance.EggsBatchProductId } })
-    } else {
-        AnimalProduct.decrement({ quantityAvailable: instance.quantity },
-            { where: { id: instance.AnimalProductId } })
-    }
-})
+// OrderLine.afterCreate((instance, options) => {
+//     console.log(instance);
+//     if (instance.EggsBatchProductId) {
+//         EggsBatchProduct.decrement({ quantityAvailable: instance.quantity },
+//             { where: { id: instance.EggsBatchProductId } })
+//     } else {
+//         AnimalProduct.decrement({ quantityAvailable: instance.quantity },
+//             { where: { id: instance.AnimalProductId } })
+//     }
+// })
 
 // OrderLine.afterSave(instance => console.log("save", instance))
 // OrderLine.afterCreate(instance => console.log("aftercreate", instance))
