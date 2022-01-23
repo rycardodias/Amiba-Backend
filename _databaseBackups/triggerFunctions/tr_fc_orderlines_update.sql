@@ -41,21 +41,21 @@ BEGIN
 			RAISE EXCEPTION 'quantityAvailable cannot be less than EggsBatchProducts.quantity';
 		END IF;
 		
-		SELECT "unit"
-	  	  INTO v_unit
-	  	  FROM "Products"
-	 	 WHERE "id" = (SELECT "ProductId" 
-					     FROM "EggsBatchProducts"
-					    WHERE "id" = NEW."EggsBatchProductId");
+		-- SELECT "unit"
+	  	--   INTO v_unit
+	  	--   FROM "Products"
+	 	--  WHERE "id" = (SELECT "ProductId" 
+		-- 			     FROM "EggsBatchProducts"
+		-- 			    WHERE "id" = NEW."EggsBatchProductId");
 	 
-		IF(v_unit = 'DOZEN' AND (NEW."quantity"%12)<>0) THEN
-			RAISE EXCEPTION 'Quantity must be divided by 12';
-		END IF;
-		IF(v_unit = 'HALFDOZEN' AND (NEW."quantity"%6)<>0) THEN
-			RAISE EXCEPTION 'Quantity must be divided by 6';
-		END IF;
+		-- IF(v_unit = 'DOZEN' AND (NEW."quantity"%12)<>0) THEN
+		-- 	RAISE EXCEPTION 'Quantity must be divided by 12';
+		-- END IF;
+		-- IF(v_unit = 'HALFDOZEN' AND (NEW."quantity"%6)<>0) THEN
+		-- 	RAISE EXCEPTION 'Quantity must be divided by 6';
+		-- END IF;
 		
-		UPDATE "EggsBatchProducts"  SET "quantityAvailable" = "quantityAvailable" + (OLD."quantity" - NEW."quantity"),
+		UPDATE "EggsBatchProducts"  SET "quantityAvailable" = "quantityAvailable" + (OLD."quantity" - NEW."quantity")*12,
 		   "updatedAt" = now()
 		 WHERE "id" = NEW."EggsBatchProductId";
 	END IF;
