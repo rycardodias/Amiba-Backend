@@ -19,16 +19,7 @@ const handleProductsQuantity = async (quantity, data) => {
     let j = 0
     let dataReturn = []
 
-
     while (i > 0) {
-        if (data[j].EggsBatchId) {
-            console.log("é ovo");
-        }
-        if (data[j].AnimalProductId) {
-            console.log("é carne");
-        }
-
-
         if (i <= data[j].quantityAvailable) {
             dataReturn.push({ id: data[j].id, quantity: i })
             return dataReturn;
@@ -38,8 +29,6 @@ const handleProductsQuantity = async (quantity, data) => {
         }
         j++
     }
-
-
 }
 
 
@@ -90,29 +79,29 @@ router.post('/createOrderOrderLines', async (req, res) => {
 
                 const rows = await handleProductsQuantity(element.quantity, allObject)
 
-                // const divider = element.Product.type === "EGGS" ? 12 : 1
-
-                total = element.quantity * element.Product.price /// divider
-                totalVAT = element.quantity * element.Product.price * (element.Product.tax / 100) /// divider
+                total = element.quantity * element.Product.price
+                totalVAT = element.quantity * element.Product.price * (element.Product.tax / 100)
 
                 for (const row of rows) {
                     dataLines = {
                         OrderId: order.dataValues.id,
                         quantity: row.quantity,
-                        total: (element.quantity * element.Product.price), /// divider,
-                        totalVAT: (element.quantity * element.Product.price * (element.Product.tax / 100)),/// divider,
+                        total: (element.quantity * element.Product.price),
+                        totalVAT: (element.quantity * element.Product.price * (element.Product.tax / 100)),
                         AnimalProductId: element.Product.type === "EGGS" ? undefined : row.id,
                         EggsBatchProductId: element.Product.type === "EGGS" ? row.id : undefined,
                     }
                     await OrderLine.create(dataLines, { transaction: t })
+
+                    if (element.Product.type === "EGGS") {
+                        await EggsBatchProduct.decrement({ quantityAvailable: row.quantity }, { where: { id: row.id } })
+                    } else {
+                        await AnimalProduct.decrement({ quantityAvailable: row.quantity }, { where: { id: row.id } })
+                    }
+
                 }
-
                 await Cart.destroy({ where: { UserId: tokenDecoded.id, ProductId: element.ProductId } }, { transaction: t })
-
-
             }
-
-
         });
         const orderUpdated = await Order.update({ total: total, totalVAT: totalVAT },
             { where: { UserId: tokenDecoded.id, id: order.id }, returning: true })
