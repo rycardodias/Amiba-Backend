@@ -15,15 +15,15 @@ dotenv.config()
 const app = express();
 app.set('trust proxy', true)
 app.use(express.json());
-app.use(
-  cors(
-    {
-      // credentials: true,
-      // origin: 'localhost:3000',
-    //   optionsSuccessStatus: 200,
-    }
-  )
-);
+// app.use(
+//   cors(
+//     {
+//       // credentials: true,
+//       // origin: 'localhost:3000',
+//     //   optionsSuccessStatus: 200,
+//     }
+//   )
+// );
 
 app.use(cookieParser())
 
