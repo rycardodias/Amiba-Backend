@@ -18,8 +18,8 @@ app.use(express.json());
 app.use(
   cors(
     {
-      credentials: true,
-      origin: 'localhost:3000',
+      // credentials: true,
+      // origin: 'localhost:3000',
     //   optionsSuccessStatus: 200,
     }
   )
