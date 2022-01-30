@@ -20,7 +20,7 @@ app.use(express.json());
 //     {
 //       // credentials: true,
 //       // origin: 'localhost:3000',
-//     //   optionsSuccessStatus: 200,
+//       //   optionsSuccessStatus: 200,
 //     }
 //   )
 // );
