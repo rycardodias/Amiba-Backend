@@ -20,7 +20,7 @@ app.use(
     {
       credentials: true,
       origin: '*',
-        optionsSuccessStatus: 200,
+      optionsSuccessStatus: 200,
     }
   )
 );
@@ -30,9 +30,9 @@ app.use(cookieParser())
 app.use(
   cookieSession({
     signed: false,
-    secure: true,
+    secure: false,
     httpOnly: false,
-    sameSite: 'none'
+    // sameSite: 'none'
   }
   )
 )
