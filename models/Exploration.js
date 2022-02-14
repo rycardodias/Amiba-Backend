@@ -8,6 +8,9 @@ const Exploration = db.define('Exploration', {
         primaryKey: true,
         defaultValue: DataTypes.UUIDV4
     },
+    marker: {
+        type: DataTypes.STRING,
+    },
     type: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -67,7 +70,6 @@ const Exploration = db.define('Exploration', {
                 msg: "fiscalNumber field is required",
             }
         },
-        unique: true
     },
     gpsLocalization: {
         type: DataTypes.STRING,
