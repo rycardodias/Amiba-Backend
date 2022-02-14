@@ -92,9 +92,9 @@ router.get('/UserId', async (req, res) => {
 router.post('/create', async (req, res) => {
     const response = new ResponseModel()
     try {
-        const { OrganizationId, type, name, address, locale, zipcode, telephone, mobilePhone, fiscalNumber, gpsLocalization } = req.body
+        const { OrganizationId, type, name, marker, address, locale, zipcode, telephone, mobilePhone, fiscalNumber, gpsLocalization } = req.body
 
-        if (!(OrganizationId && type && name && address && locale && zipcode && fiscalNumber)) {
+        if (!(OrganizationId && type && name && marker && address && locale && zipcode && fiscalNumber)) {
             response.message = error_missing_fields
             response.error = error_missing_fields
             return res.status(400).json(response)
@@ -104,6 +104,7 @@ router.post('/create', async (req, res) => {
             OrganizationId: OrganizationId,
             type: type,
             name: name,
+            marker: marker,
             address: address,
             locale: locale,
             zipcode: zipcode,
@@ -133,7 +134,7 @@ router.post('/create', async (req, res) => {
 router.put('/update', async (req, res) => {
     const response = new ResponseModel()
     try {
-        const { id, type, name, address, locale, zipcode, telephone, mobilePhone, fiscalNumber, gpsLocalization } = req.body
+        const { id, type, name, marker, address, locale, zipcode, telephone, mobilePhone, fiscalNumber, gpsLocalization } = req.body
 
 
         if (!id) {
@@ -145,6 +146,7 @@ router.put('/update', async (req, res) => {
         const data = {
             type: type,
             name: name,
+            marker: marker,
             address: address,
             locale: locale,
             zipcode: zipcode,
