@@ -20,6 +20,7 @@ router.get('/', async (req, res) => {
         }
 
         const request = await Model.findAll({ attributes: { exclude: ['password', 'createdAt', 'updatedAt'] } })
+
         if (request.length > 0) {
             response.message = success_data_exits
             response.data = request
@@ -164,6 +165,44 @@ router.put('/update', async (req, res) => {
         return res.status(400).json(response)
     }
 })
+
+router.put('/updatePermission', async (req, res) => {
+    const response = new ResponseModel()
+    try {
+        const { id, permission } = req.body
+
+        if (!await verifyTokenPermissions(req.session.token, ['ADMIN']) && !process.env.DEV_MODE) {
+            response.message = error_invalid_token_or_permission
+            response.error = error_invalid_token_or_permission
+            return res.status(req.session.token ? 403 : 401).json(response)
+        }
+
+        const data = {
+            permission: permission !== "" ? permission : undefined,
+        }
+
+        const request = await Model.update(data, {
+            where: { id: id },
+            returning: true
+        })
+
+        if (request[0] === 1) {
+            response.message = success_row_update
+            response.data = request[1][0].dataValues
+            res.status(200).json(response)
+        } else {
+            response.message = error_row_update
+            response.error = request[0]
+            res.status(404).json(response)
+        }
+    } catch (error) {
+        response.message = error_invalid_fields
+        response.error = error
+        return res.status(400).json(response)
+    }
+})
+
+
 
 router.put('/update/password', async (req, res) => {
     const response = new ResponseModel()
@@ -336,7 +375,7 @@ router.get('/validateToken', async (req, res) => {
             response.error = error_invalid_token
             res.status(400).json(response)
         }
-        
+
         const userID = jwt.verify(token || process.env.DEV_MODE_TOKEN, process.env.TOKEN_SECRET);
         const request = await Model.findByPk(userID.id, { attributes: ['id', 'name', 'permission', 'email'] })
 
