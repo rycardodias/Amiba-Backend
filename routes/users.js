@@ -178,7 +178,7 @@ router.put('/updatePermission', async (req, res) => {
         }
 
         const data = {
-            permission: permission !== "" ? { permission } : undefined,
+            permission: permission !== "" ? [permission] : undefined,
         }
 
         const request = await Model.update(data, {
