@@ -11,6 +11,8 @@ const ResponseModel = require('../lib/ResponseModel')
 const { error_missing_fields, error_invalid_fields, error_data_not_found, success_row_delete, error_row_delete, success_row_update,
     error_row_update, error_row_create, success_row_create, success_data_exits } = require('../lib/ResponseMessages')
 const { formatDateYYYYMMDD } = require('../lib/FormatDates')
+const jwt = require("jsonwebtoken");
+const { verifyPermissionArray } = require('../verifications/tokenVerifications');
 
 router.get('/', async (req, res) => {
     const response = new ResponseModel()
@@ -79,7 +81,6 @@ router.get('/UserId', async (req, res) => {
                 include: [
                     { model: Exploration }]
             })
-            console.log("entra neste")
         } else {
             request = await Model.findAll({
                 include: [
@@ -90,8 +91,6 @@ router.get('/UserId', async (req, res) => {
                         }
                     }]
             })
-            console.log("entra naquele")
-
         }
 
         if (request.length > 0) {
@@ -104,6 +103,7 @@ router.get('/UserId', async (req, res) => {
             res.status(404).json(response)
         }
     } catch (error) {
+        console.log(error)
         response.message = error_data_not_found
         response.error = error
         return res.status(400).json(response)
