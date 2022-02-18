@@ -79,6 +79,7 @@ router.get('/UserId', async (req, res) => {
                 include: [
                     { model: Exploration }]
             })
+            console.log("entra neste")
         } else {
             request = await Model.findAll({
                 include: [
@@ -89,6 +90,8 @@ router.get('/UserId', async (req, res) => {
                         }
                     }]
             })
+            console.log("entra naquele")
+
         }
 
         if (request.length > 0) {
