@@ -7,7 +7,7 @@ const ResponseModel = require('../lib/ResponseModel')
 const { error_missing_fields, error_invalid_fields, error_data_not_found, success_row_delete, error_row_delete, success_row_update,
     error_row_update, error_row_create, success_row_create, success_data_exits } = require('../lib/ResponseMessages')
 const jwt = require("jsonwebtoken");
-
+const { verifyPermissionArray } = require('../verifications/tokenVerifications');
 router.get('/', async (req, res) => {
     const response = new ResponseModel()
     try {
@@ -67,11 +67,18 @@ router.get('/UserId', async (req, res) => {
 
         let tokenDecoded = jwt.verify(token || process.env.DEV_MODE_TOKEN, process.env.TOKEN_SECRET)
 
-        const request = await Model.findAll({
-            include: [
-                { model: Organization, where: { UserId: tokenDecoded.id } }]
-        })
-
+        let request
+        if (await verifyPermissionArray(tokenDecoded.permission, ['ADMIN', 'AMIBA'])) {
+            request = await Model.findAll({
+                include: [
+                    { model: Organization }]
+            })
+        } else {
+            request = await Model.findAll({
+                include: [
+                    { model: Organization, where: { UserId: tokenDecoded.id } }]
+            })
+        }
 
         if (request.length > 0) {
             response.message = success_data_exits
