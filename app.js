@@ -13,7 +13,7 @@ dotenv.config()
 //    .catch((error)=> console.error('Unable to connect to the database:', error))
 
 const app = express();
-// app.set('trust proxy', true)
+app.set('trust proxy', true)
 app.use(express.json());
 app.use(
   cors(
