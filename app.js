@@ -13,14 +13,14 @@ dotenv.config()
 //    .catch((error)=> console.error('Unable to connect to the database:', error))
 
 const app = express();
-app.set('trust proxy', true)
+// app.set('trust proxy', true)
 app.use(express.json());
 app.use(
   cors(
     {
       credentials: true,
       origin: '*',
-      optionsSuccessStatus: 200,
+      // optionsSuccessStatus: 200,
     }
   )
 );
@@ -32,7 +32,7 @@ app.use(
     signed: false,
     secure: false,
     httpOnly: false,
-    // sameSite: 'none'
+    sameSite: 'none'
   }
   )
 )

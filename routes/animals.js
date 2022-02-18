@@ -3,7 +3,7 @@ const router = express.Router()
 const { Op } = require("sequelize");
 const { Sequelize } = require('../config/database');
 const { animalMinAge } = require('../lib/parameters');
-
+const Organization = require('../models/Organization')
 const Model = require('../models/Animal')
 const Exploration = require('../models/Exploration')
 const Certification = require('../models/Certification')
@@ -58,6 +58,53 @@ router.get('/id/:id', async (req, res) => {
         return res.status(400).json(response)
     }
 
+})
+
+router.get('/UserId', async (req, res) => {
+    const response = new ResponseModel()
+    try {
+        const { token } = req.session
+
+        if (!token && !process.env.DEV_MODE) {
+            response.message = error_missing_fields
+            response.error = error_missing_fields
+            return res.status(400).json(response)
+        }
+
+        let tokenDecoded = jwt.verify(token || process.env.DEV_MODE_TOKEN, process.env.TOKEN_SECRET)
+
+        let request
+        if (await verifyPermissionArray(tokenDecoded.permission, ['ADMIN', 'AMIBA'])) {
+            request = await Model.findAll({
+                include: [
+                    { model: Exploration }]
+            })
+        } else {
+            request = await Model.findAll({
+                include: [
+                    {
+                        model: Exploration,
+                        include: {
+                            model: Organization, where: { UserId: tokenDecoded.id }
+                        }
+                    }]
+            })
+        }
+
+        if (request.length > 0) {
+            response.message = success_data_exits
+            response.data = request
+            res.status(200).json(response)
+        } else {
+            response.message = error_data_not_found
+            response.error = error_data_not_found
+            res.status(404).json(response)
+        }
+    } catch (error) {
+        response.message = error_data_not_found
+        response.error = error
+        return res.status(400).json(response)
+    }
 })
 
 
