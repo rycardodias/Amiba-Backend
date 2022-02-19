@@ -67,4 +67,15 @@ router.get('/teste', async (req, res) => {
     res.status(200).json({ teste: "aa" })
 })
 
+router.get('/token', async (req, res) => {
+    req.session.token = "tokenTeste"
+    
+    res.status(200).json("token SET")
+})
+
+router.get('/gettoken', async (req, res) => {
+    
+    res.status(200).json(req.session)
+})
+
 module.exports = router

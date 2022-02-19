@@ -8,19 +8,22 @@ const db = require('./config/database')
 dotenv.config()
 // db.sync({ force: true })
 
-// db.authenticate()
-//    .then(()=> console.log('Connection has been established successfully.'))
-//    .catch((error)=> console.error('Unable to connect to the database:', error))
+db.authenticate()
+  .then(() => console.log('Connection has been established successfully.'))
+  .catch((error) => console.error('Unable to connect to the database:', error))
 
 const app = express();
-app.set('trust proxy', true)
+app.set('trust proxy', 1) // trust first proxy
+
 app.use(express.json());
+
 app.use(
   cors(
     {
       credentials: true,
       origin: '*',
       optionsSuccessStatus: 200,
+      preflightContinue: false,
     }
   )
 );
@@ -29,9 +32,12 @@ app.use(cookieParser())
 
 app.use(
   cookieSession({
-    signed: false,
-    secure: false,
-    httpOnly: false,
+    name: "session",
+    keys: ["MySecret"],
+    maxAge: 60 * 60 * 1000,
+    // signed: false,
+    // secure: false,
+    // httpOnly: false,
     sameSite: 'none'
   }
   )
