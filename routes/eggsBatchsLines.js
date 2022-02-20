@@ -42,7 +42,8 @@ router.get('/UserId', async (req, res) => {
         if (await verifyPermissionArray(tokenDecoded.permission, ['ADMIN', 'AMIBA'])) {
             request = await Model.findAll({
                 include: {
-                    model: EggsBatch, include: {
+                    model: EggsBatch, 
+                    include: {
                         model: Exploration
                     }
                 }
