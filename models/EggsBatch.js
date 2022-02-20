@@ -32,6 +32,15 @@ const EggsBatch = db.define('EggsBatch', {
             }
         },
     },
+    validity: {
+        type: DataTypes.DATEONLY,
+        allowNull: false,
+        validate: {
+            notEmpty: {
+                msg: "validity field is required",
+            }
+        }
+    },
 },
 )
 
@@ -42,5 +51,6 @@ EggsBatch.belongsTo(Exploration, {
 })
 Exploration.hasMany(EggsBatch)
 
-// EggsBatch.sync({ force: true })
+// EggsBatch.sync({ alter: true })
+
 module.exports = EggsBatch

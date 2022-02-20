@@ -45,11 +45,11 @@ const Organization = db.define('Organization', {
         },
     },
     telephone: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.STRING,
         allowNull: true,
     },
     mobilePhone: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.STRING,
         allowNull: true,
     },
     fiscalNumber: {
@@ -72,5 +72,7 @@ Organization.belongsTo(User, {
     foreignKey: { allowNull: false },
 })
 User.hasMany(Organization)
-// Organization.sync({ force: true })
+
+// Organization.sync({ alter: true })
+
 module.exports = Organization

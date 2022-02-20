@@ -141,11 +141,12 @@ router.get('/ExplorationId/:ExplorationId', async (req, res) => {
 router.post('/create', async (req, res) => {
     const response = new ResponseModel()
     try {
-        const { name, ExplorationId } = req.body
+        const { name, ExplorationId, validity } = req.body
 
         const data = {
             name: name,
             ExplorationId: ExplorationId,
+            validity: validity
         }
 
         const request = await Model.create(data)
@@ -168,7 +169,7 @@ router.post('/create', async (req, res) => {
 router.put('/update', async (req, res) => {
     const response = new ResponseModel()
     try {
-        const { id, name } = req.body
+        const { id, name, validity } = req.body
 
         if (!id) {
             response.message = error_missing_fields
@@ -177,6 +178,7 @@ router.put('/update', async (req, res) => {
         }
         const data = {
             name: name,
+            validity: validity
         }
 
         const request = await Model.update(data, {
