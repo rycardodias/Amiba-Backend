@@ -6,7 +6,9 @@ const { error_missing_fields, error_invalid_fields, error_data_not_found, succes
     error_row_update, error_row_create, success_row_create, success_data_exits } = require('../lib/ResponseMessages')
 const Product = require('../models/Product')
 const EggsBatch = require('../models/EggsBatch')
-
+const Organization = require('../models/Organization')
+const jwt = require("jsonwebtoken");
+const { verifyPermissionArray } = require('../verifications/tokenVerifications');
 
 router.get('/', async (req, res) => {
     const response = new ResponseModel()
@@ -27,6 +29,57 @@ router.get('/', async (req, res) => {
         return res.status(400).json(response)
     }
 
+})
+
+router.get('/UserId', async (req, res) => {
+    const response = new ResponseModel()
+    try {
+        const { token } = req.session
+
+        let tokenDecoded = jwt.verify(token || process.env.DEV_MODE_TOKEN, process.env.TOKEN_SECRET)
+
+        let request
+        if (await verifyPermissionArray(tokenDecoded.permission, ['ADMIN', 'AMIBA'])) {
+            request = await Model.findAll({
+                include: [{
+                    model: Product
+                }, {
+                    model: EggsBatch
+                }]
+            })
+        } else {
+            request = await Model.findAll({
+                include: [{
+                    model: Product,
+                    attributes: ['id', 'name', 'OrganizationId'],
+                    required: true,
+                    include: {
+                        model: Organization,
+                        where: { UserId: tokenDecoded.id },
+                        attributes: ['id', 'UserId']
+                    }
+                }, {
+                    model: EggsBatch
+                }]
+            })
+        }
+
+
+        if (request.length > 0) {
+            response.message = success_data_exits
+            response.data = request
+            res.status(200).json(response)
+        } else {
+            response.message = error_data_not_found
+            response.error = error_data_not_found
+            res.status(404).json(response)
+        }
+    } catch (error) {
+        console.log(error)
+        response.message = error_data_not_found
+        response.error = error
+        return res.status(400).json(response)
+    }
 })
 
 router.get('/ProductId/:ProductId/EggsBatchId/:EggsBatchId', async (req, res) => {

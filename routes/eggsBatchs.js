@@ -4,6 +4,7 @@ const Model = require('../models/EggsBatch')
 const Exploration = require('../models/Exploration')
 const Organization = require('../models/Organization')
 const jwt = require("jsonwebtoken");
+const { verifyPermissionArray } = require('../verifications/tokenVerifications');
 
 const ResponseModel = require('../lib/ResponseModel')
 const { error_missing_fields, error_invalid_fields, error_data_not_found, success_row_delete, error_row_delete, success_row_update,
@@ -37,18 +38,28 @@ router.get('/UserId', async (req, res) => {
 
         let tokenDecoded = jwt.verify(token || process.env.DEV_MODE_TOKEN, process.env.TOKEN_SECRET)
 
-        const request = await Model.findAll({
-            include: {
-                model: Exploration,
-                attributes: ['id', 'name', 'OrganizationId'],
-                required: true,
+        let request
+        if (await verifyPermissionArray(tokenDecoded.permission, ['ADMIN', 'AMIBA'])) {
+            request = await Model.findAll({
                 include: {
-                    model: Organization,
-                    where: { UserId: tokenDecoded.id },
-                    attributes: ['id', 'UserId']
+                    model: Exploration
                 }
-            }
-        })
+            })
+        } else {
+            request = await Model.findAll({
+                include: {
+                    model: Exploration,
+                    attributes: ['id', 'name', 'OrganizationId'],
+                    required: true,
+                    include: {
+                        model: Organization,
+                        where: { UserId: tokenDecoded.id },
+                        attributes: ['id', 'UserId']
+                    }
+                }
+            })
+        }
+
         if (request.length > 0) {
             response.message = success_data_exits
             response.data = request
