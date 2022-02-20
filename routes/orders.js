@@ -8,8 +8,6 @@ const AnimalProduct = require('../models/AnimalProduct')
 const Product = require('../models/Product')
 const Organization = require('../models/Organization')
 const { Op } = require("sequelize");
-
-
 const jwt = require("jsonwebtoken");
 const { verifyPermissionArray } = require('../verifications/tokenVerifications');
 const ResponseModel = require('../lib/ResponseModel')

@@ -6,6 +6,13 @@ const ResponseModel = require('../lib/ResponseModel')
 const { error_missing_fields, error_invalid_fields, error_data_not_found, success_row_delete, error_row_delete, success_row_update,
     error_row_update, error_row_create, success_row_create, success_data_exits } = require('../lib/ResponseMessages')
 const Order = require('../models/Order')
+const OrderLine = require('../models/OrderLine')
+const EggsBatchProduct = require('../models/EggsBatchProduct')
+const AnimalProduct = require('../models/AnimalProduct')
+const Product = require('../models/Product')
+const Organization = require('../models/Organization')
+
+const { Op } = require("sequelize");
 const jwt = require("jsonwebtoken");
 const { verifyPermissionArray } = require('../verifications/tokenVerifications');
 
@@ -28,6 +35,103 @@ router.get('/', async (req, res) => {
         return res.status(400).json(response)
     }
 
+})
+
+router.get('/UserId', async (req, res) => {
+    const response = new ResponseModel()
+    try {
+        const { token } = req.session
+
+        if (!token && !process.env.DEV_MODE) {
+            response.message = error_missing_fields
+            response.error = error_missing_fields
+            return res.status(400).json(response)
+        }
+
+        let tokenDecoded = jwt.verify(token || process.env.DEV_MODE_TOKEN, process.env.TOKEN_SECRET)
+
+        let request
+        if (!await verifyPermissionArray(tokenDecoded.permission, ['ADMIN', 'AMIBA'])) {
+            request = await Model.findAll({
+                include: {
+                    model: Order,
+                }
+            })
+        } else {
+            request = await Model.findAll({
+                include: {
+                    model: Order,
+                    include: {
+                        model: OrderLine,
+                        required: true,
+                        include: [{
+                            model: EggsBatchProduct,
+                            attributes: ['id', 'ProductId'],
+                            include: {
+                                model: Product,
+                                required: true,
+                                attributes: ['id', 'name', 'OrganizationId'],
+                                include: {
+                                    model: Organization,
+                                    required: true,
+                                    where: { UserId: tokenDecoded.id },
+                                    attributes: ['id', 'name', 'UserId'],
+                                }
+                            }
+
+                        },
+                        {
+                            model: AnimalProduct,
+                            attributes: ['id', 'ProductId'],
+                            include: {
+                                model: Product,
+                                required: true,
+                                attributes: ['id', 'name', 'OrganizationId'],
+                                include: {
+                                    model: Organization,
+                                    required: true,
+                                    where: { UserId: tokenDecoded.id },
+                                    attributes: ['id', 'name', 'UserId'],
+                                }
+                            }
+                        }],
+
+                    },
+                },
+                where: {
+                    [Op.or]: [
+                        {
+                            [Op.and]: [
+                                { '$Order.OrderLines.EggsBatchProductId$': { [Op.not]: null } },
+                                { '$Order.OrderLines.EggsBatchProduct.id$': { [Op.not]: null } }
+                            ]
+                        },
+                        {
+                            [Op.and]: [
+                                { '$Order.OrderLines.AnimalProductId$': { [Op.not]: null } },
+                                { '$Order.OrderLines.AnimalProduct.id$': { [Op.not]: null } }
+                            ]
+                        }
+                    ],
+                }
+            })
+        }
+
+        if (request.length > 0) {
+            response.message = success_data_exits
+            response.data = request
+            res.status(200).json(response)
+        } else {
+            response.message = error_data_not_found
+            response.error = error_data_not_found
+            res.status(404).json(response)
+        }
+    } catch (error) {
+        console.log(error)
+        response.message = error_data_not_found
+        response.error = error
+        return res.status(400).json(response)
+    }
 })
 
 router.get('/id/:id', async (req, res) => {
