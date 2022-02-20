@@ -7,7 +7,8 @@ const { error_missing_fields, error_invalid_fields, error_data_not_found, succes
 const Product = require('../models/Product')
 const AnimalProduct = require('../models/AnimalProduct')
 const EggsBatchProduct = require('../models/EggsBatchProduct')
-
+const jwt = require("jsonwebtoken");
+const { verifyPermissionArray } = require('../verifications/tokenVerifications');
 router.get('/', async (req, res) => {
     const response = new ResponseModel()
     try {
@@ -26,7 +27,6 @@ router.get('/', async (req, res) => {
         response.error = error
         return res.status(400).json(response)
     }
-
 })
 
 router.get('/id/:id', async (req, res) => {

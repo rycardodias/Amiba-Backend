@@ -11,6 +11,8 @@ const EggsBatchProduct = require('../models/EggsBatchProduct')
 const { Op } = require("sequelize");
 const Exploration = require('../models/Exploration')
 const { Sequelize } = require('../config/database')
+const jwt = require("jsonwebtoken");
+const { verifyPermissionArray } = require('../verifications/tokenVerifications');
 
 router.get('/', async (req, res) => {
     const response = new ResponseModel()
@@ -31,6 +33,54 @@ router.get('/', async (req, res) => {
         return res.status(400).json(response)
     }
 
+})
+
+router.get('/UserId', async (req, res) => {
+    const response = new ResponseModel()
+    try {
+        const { token } = req.session
+
+        if (!token && !process.env.DEV_MODE) {
+            response.message = error_missing_fields
+            response.error = error_missing_fields
+            return res.status(400).json(response)
+        }
+
+        let tokenDecoded = jwt.verify(token || process.env.DEV_MODE_TOKEN, process.env.TOKEN_SECRET)
+
+        let request
+        if (await verifyPermissionArray(tokenDecoded.permission, ['ADMIN', 'AMIBA'])) {
+            request = await Model.findAll({
+                include: {
+                    model: Organization
+                }
+            })
+        } else {
+            request = await Model.findAll({
+                include: {
+                    model: Organization,
+                    required: true,
+                    where: { UserId: tokenDecoded.id },
+                    attributes: ['id', 'UserId']
+                }
+            })
+        }
+
+        if (request.length > 0) {
+            response.message = success_data_exits
+            response.data = request
+            res.status(200).json(response)
+        } else {
+            response.message = error_data_not_found
+            response.error = error_data_not_found
+            res.status(404).json(response)
+        }
+    } catch (error) {
+        console.log(error)
+        response.message = error_data_not_found
+        response.error = error
+        return res.status(400).json(response)
+    }
 })
 
 router.get('/id/:id', async (req, res) => {
