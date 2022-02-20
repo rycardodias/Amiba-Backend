@@ -7,6 +7,7 @@ const EggsBatchProduct = require('../models/EggsBatchProduct')
 const AnimalProduct = require('../models/AnimalProduct')
 const Product = require('../models/Product')
 const Organization = require('../models/Organization')
+const { Op } = require("sequelize");
 
 
 const jwt = require("jsonwebtoken");
@@ -50,7 +51,7 @@ router.get('/UserId', async (req, res) => {
         let tokenDecoded = jwt.verify(token || process.env.DEV_MODE_TOKEN, process.env.TOKEN_SECRET)
 
         let request
-        if (await verifyPermissionArray(tokenDecoded.permission, ['ADMIN', 'AMIBA'])) {
+        if (!await verifyPermissionArray(tokenDecoded.permission, ['ADMIN', 'AMIBA'])) {
             request = await Model.findAll({
                 include: {
                     model: User,
@@ -97,23 +98,24 @@ router.get('/UserId', async (req, res) => {
                             }
                         }
                     }],
-                    where: {
-                        [Op.or]: [
-                            {
-                                [Op.and]: [
-                                    { '$OrderLine.EggsBatchProductId$': { [Op.not]: null } },
-                                    { '$EggsBatchProduct.id$': { [Op.not]: null } }
-                                ]
-                            },
-                            {
-                                [Op.and]: [
-                                    { '$OrderLine.AnimalProductId$': { [Op.not]: null } },
-                                    { '$AnimalProduct.id$': { [Op.not]: null } }
-                                ]
-                            }
-                        ],
-                    }
-                }]
+
+                }],
+                where: {
+                    [Op.or]: [
+                        {
+                            [Op.and]: [
+                                { '$OrderLines.EggsBatchProductId$': { [Op.not]: null } },
+                                { '$OrderLines.EggsBatchProduct.id$': { [Op.not]: null } }
+                            ]
+                        },
+                        {
+                            [Op.and]: [
+                                { '$OrderLines.AnimalProductId$': { [Op.not]: null } },
+                                { '$OrderLines.AnimalProduct.id$': { [Op.not]: null } }
+                            ]
+                        }
+                    ],
+                }
             })
         }
 
