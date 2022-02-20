@@ -49,6 +49,7 @@ router.get('/UserId', async (req, res) => {
             request = await Model.findAll({
                 include: {
                     model: EggsBatch,
+                    required: true,
                     include: {
                         model: Exploration,
                         attributes: ['id', 'name', 'OrganizationId'],
