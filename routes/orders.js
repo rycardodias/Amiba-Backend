@@ -3,6 +3,12 @@ const router = express.Router()
 const Model = require('../models/Order')
 const User = require('../models/User')
 const OrderLine = require('../models/OrderLine')
+const EggsBatchProduct = require('../models/EggsBatchProduct')
+const AnimalProduct = require('../models/AnimalProduct')
+const Product = require('../models/Product')
+const Organization = require('../models/Organization')
+
+
 const jwt = require("jsonwebtoken");
 const { verifyPermissionArray } = require('../verifications/tokenVerifications');
 const ResponseModel = require('../lib/ResponseModel')
@@ -60,12 +66,53 @@ router.get('/UserId', async (req, res) => {
                 {
                     model: OrderLine,
                     required: true,
-                    // include: {
-                    //     model:
-                    //     required: true,
-                    //     where: { UserId: tokenDecoded.id },
-                    //     attributes: ['id', 'UserId']
-                    // }
+                    include: [{
+                        model: EggsBatchProduct,
+                        attributes: ['id', 'ProductId'],
+                        include: {
+                            model: Product,
+                            required: true,
+                            attributes: ['id', 'name', 'OrganizationId'],
+                            include: {
+                                model: Organization,
+                                required: true,
+                                where: { UserId: tokenDecoded.id },
+                                attributes: ['id', 'name', 'UserId'],
+                            }
+                        }
+
+                    },
+                    {
+                        model: AnimalProduct,
+                        attributes: ['id', 'ProductId'],
+                        include: {
+                            model: Product,
+                            required: true,
+                            attributes: ['id', 'name', 'OrganizationId'],
+                            include: {
+                                model: Organization,
+                                required: true,
+                                where: { UserId: tokenDecoded.id },
+                                attributes: ['id', 'name', 'UserId'],
+                            }
+                        }
+                    }],
+                    where: {
+                        [Op.or]: [
+                            {
+                                [Op.and]: [
+                                    { '$OrderLine.EggsBatchProductId$': { [Op.not]: null } },
+                                    { '$EggsBatchProduct.id$': { [Op.not]: null } }
+                                ]
+                            },
+                            {
+                                [Op.and]: [
+                                    { '$OrderLine.AnimalProductId$': { [Op.not]: null } },
+                                    { '$AnimalProduct.id$': { [Op.not]: null } }
+                                ]
+                            }
+                        ],
+                    }
                 }]
             })
         }

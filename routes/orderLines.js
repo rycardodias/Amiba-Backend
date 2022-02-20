@@ -97,7 +97,7 @@ router.get('/UserId', async (req, res) => {
                             ]
                         }
                     ],
-                },
+                }
             })
         }
 
