@@ -1,45 +1,65 @@
 SELECT
-    "OrderLine"."id",
-    "OrderLine"."quantity",
-    "OrderLine"."total",
-    "OrderLine"."totalVAT",
-    "OrderLine"."createdAt",
-    "OrderLine"."updatedAt",
-    "OrderLine"."OrderId",
-    "OrderLine"."AnimalProductId",
-    "OrderLine"."EggsBatchProductId",
-    "EggsBatchProduct"."id" AS "EggsBatchProduct.id",
-    "EggsBatchProduct"."ProductId" AS "EggsBatchProduct.ProductId",
-    "EggsBatchProduct->Product"."id" AS "EggsBatchProduct.Product.id",
-    "EggsBatchProduct->Product"."name" AS "EggsBatchProduct.Product.name",
-    "EggsBatchProduct->Product"."OrganizationId" AS "EggsBatchProduct.Product.OrganizationId",
-    "EggsBatchProduct->Product->Organization"."id" AS "EggsBatchProduct.Product.Organization.id",
-    "EggsBatchProduct->Product->Organization"."name" AS "EggsBatchProduct.Product.Organization.name",
-    "EggsBatchProduct->Product->Organization"."UserId" AS "EggsBatchProduct.Product.Organization.UserId",
-    "AnimalProduct"."id" AS "AnimalProduct.id",
-    "AnimalProduct"."ProductId" AS "AnimalProduct.ProductId",
-    "AnimalProduct->Product"."id" AS "AnimalProduct.Product.id",
-    "AnimalProduct->Product"."name" AS "AnimalProduct.Product.name",
-    "AnimalProduct->Product"."OrganizationId" AS "AnimalProduct.Product.OrganizationId",
-    "AnimalProduct->Product->Organization"."id" AS "AnimalProduct.Product.Organization.id",
-    "AnimalProduct->Product->Organization"."name" AS "AnimalProduct.Product.Organization.name",
-    "AnimalProduct->Product->Organization"."UserId" AS "AnimalProduct.Product.Organization.UserId"
+    "Order"."id",
+    "Order"."total",
+    "Order"."totalVAT",
+    "Order"."address",
+    "Order"."locale",
+    "Order"."zipcode",
+    "Order"."observation",
+    "Order"."fiscalNumber",
+    "Order"."createdAt",
+    "Order"."updatedAt",
+    "Order"."UserId",
+    "User"."id" AS "User.id",
+    "User"."name" AS "User.name",
+    "OrderLines"."id" AS "OrderLines.id",
+    "OrderLines"."quantity" AS "OrderLines.quantity",
+    "OrderLines"."total" AS "OrderLines.total",
+    "OrderLines"."totalVAT" AS "OrderLines.totalVAT",
+    "OrderLines"."createdAt" AS "OrderLines.createdAt",
+    "OrderLines"."updatedAt" AS "OrderLines.updatedAt",
+    "OrderLines"."OrderId" AS "OrderLines.OrderId",
+    "OrderLines"."AnimalProductId" AS "OrderLines.AnimalProductId",
+    "OrderLines"."EggsBatchProductId" AS "OrderLines.EggsBatchProductId",
+    "OrderLines->EggsBatchProduct"."id" AS "OrderLines.EggsBatchProduct.id",
+    "OrderLines->EggsBatchProduct"."ProductId" AS "OrderLines.EggsBatchProduct.ProductId",
+    "OrderLines->EggsBatchProduct->Product"."id" AS "OrderLines.EggsBatchProduct.Product.id",
+    "OrderLines->EggsBatchProduct->Product"."name" AS "OrderLines.EggsBatchProduct.Product.name",
+    "OrderLines->EggsBatchProduct->Product"."OrganizationId" AS "OrderLines.EggsBatchProduct.Product.OrganizationId",
+    "OrderLines->EggsBatchProduct->Product->Organization"."id" AS "OrderLines.EggsBatchProduct.Product.Organization.id",
+    "OrderLines->EggsBatchProduct->Product->Organization"."name" AS "OrderLines.EggsBatchProduct.Product.Organization.name",
+    "OrderLines->EggsBatchProduct->Product->Organization"."UserId" AS "OrderLines.EggsBatchProduct.Product.Organization.UserId",
+    "OrderLines->AnimalProduct"."id" AS "OrderLines.AnimalProduct.id",
+    "OrderLines->AnimalProduct"."ProductId" AS "OrderLines.AnimalProduct.ProductId",
+    "OrderLines->AnimalProduct->Product"."id" AS "OrderLines.AnimalProduct.Product.id",
+    "OrderLines->AnimalProduct->Product"."name" AS "OrderLines.AnimalProduct.Product.name",
+    "OrderLines->AnimalProduct->Product"."OrganizationId" AS "OrderLines.AnimalProduct.Product.OrganizationId",
+    "OrderLines->AnimalProduct->Product->Organization"."id" AS "OrderLines.AnimalProduct.Product.Organization.id",
+    "OrderLines->AnimalProduct->Product->Organization"."name" AS "OrderLines.AnimalProduct.Product.Organization.name",
+    "OrderLines->AnimalProduct->Product->Organization"."UserId" AS "OrderLines.AnimalProduct.Product.Organization.UserId"
 FROM
-    "OrderLines" AS "OrderLine"
+    "Orders" AS "Order"
+    LEFT OUTER JOIN "Users" AS "User" ON "Order"."UserId" = "User"."id"
+    INNER JOIN "OrderLines" AS "OrderLines" ON "Order"."id" = "OrderLines"."OrderId"
+    AND (
+        (
+            "OrderLine"."EggsBatchProductId" IS NOT NULL
+            AND "EggsBatchProduct"."id" IS NOT NULL
+        )
+        OR (
+            "OrderLine"."AnimalProductId" IS NOT NULL
+            AND "AnimalProduct"."id" IS NOT NULL
+        )
+    )
     LEFT OUTER JOIN (
-        "EggsBatchProducts" AS "EggsBatchProduct"
-        INNER JOIN "Products" AS "EggsBatchProduct->Product" ON "EggsBatchProduct"."ProductId" = "EggsBatchProduct->Product"."id"
-        INNER JOIN "Organizations" AS "EggsBatchProduct->Product->Organization" ON "EggsBatchProduct->Product"."OrganizationId" = "EggsBatchProduct->Product->Organization"."id"
-        AND "EggsBatchProduct->Product->Organization"."UserId" = '8afab94f-fa16-4837-9807-d9359f81bfe2'
-    ) ON "OrderLine"."EggsBatchProductId" = "EggsBatchProduct"."id"
+        "EggsBatchProducts" AS "OrderLines->EggsBatchProduct"
+        INNER JOIN "Products" AS "OrderLines->EggsBatchProduct->Product" ON "OrderLines->EggsBatchProduct"."ProductId" = "OrderLines->EggsBatchProduct->Product"."id"
+        INNER JOIN "Organizations" AS "OrderLines->EggsBatchProduct->Product->Organization" ON "OrderLines->EggsBatchProduct->Product"."OrganizationId" = "OrderLines->EggsBatchProduct->Product->Organization"."id"
+        AND "OrderLines->EggsBatchProduct->Product->Organization"."UserId" = '8afab94f-fa16-4837-9807-d9359f81bfe2'
+    ) ON "OrderLines"."EggsBatchProductId" = "OrderLines->EggsBatchProduct"."id"
     LEFT OUTER JOIN (
-        "AnimalProducts" AS "AnimalProduct"
-        INNER JOIN "Products" AS "AnimalProduct->Product" ON "AnimalProduct"."ProductId" = "AnimalProduct->Product"."id"
-        INNER JOIN "Organizations" AS "AnimalProduct->Product->Organization" ON "AnimalProduct->Product"."OrganizationId" = "AnimalProduct->Product->Organization"."id"
-        AND "AnimalProduct->Product->Organization"."UserId" = '8afab94f-fa16-4837-9807-d9359f81bfe2'
-    ) ON "OrderLine"."AnimalProductId" = "AnimalProduct"."id"
-WHERE
-    (
-        "OrderLine"."AnimalProductId" = '1a64b213-d21c-4616-b534-bc3370b86897'
-        OR "OrderLine"."EggsBatchProductId" = '1a64b213-d21c-4616-b534-bc3370b86897'
-    );
+        "AnimalProducts" AS "OrderLines->AnimalProduct"
+        INNER JOIN "Products" AS "OrderLines->AnimalProduct->Product" ON "OrderLines->AnimalProduct"."ProductId" = "OrderLines->AnimalProduct->Product"."id"
+        INNER JOIN "Organizations" AS "OrderLines->AnimalProduct->Product->Organization" ON "OrderLines->AnimalProduct->Product"."OrganizationId" = "OrderLines->AnimalProduct->Product->Organization"."id"
+        AND "OrderLines->AnimalProduct->Product->Organization"."UserId" = '8afab94f-fa16-4837-9807-d9359f81bfe2'
+    ) ON "OrderLines"."AnimalProductId" = "OrderLines->AnimalProduct"."id";
