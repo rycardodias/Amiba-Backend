@@ -51,7 +51,7 @@ router.get('/UserId', async (req, res) => {
         let tokenDecoded = jwt.verify(token || process.env.DEV_MODE_TOKEN, process.env.TOKEN_SECRET)
 
         let request
-        if (!await verifyPermissionArray(tokenDecoded.permission, ['ADMIN', 'AMIBA'])) {
+        if (await verifyPermissionArray(tokenDecoded.permission, ['ADMIN', 'AMIBA'])) {
             request = await Model.findAll({
                 include: {
                     model: User,
