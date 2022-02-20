@@ -8,6 +8,7 @@ const Product = require('../models/Product')
 const AnimalProduct = require('../models/AnimalProduct')
 const EggsBatchProduct = require('../models/EggsBatchProduct')
 const Organization = require('../models/Organization')
+const { Op } = require("sequelize");
 
 const jwt = require("jsonwebtoken");
 const { verifyPermissionArray } = require('../verifications/tokenVerifications');
@@ -52,13 +53,14 @@ router.get('/UserId', async (req, res) => {
             request = await Model.findAll({
                 include: [{
                     model: EggsBatchProduct,
-                    required: true,
                     attributes: ['id', 'ProductId'],
                     include: {
                         model: Product,
+                        required: true,
                         attributes: ['id', 'name', 'OrganizationId'],
                         include: {
                             model: Organization,
+                            required: true,
                             where: { UserId: tokenDecoded.id },
                             attributes: ['id', 'name', 'UserId'],
                         }
@@ -67,18 +69,24 @@ router.get('/UserId', async (req, res) => {
                 },
                 {
                     model: AnimalProduct,
-                    required: true,
                     attributes: ['id', 'ProductId'],
                     include: {
                         model: Product,
+                        required: true,
                         attributes: ['id', 'name', 'OrganizationId'],
                         include: {
                             model: Organization,
+                            required: true,
                             where: { UserId: tokenDecoded.id },
                             attributes: ['id', 'name', 'UserId'],
                         }
                     }
-                }]
+                }],
+                where: {
+                    [Op.or]: [
+                        { '$AnimalProducts.id$': { [Op.eq]: '$$AnimalProductsId' } }
+                        , { '$EggsBatchProducts.id$': { [Op.eq]: '$$EggsBatchProductsId' } }],
+                },
             })
         }
 
