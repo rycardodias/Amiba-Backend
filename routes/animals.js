@@ -78,15 +78,20 @@ router.get('/UserId', async (req, res) => {
         let request
         if (await verifyPermissionArray(tokenDecoded.permission, ['ADMIN', 'AMIBA'])) {
             request = await Model.findAll({
-                include: { model: Exploration }
+                include: {
+                    model: Exploration
+                }
             })
         } else {
             request = await Model.findAll({
                 include: {
                     model: Exploration,
+                    attributes: ['id', 'OrganizationId'],
                     required: true,
                     include: {
-                        model: Organization, where: { UserId: tokenDecoded.id }
+                        model: Organization,
+                        where: { UserId: tokenDecoded.id },
+                        attributes: ['id', 'UserId']
                     }
                 }
             })
