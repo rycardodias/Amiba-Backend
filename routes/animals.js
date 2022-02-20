@@ -86,7 +86,7 @@ router.get('/UserId', async (req, res) => {
             request = await Model.findAll({
                 include: {
                     model: Exploration,
-                    attributes: ['id', 'OrganizationId'],
+                    attributes: ['id', 'name', 'OrganizationId'],
                     required: true,
                     include: {
                         model: Organization,
