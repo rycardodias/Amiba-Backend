@@ -84,8 +84,8 @@ router.get('/UserId', async (req, res) => {
                 }],
                 where: {
                     [Op.or]: [
-                        { '$AnimalProducts.id$': { [Op.eq]: '$$AnimalProductsId' } }
-                        , { '$EggsBatchProducts.id$': { [Op.eq]: '$$EggsBatchProductsId' } }],
+                        { '$AnimalProduct.id$': { [Op.eq]: '$AnimalProductId$' } }
+                        , { '$EggsBatchProduct.id$': { [Op.eq]: '$$EggsBatchProductId$' } }],
                 },
             })
         }
