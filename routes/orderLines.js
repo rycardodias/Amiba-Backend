@@ -52,6 +52,7 @@ router.get('/UserId', async (req, res) => {
             request = await Model.findAll({
                 include: [{
                     model: EggsBatchProduct,
+                    required: true,
                     attributes: ['id', 'ProductId'],
                     include: {
                         model: Product,
@@ -66,6 +67,7 @@ router.get('/UserId', async (req, res) => {
                 },
                 {
                     model: AnimalProduct,
+                    required: true,
                     attributes: ['id', 'ProductId'],
                     include: {
                         model: Product,
