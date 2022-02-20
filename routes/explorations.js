@@ -76,7 +76,11 @@ router.get('/UserId', async (req, res) => {
         } else {
             request = await Model.findAll({
                 include: [
-                    { model: Organization, where: { UserId: tokenDecoded.id } }]
+                    {
+                        model: Organization,
+                        required: true,
+                        where: { UserId: tokenDecoded.id }
+                    }]
             })
         }
 
