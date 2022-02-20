@@ -84,8 +84,19 @@ router.get('/UserId', async (req, res) => {
                 }],
                 where: {
                     [Op.or]: [
-                        { '$AnimalProduct.id$': { [Op.eq]: '$AnimalProductId$' } }
-                        , { '$EggsBatchProduct.id$': { [Op.eq]: '$$EggsBatchProductId$' } }],
+                        {
+                            [Op.and]: [
+                                { '$OrderLine.EggsBatchProductId$': { [Op.not]: null } },
+                                { '$EggsBatchProduct.id$': { [Op.not]: null } }
+                            ]
+                        },
+                        {
+                            [Op.and]: [
+                                { '$OrderLine.AnimalProductId$': { [Op.not]: null } },
+                                { '$AnimalProduct.id$': { [Op.not]: null } }
+                            ]
+                        }
+                    ],
                 },
             })
         }
