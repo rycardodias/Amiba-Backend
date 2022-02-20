@@ -55,6 +55,7 @@ router.get('/UserId', async (req, res) => {
                         required: true,
                         include: {
                             model: Organization,
+                            required: true,
                             where: { UserId: tokenDecoded.id },
                             attributes: ['id', 'name', 'UserId']
                         }
