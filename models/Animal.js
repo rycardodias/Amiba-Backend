@@ -23,6 +23,14 @@ const Animal = db.define('Animal', {
             },
         }
     },
+    lgn: {
+        type: DataTypes.STRING,
+        unique: true,
+    },
+    lga: {
+        type: DataTypes.STRING,
+        unique: true,
+    },
     race: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -80,6 +88,9 @@ Exploration.hasMany(Animal)
 Animal.beforeSave((values, options) => {
     if (values.birthDate < values.slaughterDate) {
         throw new Error("slaughterDate must be greater than birthdate");
+    }
+    if ((values.lgn === undefined && values.lga === undefined) || (values.lgn === "" && values.lga === "")) {
+        throw new Error("LGN or LGA must be assigned");
     }
 })
 

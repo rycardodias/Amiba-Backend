@@ -167,7 +167,7 @@ router.get('/ExplorationId/:ExplorationId/certificated', async (req, res) => {
 router.post('/create', async (req, res) => {
     const response = new ResponseModel()
     try {
-        const { ExplorationId, identifier, race, gender, birthDate, weight } = req.body
+        const { ExplorationId, lgn, lga, identifier, race, gender, birthDate, weight } = req.body
 
         if (!(ExplorationId && identifier && race && gender && birthDate && weight)) {
             response.message = error_missing_fields
@@ -181,7 +181,9 @@ router.post('/create', async (req, res) => {
             race: race,
             gender: gender,
             birthDate: birthDate,
-            weight: weight
+            weight: weight,
+            lgn: lgn,
+            lga: lga,
         }
 
         const request = await Model.create(data)
