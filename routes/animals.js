@@ -206,7 +206,46 @@ router.post('/create', async (req, res) => {
 router.put('/update', async (req, res) => {
     const response = new ResponseModel()
     try {
-        const { id, slaughterDate, slaughterWeight, slaughterLocal, breeder, validated } = req.body
+        const { id, slaughterDate, slaughterWeight, slaughterLocal, breeder } = req.body
+
+        if (!id) {
+            response.message = error_missing_fields
+            response.error = error_missing_fields
+            res.status(400).json(response)
+        }
+
+        const data = {
+            slaughterDate: slaughterDate,
+            slaughterWeight: slaughterWeight,
+            slaughterLocal: slaughterLocal,
+            breeder: breeder
+        }
+
+        const request = await Model.update(data, {
+            where: { id: id },
+            returning: true
+        })
+
+        if (request[0] === 1) {
+            response.message = success_row_update
+            response.data = request[1][0].dataValues
+            res.status(200).json(response)
+        } else {
+            response.message = error_row_update
+            response.error = request[0]
+            res.status(404).json(response)
+        }
+    } catch (error) {
+        response.message = error_invalid_fields
+        response.error = error
+        return res.status(400).json(response)
+    }
+})
+
+router.put('/validate', async (req, res) => {
+    const response = new ResponseModel()
+    try {
+        const { id, validated } = req.body
 
         if (!id) {
             response.message = error_missing_fields
@@ -217,10 +256,6 @@ router.put('/update', async (req, res) => {
         const validPermission = await verifyTokenPermissions(req.session.token, ['ADMIN', 'AMIBA'])
 
         const data = {
-            slaughterDate: slaughterDate,
-            slaughterWeight: slaughterWeight,
-            slaughterLocal: slaughterLocal,
-            breeder: breeder,
             validated: validPermission === true ? validated : undefined,
         }
 
