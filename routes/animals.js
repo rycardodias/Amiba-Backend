@@ -12,7 +12,7 @@ const { error_missing_fields, error_invalid_fields, error_data_not_found, succes
     error_row_update, error_row_create, success_row_create, success_data_exits } = require('../lib/ResponseMessages')
 const { formatDateYYYYMMDD } = require('../lib/FormatDates')
 const jwt = require("jsonwebtoken");
-const { verifyPermissionArray } = require('../verifications/tokenVerifications');
+const { verifyPermissionArray, verifyTokenPermissions } = require('../verifications/tokenVerifications');
 
 router.get('/', async (req, res) => {
     const response = new ResponseModel()
@@ -206,7 +206,7 @@ router.post('/create', async (req, res) => {
 router.put('/update', async (req, res) => {
     const response = new ResponseModel()
     try {
-        const { id, slaughterDate, slaughterWeight, slaughterLocal, breeder } = req.body
+        const { id, slaughterDate, slaughterWeight, slaughterLocal, breeder, validated } = req.body
 
         if (!id) {
             response.message = error_missing_fields
@@ -214,11 +214,14 @@ router.put('/update', async (req, res) => {
             res.status(400).json(response)
         }
 
+        const validPermission = await verifyTokenPermissions(req.session.token, ['ADMIN', 'AMIBA'])
+
         const data = {
             slaughterDate: slaughterDate,
             slaughterWeight: slaughterWeight,
             slaughterLocal: slaughterLocal,
             breeder: breeder,
+            validated: validPermission === true ? validated : undefined,
         }
 
         const request = await Model.update(data, {

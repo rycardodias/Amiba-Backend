@@ -74,6 +74,10 @@ const Animal = db.define('Animal', {
     breeder: {
         type: DataTypes.BOOLEAN,
         defaultValue: false
+    },
+    validated: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false
     }
 },
 )
