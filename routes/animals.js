@@ -138,15 +138,23 @@ router.get('/ExplorationId/:ExplorationId/certificated', async (req, res) => {
             res.status(400).json(response)
         }
 
-        var minimumAge = new Date(new Date());
-        minimumAge.setMonth(new Date().getMonth() - animalMinAge);
+        var minimumAge = await new Date(new Date());
+        await minimumAge.setMonth(new Date().getMonth() - animalMinAge);
 
         const request = await Model.findAndCountAll({
             where:
-                Sequelize.literal(`"Exploration"."id" = '${req.params.ExplorationId}' `
-                    + `AND "Animal"."birthDate" >= "Exploration->Certifications"."initialDate" `
-                    + `AND "Animal"."birthDate" <= '${formatDateYYYYMMDD(minimumAge)}'`),
-            validated: { [Op.is]: true },
+                [
+                    {
+                        validated: { [Op.is]: true },
+                        ExplorationId: req.params.ExplorationId,
+                        birthDate: {
+                            [Op.lte]: formatDateYYYYMMDD(minimumAge),
+                        }
+                    },
+                    Sequelize.literal(
+                        `"Animal"."birthDate" >= "Exploration->Certifications"."initialDate" `
+                    )
+                ],
             include: [{
                 model: Exploration,
                 attributes: ['id', 'name'],
@@ -156,7 +164,7 @@ router.get('/ExplorationId/:ExplorationId/certificated', async (req, res) => {
                     required: true,
                     attributes: ['id', 'initialDate', 'finalDate'],
                     where: {
-                        finalDate: { [Op.gte]: new Date() },
+                        finalDate: { [Op.gte]: formatDateYYYYMMDD(new Date()) },
                     }
                 },
             }]
@@ -172,6 +180,7 @@ router.get('/ExplorationId/:ExplorationId/certificated', async (req, res) => {
             res.status(404).json(response)
         }
     } catch (error) {
+        console.log("error", error)
         response.message = error_data_not_found
         response.error = error
         return res.status(400).json(response)

@@ -44,7 +44,6 @@ Certification.belongsTo(Exploration, {
 Exploration.hasMany(Certification)
 
 Certification.beforeCreate(instance => {
-    console.log(instance)
     if(instance.initialDate> instance.finalDate) {
         throw new Error("initial and final Dates are invalid!");
     }
