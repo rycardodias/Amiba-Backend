@@ -146,6 +146,7 @@ router.get('/ExplorationId/:ExplorationId/certificated', async (req, res) => {
                 Sequelize.literal(`"Exploration"."id" = '${req.params.ExplorationId}' `
                     + `AND "Animal"."birthDate" >= "Exploration->Certifications"."initialDate" `
                     + `AND "Animal"."birthDate" <= '${formatDateYYYYMMDD(minimumAge)}'`),
+            validated: { [Op.is]: true },
             include: [{
                 model: Exploration,
                 attributes: ['id', 'name'],
