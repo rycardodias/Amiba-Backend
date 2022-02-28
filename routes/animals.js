@@ -93,7 +93,10 @@ router.get('/UserId', async (req, res) => {
                         where: { UserId: tokenDecoded.id },
                         attributes: ['id', 'UserId']
                     }
-                }
+                },
+                order: [
+                    ['createdAt', 'DESC'],
+                    ['updatedAt', 'DESC'],]
             })
         }
 
