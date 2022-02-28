@@ -95,8 +95,7 @@ router.get('/UserId', async (req, res) => {
                     }
                 },
                 order: [
-                    ['createdAt', 'DESC'],
-                    ['updatedAt', 'DESC'],]
+                    ['createdAt', 'DESC']]
             })
         }
 
