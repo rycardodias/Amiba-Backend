@@ -95,7 +95,7 @@ router.get('/UserId', async (req, res) => {
                     }
                 },
                 order: [
-                    ['createdAt', 'DESC']]
+                    ['createdAt', 'ASC']]
             })
         }
 
