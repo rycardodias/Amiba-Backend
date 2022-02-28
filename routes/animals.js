@@ -17,7 +17,13 @@ const { verifyPermissionArray, verifyTokenPermissions } = require('../verificati
 router.get('/', async (req, res) => {
     const response = new ResponseModel()
     try {
-        const request = await Model.findAll({ include: [Exploration] })
+        const request = await Model.findAll({
+            include: [Exploration],
+            order: [
+                ['createdAt', 'DESC'],
+                ['updatedAt', 'DESC']
+            ]
+        })
         if (request.length > 0) {
             response.message = success_data_exits
             response.data = request
@@ -80,7 +86,11 @@ router.get('/UserId', async (req, res) => {
             request = await Model.findAll({
                 include: {
                     model: Exploration
-                }
+                },
+                order: [
+                    ['createdAt', 'DESC'],
+                    ['updatedAt', 'DESC']
+                ]
             })
         } else {
             request = await Model.findAll({
@@ -95,7 +105,9 @@ router.get('/UserId', async (req, res) => {
                     }
                 },
                 order: [
-                    ['createdAt', 'ASC']]
+                    ['createdAt', 'DESC'],
+                    ['updatedAt', 'DESC']
+                ]
             })
         }
 
