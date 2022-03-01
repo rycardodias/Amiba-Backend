@@ -193,6 +193,62 @@ router.put('/update', async (req, res) => {
     }
 })
 
+router.get('/forgetPassword/:email', async (req, res) => {
+    const response = new ResponseModel()
+    try {
+        const { email } = req.params
+
+        const request = await Model.findOne({
+            where: {
+                email: email
+            },
+            returning: true
+        })
+
+        const newToken = jwt.sign({ id: request.id, email: request.email }, process.env.TOKEN_SECRET)
+
+        //https://myaccount.google.com/lesssecureapps?pli=1&rapt=AEjHL4Pm8T8M5qWHjZ_79Z-2gMMMJVOOPtaSa6_W2rxzcdbPe_HE4CNPkD0THRreigjLFCe1rbnyyxgdZxgYTEUVeNQ_QOet-Q
+        var transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+                user: process.env.EMAIL_USER,
+                pass: process.env.EMAIL_PASSWORD
+            }
+        });
+
+        var mailOptions = {
+            from: process.env.EMAIL_USER,
+            to: email,
+            subject: 'AMIBA - Repor palavra-chave',
+            text: `Repor palavra-chave: https://shop.amiba.pt/api/users/recoverPassword/${newToken}`
+        };
+
+        transporter.sendMail(mailOptions, function (error, info) {
+            if (error) {
+                console.log(error);
+                return res.status(400).json(error)
+            } else {
+                console.log('Email sent: ' + info.response);
+            }
+        });
+
+        if (request.dataValues) {
+            response.message = success_row_update
+            response.data = newToken
+            res.status(200).json(response)
+        } else {
+            response.message = error_row_update
+            response.error = request[0]
+            res.status(404).json(response)
+        }
+
+    } catch (error) {
+        response.message = error_invalid_fields
+        response.error = error
+        return res.status(400).json(response)
+    }
+})
+
 router.put('/updatePermission', async (req, res) => {
     const response = new ResponseModel()
     try {
