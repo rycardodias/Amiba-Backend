@@ -1,8 +1,6 @@
 const { DataTypes, Sequelize } = require('sequelize');
 const db = require('../config/database');
 
-// db.sync({force: true})
-
 const User = db.define('User', {
     id: {
         type: DataTypes.UUID,
@@ -84,7 +82,12 @@ const User = db.define('User', {
         type: DataTypes.INTEGER,
         unique: true
     },
+    emailValidated: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false
+    }
 },
 )
 
+// User.sync({alter: true})
 module.exports = User

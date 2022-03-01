@@ -8,7 +8,7 @@ const { error_missing_fields, error_invalid_token, error_invalid_token_or_permis
     success_row_delete, error_row_delete, success_row_update, error_row_update, error_row_create, success_row_create,
     success_token_delete, success_token_valid, success_data_exits, error_invalid_password } = require('../lib/ResponseMessages');
 const { verifyTokenPermissions, validateToken } = require('../verifications/tokenVerifications');
-
+const nodemailer = require("nodemailer");
 router.get('/', async (req, res) => {
     const response = new ResponseModel()
 
@@ -100,6 +100,33 @@ router.post('/create', async (req, res) => {
         response.data = jwt.sign({ id: request.id, permission: request.permission }, process.env.TOKEN_SECRET)
 
         req.session = { token: response.data };
+
+        const newToken = jwt.sign({ id: request.id, email: request.email }, process.env.TOKEN_SECRET)
+
+        //https://myaccount.google.com/lesssecureapps?pli=1&rapt=AEjHL4Pm8T8M5qWHjZ_79Z-2gMMMJVOOPtaSa6_W2rxzcdbPe_HE4CNPkD0THRreigjLFCe1rbnyyxgdZxgYTEUVeNQ_QOet-Q
+        var transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+                user: process.env.EMAIL_USER,
+                pass: process.env.EMAIL_PASSWORD
+            }
+        });
+
+        var mailOptions = {
+            from: process.env.EMAIL_USER,
+            to: email,
+            subject: 'AMIBA - Validação de E-mail',
+            text: `Validar email: https://shop.amiba.pt/api/users/validateEmail/${newToken}`
+        };
+
+        transporter.sendMail(mailOptions, function (error, info) {
+            if (error) {
+                console.log(error);
+                return res.status(400).json(error)
+            } else {
+                console.log('Email sent: ' + info.response);
+            }
+        });
 
         return res.status(201).json(response)
 
@@ -251,6 +278,96 @@ router.put('/update/password', async (req, res) => {
             return res.status(404).json(response)
         }
 
+    } catch (error) {
+        response.message = error_invalid_fields
+        response.error = error
+        return res.status(400).json(response)
+    }
+})
+
+router.get('/generateEmailValidation/:email', async (req, res) => {
+    const response = new ResponseModel()
+    try {
+        const { email } = req.params
+
+        const request = await Model.findOne({
+            where: {
+                email: email,
+                emailValidated: false
+            },
+            returning: true
+        })
+        const newToken = jwt.sign({ id: request.dataValues.id, email: email }, process.env.TOKEN_SECRET)
+
+        //https://myaccount.google.com/lesssecureapps?pli=1&rapt=AEjHL4Pm8T8M5qWHjZ_79Z-2gMMMJVOOPtaSa6_W2rxzcdbPe_HE4CNPkD0THRreigjLFCe1rbnyyxgdZxgYTEUVeNQ_QOet-Q
+        var transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+                user: process.env.EMAIL_USER,
+                pass: process.env.EMAIL_PASSWORD
+            }
+        });
+
+        var mailOptions = {
+            from: process.env.EMAIL_USER,
+            to: email,
+            subject: 'AMIBA - Validação de E-mail',
+            text: `Validar email: https://shop.amiba.pt/api/users/validateEmail/${newToken}`
+        };
+
+        transporter.sendMail(mailOptions, function (error, info) {
+            if (error) {
+                console.log(error);
+                return res.status(400).json(error)
+            } else {
+                console.log('Email sent: ' + info.response);
+            }
+        });
+
+        if (request.dataValues) {
+            response.message = success_row_update
+            response.data = newToken
+            res.status(200).json(response)
+        } else {
+            response.message = error_row_update
+            response.error = request[0]
+            res.status(404).json(response)
+        }
+    } catch (error) {
+        response.message = error_invalid_fields
+        response.error = error
+        return res.status(400).json(response)
+    }
+})
+
+router.get('/validateEmail/:validationToken', async (req, res) => {
+    const response = new ResponseModel()
+    try {
+        const { validationToken } = req.params
+
+        const tokenDecoded = jwt.decode(validationToken, process.env.TOKEN_SECRET)
+
+        console.log(tokenDecoded)
+
+        const request = await Model.update({ emailValidated: true }, {
+            where: {
+                id: tokenDecoded.id,
+                email: tokenDecoded.email
+            },
+            returning: true
+        })
+
+        const values = request[1][0].dataValues
+
+        if (request[0] === 1) {
+            response.message = success_row_update
+            response.data = { name: values.name, email: values.email, emailValidated: values.emailValidated }
+            res.status(200).json(response)
+        } else {
+            response.message = error_row_update
+            response.error = request[0]
+            res.status(404).json(response)
+        }
     } catch (error) {
         response.message = error_invalid_fields
         response.error = error
