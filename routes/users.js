@@ -220,7 +220,7 @@ router.post('/forgetPassword', async (req, res) => {
             from: process.env.EMAIL_USER,
             to: email,
             subject: 'AMIBA - Repor palavra-chave',
-            text: `Repor palavra-chave: https://shop.amiba.pt/api/users/recoverPassword/${newToken}`
+            text: `Repor palavra-chave: https://shop.amiba.pt/recover-password?token=${newToken}`
         };
 
         transporter.sendMail(mailOptions, function (error, info) {
@@ -440,8 +440,6 @@ router.get('/validateEmail/:validationToken', async (req, res) => {
         const { validationToken } = req.params
 
         const tokenDecoded = jwt.decode(validationToken, process.env.TOKEN_SECRET)
-
-        console.log(tokenDecoded)
 
         const request = await Model.update({ emailValidated: true }, {
             where: {
