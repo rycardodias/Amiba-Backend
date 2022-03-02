@@ -11,7 +11,8 @@ const { error_missing_fields, error_invalid_fields, error_data_not_found, succes
     error_row_update, error_row_create, success_row_create, success_data_exits, error_invalid_token } = require('../lib/ResponseMessages')
 const { Op } = require("sequelize");
 const { verifyTokenPermissions } = require('../verifications/tokenVerifications');
-
+const jwt = require("jsonwebtoken");
+const { verifyPermissionArray } = require('../verifications/tokenVerifications');
 
 router.get('/', async (req, res) => {
     const response = new ResponseModel()
@@ -71,15 +72,9 @@ router.get('/UserId', async (req, res) => {
     const response = new ResponseModel()
     try {
         const { token } = req.session
-
-        if (!token && !process.env.DEV_MODE) {
-            response.message = error_missing_fields
-            response.error = error_missing_fields
-            return res.status(400).json(response)
-        }
-
-        let tokenDecoded = jwt.verify(token || process.env.DEV_MODE_TOKEN, process.env.TOKEN_SECRET)
-
+        console.log("entra")
+        let tokenDecoded = await jwt.verify(token || process.env.DEV_MODE_TOKEN, process.env.TOKEN_SECRET)
+        console.log('tokenDecoded', tokenDecoded)
         let request
         if (await verifyPermissionArray(tokenDecoded.permission, ['ADMIN', 'AMIBA'])) {
             request = await Model.findAll({})
