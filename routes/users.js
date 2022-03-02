@@ -249,6 +249,44 @@ router.post('/forgetPassword', async (req, res) => {
     }
 })
 
+router.put('/recoverPassword/:token', async (req, res) => {
+    const response = new ResponseModel()
+    try {
+        const { token } = req.params
+        const { password, repeatPassword } = req.body
+
+        if (password !== repeatPassword) throw new Error("Invalid password match")
+
+        const tokenDecoded = await jwt.decode(token, process.env.TOKEN_SECRET)
+
+        const request = await Model.update({ password: await bcrypt.hashSync(password, 10) }, {
+            where: {
+                id: tokenDecoded.id,
+                email: tokenDecoded.email,
+            },
+            returning: true
+        })
+
+        const row = request[1][0].dataValues
+        
+        if (request[0] === 1) {
+            response.message = success_row_update
+            response.data = {email: row.email, name: row.name}
+            return res.status(200).json(response)
+        } else {
+            response.message = error_row_update
+            response.error = request[0]
+            return res.status(404).json(response)
+        }
+
+    } catch (error) {
+        console.log(error)
+        response.message = error_invalid_fields
+        response.error = error.message
+        return res.status(400).json(response)
+    }
+})
+
 router.put('/updatePermission', async (req, res) => {
     const response = new ResponseModel()
     try {
