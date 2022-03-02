@@ -67,16 +67,27 @@ router.get('/id/:id', async (req, res) => {
 
 })
 
-router.get('/UserId/:UserId', async (req, res) => {
+router.get('/UserId', async (req, res) => {
     const response = new ResponseModel()
     try {
-        if (!req.params.UserId) {
+        const { token } = req.session
+
+        if (!token && !process.env.DEV_MODE) {
             response.message = error_missing_fields
             response.error = error_missing_fields
-            res.status(400).json(response)
+            return res.status(400).json(response)
         }
 
-        const request = await Model.findAll({ where: { UserId: req.params.UserId } })
+        let tokenDecoded = jwt.verify(token || process.env.DEV_MODE_TOKEN, process.env.TOKEN_SECRET)
+
+        let request
+        if (await verifyPermissionArray(tokenDecoded.permission, ['ADMIN', 'AMIBA'])) {
+            request = await Model.findAll({})
+        } else {
+            request = await Model.findAll({
+                where: { UserId: tokenDecoded.id },
+            })
+        }
 
         if (request) {
             response.message = success_data_exits
