@@ -193,10 +193,10 @@ router.put('/update', async (req, res) => {
     }
 })
 
-router.get('/forgetPassword/:email', async (req, res) => {
+router.post('/forgetPassword', async (req, res) => {
     const response = new ResponseModel()
     try {
-        const { email } = req.params
+        const { email } = req.body
 
         const request = await Model.findOne({
             where: {
@@ -341,10 +341,10 @@ router.put('/update/password', async (req, res) => {
     }
 })
 
-router.get('/generateEmailValidation/:email', async (req, res) => {
+router.post('/generateEmailValidation', async (req, res) => {
     const response = new ResponseModel()
     try {
-        const { email } = req.params
+        const { email } = req.body
 
         const request = await Model.findOne({
             where: {
