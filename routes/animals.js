@@ -206,8 +206,8 @@ router.post('/create', async (req, res) => {
             gender: gender,
             birthDate: birthDate,
             weight: weight,
-            lgn: lgn,
-            lga: lga,
+            lgn: lgn !== "" ? lgn : undefined,
+            lga: lga !== "" ? lga : undefined,
         }
 
         const request = await Model.create(data)
