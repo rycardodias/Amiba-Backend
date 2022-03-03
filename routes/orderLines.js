@@ -50,7 +50,54 @@ router.get('/UserId', async (req, res) => {
 
         let request
         if (await verifyPermissionArray(tokenDecoded.permission, ['ADMIN', 'AMIBA'])) {
-            request = await Model.findAll()
+            request = await Model.findAll({
+                include: [{
+                    model: EggsBatchProduct,
+                    attributes: ['id', 'ProductId', 'EggsBatchId'],
+                    include: [
+                        {
+                            model: Product,
+                            required: true,
+                            attributes: ['id', 'name', 'OrganizationId'],
+                        },
+                        {
+                            model: EggsBatch,
+                            required: true,
+                        }
+                    ]
+                },
+                {
+                    model: AnimalProduct,
+                    attributes: ['id', 'ProductId', 'AnimalId'],
+                    include: [
+                        {
+                            model: Product,
+                            required: true,
+                            attributes: ['id', 'name', 'OrganizationId'],
+                        },
+                        {
+                            model: Animal,
+                            required: true,
+                        }
+                    ]
+                }],
+                where: {
+                    [Op.or]: [
+                        {
+                            [Op.and]: [
+                                { '$OrderLine.EggsBatchProductId$': { [Op.not]: null } },
+                                { '$EggsBatchProduct.id$': { [Op.not]: null } }
+                            ]
+                        },
+                        {
+                            [Op.and]: [
+                                { '$OrderLine.AnimalProductId$': { [Op.not]: null } },
+                                { '$AnimalProduct.id$': { [Op.not]: null } }
+                            ]
+                        }
+                    ],
+                }
+            })
         } else {
             request = await Model.findAll({
                 include: [{
