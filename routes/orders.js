@@ -6,6 +6,8 @@ const OrderLine = require('../models/OrderLine')
 const EggsBatchProduct = require('../models/EggsBatchProduct')
 const AnimalProduct = require('../models/AnimalProduct')
 const Product = require('../models/Product')
+const OrderHistory = require('../models/OrderHistory')
+
 const Organization = require('../models/Organization')
 const { Op } = require("sequelize");
 const jwt = require("jsonwebtoken");
@@ -51,10 +53,15 @@ router.get('/UserId', async (req, res) => {
         let request
         if (await verifyPermissionArray(tokenDecoded.permission, ['ADMIN', 'AMIBA'])) {
             request = await Model.findAll({
-                include: {
-                    model: User,
-                    attributes: ['id', 'name']
-                }
+                include: [
+                    {
+                        model: User,
+                        attributes: ['id', 'name']
+                    },
+                    {
+                        model: OrderHistory,
+                    }
+                ]
             })
         } else {
             request = await Model.findAll({
@@ -62,6 +69,7 @@ router.get('/UserId', async (req, res) => {
                     model: User,
                     attributes: ['id', 'name']
                 },
+                
                 {
                     model: OrderLine,
                     required: true,
