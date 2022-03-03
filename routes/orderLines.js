@@ -6,7 +6,9 @@ const { error_missing_fields, error_invalid_fields, error_data_not_found, succes
     error_row_update, error_row_create, success_row_create, success_data_exits } = require('../lib/ResponseMessages')
 const Product = require('../models/Product')
 const AnimalProduct = require('../models/AnimalProduct')
+const Animal = require('../models/Animal')
 const EggsBatchProduct = require('../models/EggsBatchProduct')
+const EggsBatch = require('../models/EggsBatch')
 const Organization = require('../models/Organization')
 const { Op } = require("sequelize");
 
@@ -53,34 +55,46 @@ router.get('/UserId', async (req, res) => {
             request = await Model.findAll({
                 include: [{
                     model: EggsBatchProduct,
-                    attributes: ['id', 'ProductId'],
-                    include: {
-                        model: Product,
-                        required: true,
-                        attributes: ['id', 'name', 'OrganizationId'],
-                        include: {
-                            model: Organization,
+                    attributes: ['id', 'ProductId', 'EggsBatchId'],
+                    include: [
+                        {
+                            model: Product,
                             required: true,
-                            where: { UserId: tokenDecoded.id },
-                            attributes: ['id', 'name', 'UserId'],
+                            attributes: ['id', 'name', 'OrganizationId'],
+                            include: {
+                                model: Organization,
+                                required: true,
+                                where: { UserId: tokenDecoded.id },
+                                attributes: ['id', 'name', 'UserId'],
+                            }
+                        },
+                        {
+                            model: EggsBatch,
+                            required: true,
                         }
-                    }
 
+                    ]
                 },
                 {
                     model: AnimalProduct,
-                    attributes: ['id', 'ProductId'],
-                    include: {
-                        model: Product,
-                        required: true,
-                        attributes: ['id', 'name', 'OrganizationId'],
-                        include: {
-                            model: Organization,
+                    attributes: ['id', 'ProductId', 'AnimalId'],
+                    include: [
+                        {
+                            model: Product,
                             required: true,
-                            where: { UserId: tokenDecoded.id },
-                            attributes: ['id', 'name', 'UserId'],
+                            attributes: ['id', 'name', 'OrganizationId'],
+                            include: {
+                                model: Organization,
+                                required: true,
+                                where: { UserId: tokenDecoded.id },
+                                attributes: ['id', 'name', 'UserId'],
+                            }
+                        },
+                        {
+                            model: Animal,
+                            required: true,
                         }
-                    }
+                    ]
                 }],
                 where: {
                     [Op.or]: [
