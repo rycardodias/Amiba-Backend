@@ -74,7 +74,14 @@ router.get('/UserId', async (req, res) => {
                     model: User,
                     attributes: ['id', 'name'],
                 },
-
+                {
+                    model: OrderHistory,
+                    limit: 1,
+                    order: [
+                        ['createdAt', 'DESC'],
+                        ['updatedAt', 'DESC']
+                    ]
+                },
                 {
                     model: OrderLine,
                     required: true,
