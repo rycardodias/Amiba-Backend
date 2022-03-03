@@ -3,15 +3,13 @@ const router = express.Router()
 const Model = require('../models/AnimalProduct')
 const Product = require('../models/Product')
 const Animal = require('../models/Animal')
-
 const Organization = require('../models/Organization')
 const jwt = require("jsonwebtoken");
-
 const { Op } = require("sequelize");
 const ResponseModel = require('../lib/ResponseModel')
 const { error_missing_fields, error_invalid_fields, error_data_not_found, success_row_delete, error_row_delete, success_row_update,
     error_row_update, error_row_create, success_row_create, success_data_exits } = require('../lib/ResponseMessages')
-
+const { verifyPermissionArray, verifyTokenPermissions } = require('../verifications/tokenVerifications');
 
 router.get('/', async (req, res) => {
     const response = new ResponseModel()
@@ -56,12 +54,7 @@ router.get('/UserId', async (req, res) => {
                     {
                         model: Animal,
                         required: true,
-                        attributes: ['id', 'identifier', 'lgn', 'lga', 'OrganizationId'],
-                        include: {
-                            model: Organization,
-                            required: true,
-                            attributes: ['id', 'name', 'UserId']
-                        }
+                        attributes: ['id', 'identifier', 'lgn', 'lga', 'ExplorationId'],
                     }
                 ]
             })
@@ -81,18 +74,14 @@ router.get('/UserId', async (req, res) => {
                     {
                         model: Animal,
                         required: true,
-                        attributes: ['id', 'identifier', 'lgn', 'lga', 'OrganizationId'],
-                        include: {
-                            model: Organization,
-                            required: true,
-                            where: { UserId: tokenDecoded.id },
-                            attributes: ['id', 'name', 'UserId']
-                        }
+                        attributes: ['id', 'identifier', 'lgn', 'lga', 'ExplorationId'],
+
                     }
                 ]
             })
         }
 
+        console.log(request)
         if (request.length > 0) {
             response.message = success_data_exits
             response.data = request
@@ -103,6 +92,7 @@ router.get('/UserId', async (req, res) => {
             res.status(404).json(response)
         }
     } catch (error) {
+        console.log(error)
         response.message = error_data_not_found
         response.error = error
         return res.status(400).json(response)
