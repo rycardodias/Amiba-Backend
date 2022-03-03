@@ -60,6 +60,11 @@ router.get('/UserId', async (req, res) => {
                     },
                     {
                         model: OrderHistory,
+                        limit: 1,
+                        order: [
+                            ['createdAt', 'DESC'],
+                            ['updatedAt', 'DESC']
+                        ]
                     }
                 ]
             })
@@ -67,9 +72,9 @@ router.get('/UserId', async (req, res) => {
             request = await Model.findAll({
                 include: [{
                     model: User,
-                    attributes: ['id', 'name']
+                    attributes: ['id', 'name'],
                 },
-                
+
                 {
                     model: OrderLine,
                     required: true,
