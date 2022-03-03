@@ -2,6 +2,8 @@ const express = require('express')
 const router = express.Router()
 const Model = require('../models/AnimalProduct')
 const Product = require('../models/Product')
+const Animal = require('../models/Animal')
+
 const Organization = require('../models/Organization')
 const jwt = require("jsonwebtoken");
 
@@ -37,18 +39,60 @@ router.get('/UserId', async (req, res) => {
         const { token } = req.session
 
         let tokenDecoded = jwt.verify(token || process.env.DEV_MODE_TOKEN, process.env.TOKEN_SECRET)
-        
-        const request = await Model.findAll({
-            include: {
-                model: Product,
-                attributes: ['name', 'OrganizationId'],
-                include: {
-                    model: Organization,
-                    where: { UserId: tokenDecoded.id },
-                    attributes: ['id', 'name', 'UserId']
-                }
-            }
-        })
+
+        let request
+        if (await verifyPermissionArray(tokenDecoded.permission, ['ADMIN', 'AMIBA'])) {
+            request = await Model.findAll({
+                include: [
+                    {
+                        model: Product,
+                        attributes: ['name', 'OrganizationId'],
+                        include: {
+                            model: Organization,
+                            required: true,
+                            attributes: ['id', 'name', 'UserId']
+                        }
+                    },
+                    {
+                        model: Animal,
+                        required: true,
+                        attributes: ['id', 'identifier', 'lgn', 'lga', 'OrganizationId'],
+                        include: {
+                            model: Organization,
+                            required: true,
+                            attributes: ['id', 'name', 'UserId']
+                        }
+                    }
+                ]
+            })
+        } else {
+            request = await Model.findAll({
+                include: [
+                    {
+                        model: Product,
+                        attributes: ['name', 'OrganizationId'],
+                        include: {
+                            model: Organization,
+                            required: true,
+                            where: { UserId: tokenDecoded.id },
+                            attributes: ['id', 'name', 'UserId']
+                        }
+                    },
+                    {
+                        model: Animal,
+                        required: true,
+                        attributes: ['id', 'identifier', 'lgn', 'lga', 'OrganizationId'],
+                        include: {
+                            model: Organization,
+                            required: true,
+                            where: { UserId: tokenDecoded.id },
+                            attributes: ['id', 'name', 'UserId']
+                        }
+                    }
+                ]
+            })
+        }
+
         if (request.length > 0) {
             response.message = success_data_exits
             response.data = request
