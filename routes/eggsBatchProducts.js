@@ -141,7 +141,7 @@ router.post('/create', async (req, res) => {
         }
     } catch (error) {
         response.message = error_invalid_fields
-        response.error = error
+        response.error = error.message
         return res.status(400).json(response)
     }
 })

@@ -58,18 +58,19 @@ EggsBatchProduct.beforeDestroy(async (values, options) => {
         { where: { id: values.EggsBatchId } })
 })
 
-// SELECT "quantityAvailable"
-// 	  INTO v_quantityAvailable
-// 	  FROM "EggsBatches"
-// 	 WHERE "EggsBatches"."id" = OLD."EggsBatchId";
+EggsBatchProduct.beforeCreate(async (values, options) => {
+    const request = await EggsBatch.findByPk(values.EggsBatchId)
+    const lines = await EggsBatchProduct.findAll({ where: { EggsBatchId: values.EggsBatchId } })
 
-// 	 IF (OLD."quantity" > v_quantityAvailable) THEN
-// 		RAISE EXCEPTION 'quantity to remove is greater than quantityAvailable';
-// 	END IF;
-
-// 	UPDATE "EggsBatches" SET "quantity" = "quantity" - OLD."quantity",
-// 	   	   "quantityAvailable" = "quantityAvailable" - OLD."quantity"
-// 	 WHERE "EggsBatches"."id" = OLD."EggsBatchId";
+    let totalLines = 0
+    for (const item of lines) {
+        totalLines += await item.dataValues.quantity
+    }
+    
+    if (request.quantity < (totalLines + values.quantity)) {
+        throw new Error("Invalid quantity");
+    }
+})
 
 // EggsBatchProduct.sync({ alter: true })
 module.exports = EggsBatchProduct

@@ -56,7 +56,6 @@ app.use(`${process.env.BASEPATH}/certifications`, require('./routes/certificatio
 app.use(`${process.env.BASEPATH}/products`, require('./routes/products'))
 app.use(`${process.env.BASEPATH}/orderLines`, require('./routes/orderLines'))
 app.use(`${process.env.BASEPATH}/eggsBatchs`, require('./routes/eggsBatchs'))
-app.use(`${process.env.BASEPATH}/eggsBatchsLines`, require('./routes/eggsBatchsLines'))
 app.use(`${process.env.BASEPATH}/animals`, require('./routes/animals'))
 app.use(`${process.env.BASEPATH}/animalProducts`, require('./routes/animalProducts'))
 app.use(`${process.env.BASEPATH}/eggsBatchProducts`, require('./routes/eggsBatchProducts'))

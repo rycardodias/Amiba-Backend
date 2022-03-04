@@ -141,11 +141,13 @@ router.get('/ExplorationId/:ExplorationId', async (req, res) => {
 router.post('/create', async (req, res) => {
     const response = new ResponseModel()
     try {
-        const { name, ExplorationId, validity } = req.body
+        const { name, ExplorationId, quantity, validity } = req.body
 
         const data = {
             name: name,
             ExplorationId: ExplorationId,
+            quantity: quantity,
+            quantityAvailable: quantity,
             validity: validity
         }
 
