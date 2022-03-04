@@ -34,6 +34,11 @@ EggsBatchLine.afterCreate((instance, options) => {
         { where: { id: instance.EggsBatchId } })
 })
 
+EggsBatchLine.beforeDestroy(async (values, options) => {
+    await EggsBatch.decrement({ quantity: values.quantity, quantityAvailable: values.quantity },
+        { where: { id: values.EggsBatchId } })
+})
+
 // EggsBatchLine.sync({ force: true })
 
 module.exports = EggsBatchLine

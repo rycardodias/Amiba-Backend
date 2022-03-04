@@ -49,8 +49,6 @@ app.get(`${process.env.BASEPATH}`, (req, res) => res.send('INDEX - AMIBA WEBSERV
 //routes
 app.use(`${process.env.BASEPATH}/users`, require('./routes/users'))
 app.use(`${process.env.BASEPATH}/organizations`, require('./routes/organizations'))
-app.use(`${process.env.BASEPATH}/restaurants`, require('./routes/restaurants'))
-app.use(`${process.env.BASEPATH}/menus`, require('./routes/menus'))
 app.use(`${process.env.BASEPATH}/orders`, require('./routes/orders'))
 app.use(`${process.env.BASEPATH}/orderHistory`, require('./routes/orderHistory'))
 app.use(`${process.env.BASEPATH}/explorations`, require('./routes/explorations'))

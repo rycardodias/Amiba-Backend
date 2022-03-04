@@ -49,6 +49,12 @@ AnimalProduct.belongsTo(Animal, {
 })
 Animal.hasMany(AnimalProduct)
 
+AnimalProduct.beforeDestroy((values, options) => {
+    if (values.quantity > values.quantityAvailable) {
+        throw new Error("This record has already been used");
+    }
+})
+
 // AnimalProduct.sync({alter: true})
 
 module.exports = AnimalProduct

@@ -324,7 +324,7 @@ router.delete('/delete', async (req, res) => {
             response.error = error_missing_fields
             return res.status(400).json(response)
         }
-        const request = await Model.destroy({ where: { id: id } })
+        const request = await Model.destroy({ where: { id: id }, individualHooks: true })
 
         if (request === 1) {
             response.message = success_row_delete
@@ -337,7 +337,7 @@ router.delete('/delete', async (req, res) => {
         }
     } catch (error) {
         response.message = error_invalid_fields
-        response.error = error
+        response.error = error.message
         return res.status(400).json(response)
     }
 })

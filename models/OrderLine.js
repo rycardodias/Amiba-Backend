@@ -55,20 +55,18 @@ OrderLine.belongsTo(EggsBatchProduct, {
 })
 EggsBatchProduct.hasMany(OrderLine)
 
-// OrderLine.afterCreate((instance, options) => {
-//     console.log(instance);
-//     if (instance.EggsBatchProductId) {
-//         EggsBatchProduct.decrement({ quantityAvailable: instance.quantity },
-//             { where: { id: instance.EggsBatchProductId } })
-//     } else {
-//         AnimalProduct.decrement({ quantityAvailable: instance.quantity },
-//             { where: { id: instance.AnimalProductId } })
-//     }
-// })
+OrderLine.beforeDestroy(async (values, options) => {
+    if (values.AnimalProductId) {
+        await AnimalProduct.increment({ quantityAvailable: values.quantity },
+            { where: { id: values.AnimalProductId } })
+    } else {
+        await EggsBatchProduct.increment({ quantityAvailable: values.quantity },
+            { where: { id: values.EggsBatchProductId } })
+    }
 
-// OrderLine.afterSave(instance => console.log("save", instance))
-// OrderLine.afterCreate(instance => console.log("aftercreate", instance))
-// OrderLine.afterUpdate(instance => console.log("aftercreate", instance))
+    await Order.decrement({ total: values.total, totalVAT: values.totalVAT },
+        { where: { id: values.OrderId } })
+})
 
 // OrderLine.sync({ force: true })
 
