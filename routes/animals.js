@@ -138,9 +138,10 @@ router.get('/ExplorationId/:ExplorationId/certificated', async (req, res) => {
             res.status(400).json(response)
         }
 
-        var minimumAge = await new Date(new Date());
-        await minimumAge.setMonth(new Date().getMonth() - animalMinAge);
-
+        var minimumAge = await new Date();
+        await minimumAge.setMonth(minimumAge.getMonth() - animalMinAge);
+        minimumAge = await formatDateYYYYMMDD(minimumAge)
+        
         const request = await Model.findAndCountAll({
             where:
                 [
@@ -148,7 +149,7 @@ router.get('/ExplorationId/:ExplorationId/certificated', async (req, res) => {
                         validated: { [Op.is]: true },
                         ExplorationId: req.params.ExplorationId,
                         birthDate: {
-                            [Op.lte]: formatDateYYYYMMDD(minimumAge),
+                            [Op.lte]: minimumAge,
                         }
                     },
                     Sequelize.literal(
