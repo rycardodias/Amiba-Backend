@@ -96,6 +96,8 @@ router.post('/createOrderOrderLines', async (req, res) => {
                     await OrderLine.create(dataLines, { transaction: t })
 
                     if (element.Product.type === "EGGS") {
+                        //FIXME porque não tem o {transaction: t} ? falta eliminar do EggsBatch
+
                         await EggsBatchProduct.decrement({ quantityAvailable: row.quantity }, { where: { id: row.id } })
                     } else {
                         await AnimalProduct.decrement({ quantityAvailable: row.quantity }, { where: { id: row.id } })

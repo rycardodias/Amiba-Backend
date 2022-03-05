@@ -15,7 +15,6 @@ const EggsBatch = db.define('EggsBatch', {
     quantity: {
         type: DataTypes.INTEGER,
         allowNull: false,
-        defaultValue: 0,
         validate: {
             notEmpty: {
                 msg: "quantity field is required",
@@ -25,7 +24,6 @@ const EggsBatch = db.define('EggsBatch', {
     quantityAvailable: {
         type: DataTypes.INTEGER,
         allowNull: false,
-        defaultValue: 0,
         validate: {
             notEmpty: {
                 msg: "quantity field is required",
@@ -50,6 +48,27 @@ EggsBatch.belongsTo(Exploration, {
     foreignKey: { allowNull: false },
 })
 Exploration.hasMany(EggsBatch)
+
+EggsBatch.beforeUpdate(async (values, options) => {
+    const newDataValues = values.dataValues
+    const previousDataValues = values._previousDataValues
+
+    if (!(newDataValues.quantity === previousDataValues.quantity && newDataValues.quantityAvailable === previousDataValues.quantityAvailable)) {
+
+        if (newDataValues.quantity > previousDataValues.quantity) {
+            // ver se há quantidade suficiente no lote para preencher
+            const quantityDiff = newDataValues.quantity - previousDataValues.quantity
+
+            values.quantityAvailable += quantityDiff
+
+        } else {
+            const newQuantityAvailable = previousDataValues.quantityAvailable - (previousDataValues.quantity - newDataValues.quantity)
+            if (newQuantityAvailable < 0) throw new Error("QuantityAvailable must be greater than zero");
+
+            values.quantityAvailable = newQuantityAvailable
+        }
+    }
+})
 
 // EggsBatch.sync({ alter: true })
 

@@ -22,10 +22,9 @@ const EggsBatchProduct = db.define('EggsBatchProduct', {
     quantityAvailable: {
         type: DataTypes.INTEGER,
         allowNull: false,
-        defaultValue: 0,
         validate: {
             notEmpty: {
-                msg: "quantity field is required",
+                msg: "quantityAvailable field is required",
             },
             min: 0
         }
@@ -54,8 +53,36 @@ EggsBatchProduct.beforeDestroy(async (values, options) => {
     if (values.quantity > values.quantityAvailable) {
         throw new Error("This record has already been used");
     }
-    await EggsBatch.decrement({ quantity: values.quantity, quantityAvailable: values.quantity },
-        { where: { id: values.EggsBatchId } })
+})
+
+EggsBatchProduct.beforeUpdate(async (values, options) => {
+    const newDataValues = values.dataValues
+    const previousDataValues = values._previousDataValues
+
+    if (!(newDataValues.quantity === previousDataValues.quantity && newDataValues.quantityAvailable === previousDataValues.quantityAvailable)) {
+
+        if (newDataValues.quantity > previousDataValues.quantity) {
+            // ver se há quantidade suficiente no lote para preencher
+            const quantityDiff = newDataValues.quantity - previousDataValues.quantity //quanto tenho a mais
+            const request = await EggsBatch.findByPk(values.EggsBatchId)
+            const lines = await EggsBatchProduct.findAll({ where: { EggsBatchId: values.EggsBatchId } })
+
+            let totalLines = 0
+            for (const item of lines) {
+                totalLines += await item.dataValues.quantity
+            }
+
+            if (request.quantity < (totalLines + quantityDiff)) throw new Error("Quantity cannot be greater than EggsBatch overall");
+
+            values.quantityAvailable += quantityDiff
+
+        } else {
+            const newQuantityAvailable = previousDataValues.quantityAvailable - (previousDataValues.quantity - newDataValues.quantity)
+            if (newQuantityAvailable < 0) throw new Error("QuantityAvailable must be greater than zero");
+
+            values.quantityAvailable = newQuantityAvailable
+        }
+    }
 })
 
 EggsBatchProduct.beforeCreate(async (values, options) => {
@@ -66,10 +93,8 @@ EggsBatchProduct.beforeCreate(async (values, options) => {
     for (const item of lines) {
         totalLines += await item.dataValues.quantity
     }
-    
-    if (request.quantity < (totalLines + values.quantity)) {
-        throw new Error("Invalid quantity");
-    }
+
+    if (request.quantity < (totalLines + values.quantity)) throw new Error("Invalid quantity")
 })
 
 // EggsBatchProduct.sync({ alter: true })

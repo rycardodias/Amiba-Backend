@@ -164,7 +164,8 @@ router.put('/update', async (req, res) => {
 
         const request = await Model.update(data, {
             where: { id: id },
-            returning: true
+            returning: true,
+            individualHooks: true
         })
 
         if (request[0] === 1) {
@@ -178,7 +179,7 @@ router.put('/update', async (req, res) => {
         }
     } catch (error) {
         response.message = error_invalid_fields
-        response.error = error
+        response.error = error.message
         return res.status(400).json(response)
     }
 })
