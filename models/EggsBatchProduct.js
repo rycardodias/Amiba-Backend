@@ -59,11 +59,9 @@ EggsBatchProduct.beforeUpdate(async (values, options) => {
     const newDataValues = values.dataValues
     const previousDataValues = values._previousDataValues
 
-    if (!(newDataValues.quantity === previousDataValues.quantity && newDataValues.quantityAvailable === previousDataValues.quantityAvailable)) {
-
+    if (newDataValues.quantity !== previousDataValues.quantity) {
         if (newDataValues.quantity > previousDataValues.quantity) {
-            // ver se há quantidade suficiente no lote para preencher
-            const quantityDiff = newDataValues.quantity - previousDataValues.quantity //quanto tenho a mais
+            const quantityDiff = newDataValues.quantity - previousDataValues.quantity
             const request = await EggsBatch.findByPk(values.EggsBatchId)
             const lines = await EggsBatchProduct.findAll({ where: { EggsBatchId: values.EggsBatchId } })
 
@@ -75,7 +73,6 @@ EggsBatchProduct.beforeUpdate(async (values, options) => {
             if (request.quantity < (totalLines + quantityDiff)) throw new Error("Quantity cannot be greater than EggsBatch overall");
 
             values.quantityAvailable += quantityDiff
-
         } else {
             const newQuantityAvailable = previousDataValues.quantityAvailable - (previousDataValues.quantity - newDataValues.quantity)
             if (newQuantityAvailable < 0) throw new Error("QuantityAvailable must be greater than zero");
