@@ -21,14 +21,13 @@ const AnimalProduct = db.define('AnimalProduct', {
     },
     quantityAvailable: {
         type: DataTypes.INTEGER,
-        defaultValue: 0,
         validate: {
+            notEmpty: {
+                msg: "quantityAvailable field is required",
+            },
             min: 0
         }
-    },
-    weight: {
-        type: DataTypes.INTEGER,
-    },
+    }
 },
 )
 
@@ -52,6 +51,16 @@ Animal.hasMany(AnimalProduct)
 AnimalProduct.beforeDestroy((values, options) => {
     if (values.quantity > values.quantityAvailable) {
         throw new Error("This record has already been used");
+    }
+})
+
+AnimalProduct.beforeUpdate((values, options) => {
+    if (values.quantity !== values._previousDataValues.quantity) {
+        values.quantityAvailable += (values.quantity - values._previousDataValues.quantity)
+        if (values.quantityAvailable < 0) throw new Error("QuantityAvailable cannot be less than zero");
+    }
+    if (values.quantityAvailable > values.quantity) {
+        throw new Error("QuantityAvailable cannot be greater than quantity");
     }
 })
 

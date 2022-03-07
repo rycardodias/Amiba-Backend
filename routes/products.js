@@ -443,7 +443,7 @@ router.post('/create', async (req, res) => {
         }
 
         const request = await Model.create(data)
-        console.log("request", request)
+        
         if (request) {
             response.message = success_row_create
             response.data = request
