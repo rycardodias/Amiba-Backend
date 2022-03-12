@@ -70,6 +70,54 @@ OrderLine.beforeDestroy(async (values, options) => {
         { where: { id: values.OrderId } })
 })
 
+OrderLine.afterDestroy(async (values, options) => {
+    const lines = await OrderLine.findAll({ where: { OrderId: values.OrderId } })
+    let total = 0, totalVAT = 0
+
+    for (const line of lines) {
+        total += line.total
+        totalVAT += line.totalVAT
+    }
+
+    Order.update({ total: total, totalVAT: totalVAT },
+        { where: { id: values.OrderId } })
+})
+
+OrderLine.beforeCreate(async (values, options) => {
+    if (values.AnimalProductId) {
+        const animalProducts = await AnimalProduct.findByPk(values.AnimalProductId, { include: [Product] })
+
+        if (animalProducts.quantityAvailable < values.quantity) throw new Error("QuantityAvailable cannot be less than zero");
+
+        await AnimalProduct.decrement({ quantityAvailable: values.quantity },
+            { where: { id: values.AnimalProductId } })
+
+        values.total = values.quantity * animalProducts.Product.price
+        values.totalVAT = values.quantity * animalProducts.Product.price * (animalProducts.Product.tax / 100)
+
+    } else {
+        const eggsBatchProducts = await EggsBatchProduct.findByPk(values.EggsBatchProductId, { include: [Product] })
+
+        if (eggsBatchProducts.quantityAvailable < values.quantity) throw new Error("QuantityAvailable cannot be less than zero");
+
+        await EggsBatchProduct.decrement({ quantityAvailable: values.quantity },
+            { where: { id: values.EggsBatchProductId } })
+    }
+})
+
+OrderLine.afterCreate(async (values, options) => {
+    const lines = await OrderLine.findAll({ where: { OrderId: values.OrderId } })
+    let total = 0, totalVAT = 0
+
+    for (const line of lines) {
+        total += line.total
+        totalVAT += line.totalVAT
+    }
+
+    Order.update({ total: total, totalVAT: totalVAT },
+        { where: { id: values.OrderId } })
+})
+
 OrderLine.beforeUpdate(async (values, options) => {
 
     if (values.quantity !== values._previousDataValues.quantity) {
@@ -109,6 +157,7 @@ OrderLine.afterUpdate(async (values, options) => {
     Order.update({ total: total, totalVAT: totalVAT },
         { where: { id: values.OrderId } })
 })
+
 
 // OrderLine.sync({ force: true })
 

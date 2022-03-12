@@ -147,8 +147,7 @@ router.post('/create', async (req, res) => {
             name: name,
             ExplorationId: ExplorationId,
             quantity: quantity,
-            quantityAvailable: quantity,
-            validity: validity
+            quantityAvailable: quantity
         }
 
         const request = await Model.create(data)

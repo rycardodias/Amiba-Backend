@@ -241,7 +241,7 @@ router.get('/OrderId/:OrderId', async (req, res) => {
 router.post('/create', async (req, res) => {
     const response = new ResponseModel()
     try {
-        const { OrderId, quantity, total, totalVAT, AnimalProductId, EggsBatchProductId } = req.body
+        const { OrderId, quantity, AnimalProductId, EggsBatchProductId } = req.body
 
         if (!(OrderId && quantity)) {
             response.message = error_missing_fields
@@ -252,13 +252,11 @@ router.post('/create', async (req, res) => {
         const data = {
             OrderId: OrderId,
             quantity: quantity,
-            total: total,
-            totalVAT: totalVAT,
             AnimalProductId: AnimalProductId,
             EggsBatchProductId: EggsBatchProductId,
         }
 
-        const request = await Model.create(data)
+        const request = await Model.create(data, { individualHooks: true })
 
         if (request) {
             response.message = success_row_create
