@@ -279,7 +279,7 @@ router.post('/create', async (req, res) => {
 router.put('/update', async (req, res) => {
     const response = new ResponseModel()
     try {
-        const { id, OrderId, quantity, AnimalProductId, EggsBatchProductId } = req.body
+        const { id, quantity } = req.body
 
         if (!id) {
             response.message = error_missing_fields
@@ -287,16 +287,10 @@ router.put('/update', async (req, res) => {
             res.status(400).json(response)
         }
 
-        const data = {
-            OrderId: OrderId,
-            quantity: quantity,
-            AnimalProductId: AnimalProductId,
-            EggsBatchProductId: EggsBatchProductId,
-        }
-
-        const request = await Model.update(data, {
+        const request = await Model.update({ quantity: quantity }, {
             where: { id: id },
-            returning: true
+            returning: true,
+            individualHooks: true
         })
 
         if (request[0] === 1) {
@@ -310,7 +304,7 @@ router.put('/update', async (req, res) => {
         }
     } catch (error) {
         response.message = error_invalid_fields
-        response.error = error
+        response.error = error.message
         return res.status(400).json(response)
     }
 })
