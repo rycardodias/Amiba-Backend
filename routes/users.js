@@ -428,6 +428,7 @@ router.post('/generateEmailValidation', async (req, res) => {
             res.status(404).json(response)
         }
     } catch (error) {
+        console.log(error)
         response.message = error_invalid_fields
         response.error = error
         return res.status(400).json(response)
