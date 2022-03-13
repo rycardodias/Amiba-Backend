@@ -391,7 +391,7 @@ router.post('/generateEmailValidation', async (req, res) => {
             },
             returning: true
         })
-        const newToken = jwt.sign({ id: request.dataValues.id, email: email }, process.env.TOKEN_SECRET)
+        const newToken = jwt.sign({ id: request.id, email: email }, process.env.TOKEN_SECRET)
 
         //https://myaccount.google.com/lesssecureapps?pli=1&rapt=AEjHL4Pm8T8M5qWHjZ_79Z-2gMMMJVOOPtaSa6_W2rxzcdbPe_HE4CNPkD0THRreigjLFCe1rbnyyxgdZxgYTEUVeNQ_QOet-Q
         var transporter = nodemailer.createTransport({
