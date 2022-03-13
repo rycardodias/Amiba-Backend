@@ -268,10 +268,10 @@ router.put('/recoverPassword/:token', async (req, res) => {
         })
 
         const row = request[1][0].dataValues
-        
+
         if (request[0] === 1) {
             response.message = success_row_update
-            response.data = {email: row.email, name: row.name}
+            response.data = { email: row.email, name: row.name }
             return res.status(200).json(response)
         } else {
             response.message = error_row_update
@@ -391,7 +391,9 @@ router.post('/generateEmailValidation', async (req, res) => {
             },
             returning: true
         })
-        if(!request.id) throw new Error("Email is already verified!")
+        
+        if (!request) throw new Error("Email is already verified!")
+
         const newToken = jwt.sign({ id: request.id, email: email }, process.env.TOKEN_SECRET)
 
         //https://myaccount.google.com/lesssecureapps?pli=1&rapt=AEjHL4Pm8T8M5qWHjZ_79Z-2gMMMJVOOPtaSa6_W2rxzcdbPe_HE4CNPkD0THRreigjLFCe1rbnyyxgdZxgYTEUVeNQ_QOet-Q
@@ -431,7 +433,7 @@ router.post('/generateEmailValidation', async (req, res) => {
     } catch (error) {
         console.log(error)
         response.message = error_invalid_fields
-        response.error = error
+        response.error = error.message
         return res.status(400).json(response)
     }
 })
