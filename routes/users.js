@@ -392,7 +392,7 @@ router.post('/generateEmailValidation', async (req, res) => {
             returning: true
         })
         
-        if (!request) throw new Error("Email is already verified!")
+        if (!request) throw new Error("Email is already verified or does not exists!")
 
         const newToken = jwt.sign({ id: request.id, email: email }, process.env.TOKEN_SECRET)
 
