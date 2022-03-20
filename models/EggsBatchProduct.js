@@ -55,34 +55,46 @@ EggsBatchProduct.beforeDestroy(async (values, options) => {
     }
 })
 
-EggsBatchProduct.beforeUpdate(async (values, options) => {
-    const newDataValues = values.dataValues
-    const previousDataValues = values._previousDataValues
+EggsBatchProduct.beforeUpdate((values, options) => {
+    if ((values.quantity % 6) !== 0) throw new Error("Quantity must be divisible by 6");
 
-    if ((newDataValues.quantity % 6) !== 0) throw new Error("Quantity must be divisible by 6");
-
-    if (newDataValues.quantity !== previousDataValues.quantity) {
-        if (newDataValues.quantity > previousDataValues.quantity) {
-            const quantityDiff = newDataValues.quantity - previousDataValues.quantity
-            const request = await EggsBatch.findByPk(values.EggsBatchId)
-            const lines = await EggsBatchProduct.findAll({ where: { EggsBatchId: values.EggsBatchId } })
-
-            let totalLines = 0
-            for (const item of lines) {
-                totalLines += await item.dataValues.quantity
-            }
-
-            if (request.quantity < (totalLines + quantityDiff)) throw new Error("Quantity cannot be greater than EggsBatch overall");
-
-            values.quantityAvailable += quantityDiff
-        } else {
-            const newQuantityAvailable = previousDataValues.quantityAvailable - (previousDataValues.quantity - newDataValues.quantity)
-            if (newQuantityAvailable < 0) throw new Error("QuantityAvailable must be greater than zero");
-
-            values.quantityAvailable = newQuantityAvailable
-        }
+    if (values.quantity !== values._previousDataValues.quantity) {
+        values.quantityAvailable += (values.quantity - values._previousDataValues.quantity)
+        if (values.quantityAvailable < 0) throw new Error("QuantityAvailable cannot be less than zero");
+    }
+    if (values.quantityAvailable > values.quantity) {
+        throw new Error("QuantityAvailable cannot be greater than quantity");
     }
 })
+
+// EggsBatchProduct.beforeUpdate(async (values, options) => {
+//     const newDataValues = values.dataValues
+//     const previousDataValues = values._previousDataValues
+
+//     if ((newDataValues.quantity % 6) !== 0) throw new Error("Quantity must be divisible by 6");
+
+//     if (newDataValues.quantity !== previousDataValues.quantity) {
+//         if (newDataValues.quantity > previousDataValues.quantity) {
+//             const quantityDiff = newDataValues.quantity - previousDataValues.quantity
+//             const request = await EggsBatch.findByPk(values.EggsBatchId)
+//             const lines = await EggsBatchProduct.findAll({ where: { EggsBatchId: values.EggsBatchId } })
+
+//             let totalLines = 0
+//             for (const item of lines) {
+//                 totalLines += await item.dataValues.quantity
+//             }
+
+//             if (request.quantity < (totalLines + quantityDiff)) throw new Error("Quantity cannot be greater than EggsBatch overall");
+
+//             values.quantityAvailable += quantityDiff
+//         } else {
+//             const newQuantityAvailable = previousDataValues.quantityAvailable - (previousDataValues.quantity - newDataValues.quantity)
+//             if (newQuantityAvailable < 0) throw new Error("QuantityAvailable must be greater than zero");
+
+//             values.quantityAvailable = newQuantityAvailable
+//         }
+//     }
+// })
 
 EggsBatchProduct.beforeCreate(async (values, options) => {
     // console.log(options.transaction)
