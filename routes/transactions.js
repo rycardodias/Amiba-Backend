@@ -12,6 +12,8 @@ const Cart = require('../models/Cart')
 const { Op } = require("sequelize");
 const AnimalProduct = require('../models/AnimalProduct')
 const EggsBatchProduct = require('../models/EggsBatchProduct')
+const EggsBatch = require('../models/EggsBatch')
+
 const jwt = require("jsonwebtoken");
 
 const handleProductsQuantity = async (quantity, data) => {
@@ -125,15 +127,28 @@ router.post('/createEggsBatchEggsBatchProducts', async (req, res) => {
         const { token } = req.session
 
         let eggsBatchs
+        let totalQuantity = 0
+
+        for (const i of EggsBatchProducts) {
+            totalQuantity += i.quantity
+        }
+
         await db.transaction(async (t) => {
-            eggsBatchs = await EggsBatch.create({ name: name, ExplorationId: ExplorationId, validity: new Date() }, { transaction: t })
+            eggsBatchs = await EggsBatch.create({
+                name: name,
+                ExplorationId: ExplorationId,
+                quantity: totalQuantity,
+                quantityAvailable: totalQuantity,
+                validity: new Date()
+            }, { transaction: t })
 
             for (const i of EggsBatchProducts) {
                 await EggsBatchProduct.create(
                     {
                         ProductId: i.ProductId,
                         EggsBatchId: eggsBatchs.dataValues.id,
-                        quantity: i.quantity
+                        quantity: i.quantity,
+                        quantityAvailable: i.quantity
                     },
                     { transaction: t })
             }
@@ -143,8 +158,9 @@ router.post('/createEggsBatchEggsBatchProducts', async (req, res) => {
         response.data = eggsBatchs
         return res.status(201).json(response)
     } catch (error) {
+        // console.log(error)
         response.message = error_data_not_found
-        response.error = error
+        response.error = error.message
         return res.status(400).json(response)
     }
 })

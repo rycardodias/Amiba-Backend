@@ -85,19 +85,22 @@ EggsBatchProduct.beforeUpdate(async (values, options) => {
 })
 
 EggsBatchProduct.beforeCreate(async (values, options) => {
+    // console.log(options.transaction)
     if ((values.quantity % 6) !== 0) throw new Error("Quantity must be divisible by 6");
 
     values.validity = new Date()
 
-    const eggsBatchs = await EggsBatch.findByPk(values.EggsBatchId) //total loto
-    const existingLines = await EggsBatchProduct.findAll({ where: { EggsBatchId: values.EggsBatchId } })
+    // //EXEMPLO como ver dados antes do commit da transação
+    // const eggsBatchs = await EggsBatch.findByPk(values.EggsBatchId, { transaction: options.transaction })
 
-    let totalExistingLines = 0
-    for (const item of existingLines) {
-        totalExistingLines += await item.dataValues.quantity
-    }
+    // const existingLines = await EggsBatchProduct.findAll({ where: { EggsBatchId: values.EggsBatchId } })
 
-    if (eggsBatchs.quantity < (totalExistingLines + values.quantity)) throw new Error("Invalid quantity")
+    // let totalExistingLines = 0
+    // for (const item of existingLines) {
+    //     totalExistingLines += await item.dataValues.quantity
+    // }
+
+    // if(eggsBatchs.quantity < (totalExistingLines + values.quantity)) throw new Error("Invalid quantity")
 })
 
 // EggsBatchProduct.sync({ alter: true })
